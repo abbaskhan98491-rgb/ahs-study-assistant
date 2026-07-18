@@ -1,0 +1,7 @@
+books/
+page_images/
+__pycache__/
+.claude/
+*.pyc
+package-lock.json
+.streamlit/secrets.toml
