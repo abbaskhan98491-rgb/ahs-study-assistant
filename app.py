@@ -319,6 +319,56 @@ div[data-testid="stExpander"] svg{ fill:var(--pink-700) !important;
   .hero-title{ font-size:1.2rem !important; }
   .chip{ font-size:.65rem !important; }
 }
+
+/* ===== Expander header: kill broken icon-font text, draw our own chevron ===== */
+div[data-testid="stExpander"] summary{
+  display:flex !important; align-items:center !important;
+  justify-content:space-between !important; gap:10px !important;
+  list-style:none !important; cursor:pointer !important;
+}
+div[data-testid="stExpander"] summary::-webkit-details-marker{ display:none !important; }
+
+/* hide Streamlit's icon element (renders as raw text when font fails) */
+div[data-testid="stExpander"] summary [data-testid="stExpanderToggleIcon"],
+div[data-testid="stExpander"] summary span[class*="material"],
+div[data-testid="stExpander"] summary i,
+div[data-testid="stExpander"] summary svg{
+  display:none !important; font-size:0 !important; width:0 !important;
+  visibility:hidden !important;
+}
+
+/* our own chevron on the right */
+div[data-testid="stExpander"] summary::after{
+  content:"" !important; flex:0 0 auto !important;
+  width:20px !important; height:20px !important;
+  background-repeat:no-repeat !important; background-position:center !important;
+  background-size:20px 20px !important;
+  transition:transform .2s ease !important;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c9256f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") !important;
+}
+div[data-testid="stExpander"] details[open] > summary::after,
+div[data-testid="stExpander"][open] summary::after{ transform:rotate(180deg) !important; }
+
+/* keep the label text tidy */
+div[data-testid="stExpander"] summary p,
+div[data-testid="stExpander"] summary div{
+  margin:0 !important; font-family:'Plus Jakarta Sans',sans-serif !important;
+  font-weight:700 !important; color:var(--pink-900) !important;
+  overflow:hidden !important; text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+/* extra mobile polish */
+@media (max-width: 640px){
+  div[data-testid="stExpander"] summary::after{
+    width:18px !important; height:18px !important; background-size:18px 18px !important; }
+  div[data-testid="stExpander"] summary p{ font-size:.84rem !important; }
+  .side-step{ margin:12px 0 5px !important; font-size:.66rem !important; }
+  div[data-testid="stExpander"] .stSelectbox,
+  div[data-testid="stExpander"] div[role="radiogroup"]{ margin-bottom:2px !important; }
+  .stButton>button{ margin-bottom:6px !important; }
+  .hero-chips{ gap:6px !important; margin-top:12px !important; }
+}
 </style>
 """
 
@@ -416,6 +466,11 @@ div[data-testid="stExpander"] summary{ background:#2a1830 !important;
   color:#ffd6ea !important; }
 div[data-testid="stExpander"] summary:hover{ background:#33203a !important; }
 div[data-testid="stExpander"] svg{ fill:#ffb3d8 !important; }
+
+div[data-testid="stExpander"] summary::after{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffb3d8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") !important;
+}
+div[data-testid="stExpander"] summary p{ color:#ffd6ea !important; }
 
 div[data-testid="stSidebarCollapsedControl"] button{
   background:#2a1830 !important; border:1px solid #4a2f4c !important;
@@ -641,7 +696,7 @@ except Exception as e:
     st.stop()
 
 # ---------------- STUDY PANEL (works on mobile + desktop) ----------------
-with st.expander("⚙️  Study Panel — choose subject, source & topic", expanded=True):
+with st.expander("Study Panel", expanded=True):
     col1, col2 = st.columns(2)
 
     with col1:
