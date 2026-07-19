@@ -3,3 +3,4 @@ pymupdf
 chromadb
 sentence-transformers
 groq
+requests
