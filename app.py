@@ -274,21 +274,6 @@ section[data-testid="stSidebar"]{ display:none !important; }
 div[data-testid="stSidebarCollapseButton"],
 div[data-testid="stSidebarCollapsedControl"]{ display:none !important; }
 
-/* ===== Study Panel expander styling ===== */
-div[data-testid="stExpander"]{
-  background:#fff !important; border:1px solid var(--line) !important;
-  border-radius:18px !important; box-shadow:var(--shadow) !important;
-  margin-bottom:18px !important; overflow:hidden !important;
-}
-div[data-testid="stExpander"] summary{
-  font-family:'Plus Jakarta Sans',sans-serif !important; font-weight:700 !important;
-  color:var(--pink-900) !important; font-size:.95rem !important;
-  padding:14px 18px !important; background:var(--pink-50) !important;
-}
-div[data-testid="stExpander"] summary:hover{ background:#ffeaf4 !important; }
-div[data-testid="stExpander"] svg{ fill:var(--pink-700) !important;
-  width:20px !important; height:20px !important; }
-
 /* ===== MOBILE ===== */
 @media (max-width: 640px){
   .block-container{ padding:.8rem .7rem 2rem !important; max-width:100% !important; }
@@ -319,14 +304,6 @@ div[data-testid="stExpander"] svg{ fill:var(--pink-700) !important;
   .hero-title{ font-size:1.2rem !important; }
   .chip{ font-size:.65rem !important; }
 }
-
-/* ===== Expander header: kill broken icon-font text, draw our own chevron ===== */
-div[data-testid="stExpander"] summary{
-  display:flex !important; align-items:center !important;
-  justify-content:space-between !important; gap:10px !important;
-  list-style:none !important; cursor:pointer !important;
-}
-div[data-testid="stExpander"] summary::-webkit-details-marker{ display:none !important; }
 
 /* hide Streamlit's icon element (renders as raw text when font fails) */
 div[data-testid="stExpander"] summary [data-testid="stExpanderToggleIcon"],
@@ -370,13 +347,6 @@ div[data-testid="stExpander"] summary div{
   .hero-chips{ gap:6px !important; margin-top:12px !important; }
 }
 
-/* ===== BULLETPROOF: kill any stray icon-font text in expander header ===== */
-div[data-testid="stExpander"] summary{
-  font-size:0 !important; line-height:0 !important;
-}
-div[data-testid="stExpander"] summary > *{
-  font-size:0 !important; line-height:0 !important; color:transparent !important;
-}
 /* bring back ONLY the label text */
 div[data-testid="stExpander"] summary [data-testid="stMarkdownContainer"],
 div[data-testid="stExpander"] summary [data-testid="stMarkdownContainer"] *{
@@ -723,22 +693,32 @@ except Exception as e:
     st.error(f"Setup problem: {e}")
     st.stop()
 
-# ---------------- STUDY PANEL (works on mobile + desktop) ----------------
-with st.expander("Study Panel", expanded=True):
-    col1, col2 = st.columns(2)
+# ---------------- STUDY PANEL (plain button toggle — works everywhere) ----------------
+if "panel_open" not in st.session_state:
+    st.session_state["panel_open"] = True
 
+btn_label = "Hide Study Panel" if st.session_state["panel_open"] else "Show Study Panel"
+if st.button(btn_label, key="panel_toggle", use_container_width=True):
+    st.session_state["panel_open"] = not st.session_state["panel_open"]
+    st.rerun()
+
+# Values must exist even when the panel is hidden
+if "sel_subject" not in st.session_state:
+    st.session_state["sel_subject"] = list(SOURCES.keys())[0]
+
+if st.session_state["panel_open"]:
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
     with col1:
         st.markdown('<div class="side-step">Subject</div>', unsafe_allow_html=True)
         subject = st.selectbox("Subject", list(SOURCES.keys()),
                                key="sel_subject", label_visibility="collapsed")
-
     with col2:
         source_options = list(SOURCES[subject].keys())
         st.markdown('<div class="side-step">Study from</div>', unsafe_allow_html=True)
         source_type = st.radio("Source", source_options, key="sel_source",
                                label_visibility="collapsed", horizontal=True)
-
-    book_choice = SOURCES[subject][source_type]
 
     picked_topic = ""
     if subject in SYLLABUS:
@@ -754,14 +734,12 @@ with st.expander("Study Panel", expanded=True):
     st.session_state["picked_topic"] = picked_topic
 
     st.markdown('<div class="side-step">Mode</div>', unsafe_allow_html=True)
-    if "mode" not in st.session_state:
-        st.session_state["mode"] = "study"
     m1, m2 = st.columns(2)
     with m1:
-        if st.button("🩺 Topic Study", key="mode_study", use_container_width=True):
+        if st.button("Topic Study", key="mode_study", use_container_width=True):
             st.session_state["mode"] = "study"
     with m2:
-        if st.button("📝 MCQs Test", key="mode_mcq", use_container_width=True):
+        if st.button("MCQs Test", key="mode_mcq", use_container_width=True):
             st.session_state["mode"] = "mcq"
 
     dark_on = st.toggle("Dark mode", value=st.session_state.get("dark", False),
@@ -769,8 +747,22 @@ with st.expander("Study Panel", expanded=True):
     if dark_on != st.session_state.get("dark", False):
         st.session_state["dark"] = dark_on
         st.rerun()
-    if st.session_state.get("dark", False):
-        st.markdown(DARK_CSS, unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+else:
+    subject = st.session_state["sel_subject"]
+    source_type = st.session_state.get("sel_source",
+                                       list(SOURCES[subject].keys())[0])
+    if source_type not in SOURCES[subject]:
+        source_type = list(SOURCES[subject].keys())[0]
+
+if "mode" not in st.session_state:
+    st.session_state["mode"] = "study"
+
+book_choice = SOURCES[subject][source_type]
+
+if st.session_state.get("dark", False):
+    st.markdown(DARK_CSS, unsafe_allow_html=True)
 
 # ---- MODE 1: STUDY ----
 if st.session_state.get("mode", "study") == "study":
