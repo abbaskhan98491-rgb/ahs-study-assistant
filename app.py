@@ -45,7 +45,7 @@ MCQ_CONTEXT_K = 24          # more chunks for making questions
 MCQ_TOTAL = 30              # how many questions to make
 MCQ_BATCH = 6               # generate this many per API call
 GROQ_MODEL = "llama-3.3-70b-versatile"
-ZOOM = 2
+ZOOM = 2.2
 
 # ---- PASTE YOUR KEY BELOW (keep the quotes) ----
 MY_KEY = "PASTE-YOUR-KEY-HERE"
@@ -803,12 +803,10 @@ with main_col:
             st.markdown(answer)
             if diagram_pages:
                 st.markdown("#### Diagrams from your source")
-                cols = st.columns(2)
-                for i, (bk, pg) in enumerate(diagram_pages[:6]):
+                for bk, pg in diagram_pages[:8]:
                     try:
-                        with cols[i % 2]:
-                            st.image(render_page(bk, pg), caption=f"{bk} — page {pg}",
-                                     use_container_width=True)
+                        st.image(render_page(bk, pg), caption=f"{bk} — page {pg}",
+                                 use_container_width=True)
                     except Exception:
                         st.write(f"(Could not render {bk} page {pg})")
 
