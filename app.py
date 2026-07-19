@@ -363,6 +363,27 @@ div[data-testid="stExpander"] summary::after{
   div[data-testid="stExpander"] summary [data-testid="stMarkdownContainer"] *{
     font-size:.86rem !important; }
 }
+
+/* ===== side panel look (desktop) ===== */
+.panel-head{
+  font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
+  font-size:1.05rem; color:var(--pink-900);
+  padding-bottom:10px; margin-bottom:4px;
+  border-bottom:1px solid var(--line);
+}
+/* give the left column a card feel */
+div[data-testid="stHorizontalBlock"] > div:first-child{
+  background:#fff; border:1px solid var(--line); border-radius:18px;
+  padding:18px 18px 14px; box-shadow:var(--shadow);
+  align-self:flex-start;
+}
+/* panel toggle button: small, not full width, on desktop */
+div[data-testid="stButton"] button[kind="secondary"]{ }
+
+@media (max-width: 640px){
+  div[data-testid="stHorizontalBlock"] > div:first-child{
+    padding:14px !important; margin-bottom:14px !important; }
+}
 </style>
 """
 
@@ -452,6 +473,10 @@ div[role="radiogroup"] label p,div[role="radiogroup"] label div{ color:#f0e4ee !
 /* alerts */
 div[data-testid="stAlert"]{ background:#2a1830 !important;
   border:1px solid #4a2f4c !important; color:#f0e4ee !important; }
+
+.panel-head{ color:#ffd6ea !important; border-bottom-color:#3d2740 !important; }
+div[data-testid="stHorizontalBlock"] > div:first-child{
+  background:#221527 !important; border-color:#3d2740 !important; }
 
 /* expander in dark mode */
 div[data-testid="stExpander"]{ background:#221527 !important;
@@ -693,166 +718,162 @@ except Exception as e:
     st.error(f"Setup problem: {e}")
     st.stop()
 
-# ---------------- STUDY PANEL (plain button toggle — works everywhere) ----------------
+# ---------------- STUDY PANEL (left column on desktop, top on mobile) ----------------
 if "panel_open" not in st.session_state:
     st.session_state["panel_open"] = True
-
-btn_label = "Hide Study Panel" if st.session_state["panel_open"] else "Show Study Panel"
-if st.button(btn_label, key="panel_toggle", use_container_width=True):
-    st.session_state["panel_open"] = not st.session_state["panel_open"]
-    st.rerun()
-
-# Values must exist even when the panel is hidden
+if "mode" not in st.session_state:
+    st.session_state["mode"] = "study"
 if "sel_subject" not in st.session_state:
     st.session_state["sel_subject"] = list(SOURCES.keys())[0]
 
+btn_label = "Hide Study Panel" if st.session_state["panel_open"] else "Show Study Panel"
+if st.button(btn_label, key="panel_toggle"):
+    st.session_state["panel_open"] = not st.session_state["panel_open"]
+    st.rerun()
+
 if st.session_state["panel_open"]:
-    col1, col2 = st.columns(2)
-    with col1:
+    panel_col, main_col = st.columns([1, 2.3], gap="large")
+else:
+    panel_col, main_col = None, st.container()
+
+if panel_col is not None:
+    with panel_col:
+        st.markdown('<div class="panel-head">Study Panel</div>', unsafe_allow_html=True)
+
         st.markdown('<div class="side-step">Subject</div>', unsafe_allow_html=True)
         subject = st.selectbox("Subject", list(SOURCES.keys()),
                                key="sel_subject", label_visibility="collapsed")
-    with col2:
-        source_options = list(SOURCES[subject].keys())
-        st.markdown('<div class="side-step">Study from</div>', unsafe_allow_html=True)
-        source_type = st.radio("Source", source_options, key="sel_source",
-                               label_visibility="collapsed", horizontal=True)
 
-    picked_topic = ""
-    if subject in SYLLABUS:
-        c1, c2 = st.columns(2)
-        with c1:
+        st.markdown('<div class="side-step">Study from</div>', unsafe_allow_html=True)
+        source_options = list(SOURCES[subject].keys())
+        source_type = st.radio("Source", source_options, key="sel_source",
+                               label_visibility="collapsed")
+
+        picked_topic = ""
+        if subject in SYLLABUS:
             st.markdown('<div class="side-step">Chapter</div>', unsafe_allow_html=True)
             chapter = st.selectbox("Chapter", list(SYLLABUS[subject].keys()),
                                    key="sel_chapter", label_visibility="collapsed")
-        with c2:
             st.markdown('<div class="side-step">Topic</div>', unsafe_allow_html=True)
             picked_topic = st.selectbox("Topic", SYLLABUS[subject][chapter],
                                         key="sel_topic", label_visibility="collapsed")
-    st.session_state["picked_topic"] = picked_topic
+        st.session_state["picked_topic"] = picked_topic
 
-    st.markdown('<div class="side-step">Mode</div>', unsafe_allow_html=True)
-    m1, m2 = st.columns(2)
-    with m1:
+        st.markdown('<div class="side-step">Mode</div>', unsafe_allow_html=True)
         if st.button("Topic Study", key="mode_study", use_container_width=True):
             st.session_state["mode"] = "study"
-    with m2:
         if st.button("MCQs Test", key="mode_mcq", use_container_width=True):
             st.session_state["mode"] = "mcq"
 
-    dark_on = st.toggle("Dark mode", value=st.session_state.get("dark", False),
-                        key="dark_toggle")
-    if dark_on != st.session_state.get("dark", False):
-        st.session_state["dark"] = dark_on
-        st.rerun()
-
+        dark_on = st.toggle("Dark mode", value=st.session_state.get("dark", False),
+                            key="dark_toggle")
+        if dark_on != st.session_state.get("dark", False):
+            st.session_state["dark"] = dark_on
+            st.rerun()
 else:
     subject = st.session_state["sel_subject"]
-    source_type = st.session_state.get("sel_source",
-                                       list(SOURCES[subject].keys())[0])
+    source_type = st.session_state.get("sel_source", list(SOURCES[subject].keys())[0])
     if source_type not in SOURCES[subject]:
         source_type = list(SOURCES[subject].keys())[0]
-
-if "mode" not in st.session_state:
-    st.session_state["mode"] = "study"
 
 book_choice = SOURCES[subject][source_type]
 
 if st.session_state.get("dark", False):
     st.markdown(DARK_CSS, unsafe_allow_html=True)
 
-# ---- MODE 1: STUDY ----
-if st.session_state.get("mode", "study") == "study":
-    st.markdown('<div class="card"><div class="card-title">Topic Study</div>'
-                f'<div class="card-sub">Source: {subject} &middot; {source_type}</div></div>',
-                unsafe_allow_html=True)
-    default_q = st.session_state.get("picked_topic", "")
-    question = st.text_input("Your question:",
-                             value=(f"Explain {default_q}" if default_q else ""),
-                             placeholder="e.g. Explain the citric acid cycle")
-    if st.button("Get Answer", key="ask_btn") and question.strip():
-        with st.spinner("Reading your books..."):
-            answer, diagram_pages = answer_question(
-                question, book_choice, model, collection, groq_client)
-        st.markdown("#### Answer")
-        st.markdown(answer)
-        if diagram_pages:
-            st.markdown("#### Diagrams from your source")
-            cols = st.columns(2)
-            for i, (bk, pg) in enumerate(diagram_pages[:6]):
-                try:
-                    with cols[i % 2]:
-                        st.image(render_page(bk, pg), caption=f"{bk} — page {pg}",
-                                 use_container_width=True)
-                except Exception:
-                    st.write(f"(Could not render {bk} page {pg})")
-
-# ---- MODE 2: MCQ ----
-if st.session_state.get("mode", "study") == "mcq":
-    st.markdown('<div class="card"><div class="card-title">MCQs Test</div>'
-                f'<div class="card-sub">30 practice questions &middot; {subject} &middot; {source_type}</div></div>',
-                unsafe_allow_html=True)
-    default_t = st.session_state.get("picked_topic", "")
-    topic = st.text_input("Topic:", value=default_t,
-                          placeholder="e.g. Hemoglobin, Glycolysis, Nerve conduction",
-                          key="mcq_topic")
-
-    if st.button("Generate 30 MCQs", key="mcq_btn") and topic.strip():
-        progress = st.progress(0.0, text="Starting...")
-        try:
-            mcqs = generate_all_mcqs(topic, book_choice, model, collection, groq_client, progress)
-        except Exception as e:
-            st.error(f"Problem generating MCQs: {e}")
-            mcqs = []
-        progress.empty()
-        if not mcqs:
-            st.warning("Could not make questions (topic may be thin in the books, or rate limit hit). Try a clearer topic or wait a minute.")
-        else:
-            st.session_state["mcqs"] = mcqs
-            st.session_state["submitted"] = False
-            st.success(f"{len(mcqs)} questions ready — answer them below.")
-
-    # Show the quiz if we have questions
-    if "mcqs" in st.session_state and st.session_state["mcqs"]:
-        mcqs = st.session_state["mcqs"]
-        st.markdown("---")
-        for i, q in enumerate(mcqs):
-            st.markdown(f'<div class="mcq-card"><div class="mcq-num">Question {i+1}</div>'
-                        f'<div class="mcq-q">{q["question"]}</div></div>',
-                        unsafe_allow_html=True)
-            st.radio("Choose:", q["options"], key=f"ans_{i}", index=None,
-                     label_visibility="collapsed")
-
-        if st.button("Submit & See Score", key="submit_btn"):
-            st.session_state["submitted"] = True
-
-        if st.session_state.get("submitted"):
-            score = 0
-            for i, q in enumerate(mcqs):
-                chosen = st.session_state.get(f"ans_{i}")
-                correct = q["options"][q["answer_index"]]
-                if chosen == correct:
-                    score += 1
-            pct = round(score / len(mcqs) * 100)
-            st.markdown(
-                f'<div class="score-badge"><div class="score-num">{score}<span style="font-size:1.4rem;color:#8a6b7c;">/{len(mcqs)}</span></div>'
-                f'<div class="score-lbl">{pct}% correct</div></div>',
-                unsafe_allow_html=True)
-            st.markdown("#### Review")
-            for i, q in enumerate(mcqs):
-                chosen = st.session_state.get(f"ans_{i}")
-                correct = q["options"][q["answer_index"]]
-                right = (chosen == correct)
-                box = "correct-box" if right else "wrong-box"
-                mark = "✅ Correct" if right else "❌ Wrong"
-                your_ans = chosen if chosen else "(not answered)"
-                st.markdown(
-                    f'<div class="{box}"><b>Q{i+1}. {q["question"]}</b><br>'
-                    f'{mark}<br>Your answer: {your_ans}<br>'
-                    f'Correct answer: {correct}<br>'
-                    f'<i>{q.get("explanation","")}</i><br>'
-                    f'<small>📖 {q.get("page","")}</small></div>',
+with main_col:
+    # ---- MODE 1: STUDY ----
+    if st.session_state.get("mode", "study") == "study":
+        st.markdown('<div class="card"><div class="card-title">Topic Study</div>'
+                    f'<div class="card-sub">Source: {subject} &middot; {source_type}</div></div>',
                     unsafe_allow_html=True)
+        default_q = st.session_state.get("picked_topic", "")
+        question = st.text_input("Your question:",
+                                 value=(f"Explain {default_q}" if default_q else ""),
+                                 placeholder="e.g. Explain the citric acid cycle")
+        if st.button("Get Answer", key="ask_btn") and question.strip():
+            with st.spinner("Reading your books..."):
+                answer, diagram_pages = answer_question(
+                    question, book_choice, model, collection, groq_client)
+            st.markdown("#### Answer")
+            st.markdown(answer)
+            if diagram_pages:
+                st.markdown("#### Diagrams from your source")
+                cols = st.columns(2)
+                for i, (bk, pg) in enumerate(diagram_pages[:6]):
+                    try:
+                        with cols[i % 2]:
+                            st.image(render_page(bk, pg), caption=f"{bk} — page {pg}",
+                                     use_container_width=True)
+                    except Exception:
+                        st.write(f"(Could not render {bk} page {pg})")
+
+    # ---- MODE 2: MCQ ----
+    if st.session_state.get("mode", "study") == "mcq":
+        st.markdown('<div class="card"><div class="card-title">MCQs Test</div>'
+                    f'<div class="card-sub">30 practice questions &middot; {subject} &middot; {source_type}</div></div>',
+                    unsafe_allow_html=True)
+        default_t = st.session_state.get("picked_topic", "")
+        topic = st.text_input("Topic:", value=default_t,
+                              placeholder="e.g. Hemoglobin, Glycolysis, Nerve conduction",
+                              key="mcq_topic")
+
+        if st.button("Generate 30 MCQs", key="mcq_btn") and topic.strip():
+            progress = st.progress(0.0, text="Starting...")
+            try:
+                mcqs = generate_all_mcqs(topic, book_choice, model, collection, groq_client, progress)
+            except Exception as e:
+                st.error(f"Problem generating MCQs: {e}")
+                mcqs = []
+            progress.empty()
+            if not mcqs:
+                st.warning("Could not make questions (topic may be thin in the books, or rate limit hit). Try a clearer topic or wait a minute.")
+            else:
+                st.session_state["mcqs"] = mcqs
+                st.session_state["submitted"] = False
+                st.success(f"{len(mcqs)} questions ready — answer them below.")
+
+        # Show the quiz if we have questions
+        if "mcqs" in st.session_state and st.session_state["mcqs"]:
+            mcqs = st.session_state["mcqs"]
+            st.markdown("---")
+            for i, q in enumerate(mcqs):
+                st.markdown(f'<div class="mcq-card"><div class="mcq-num">Question {i+1}</div>'
+                            f'<div class="mcq-q">{q["question"]}</div></div>',
+                            unsafe_allow_html=True)
+                st.radio("Choose:", q["options"], key=f"ans_{i}", index=None,
+                         label_visibility="collapsed")
+
+            if st.button("Submit & See Score", key="submit_btn"):
+                st.session_state["submitted"] = True
+
+            if st.session_state.get("submitted"):
+                score = 0
+                for i, q in enumerate(mcqs):
+                    chosen = st.session_state.get(f"ans_{i}")
+                    correct = q["options"][q["answer_index"]]
+                    if chosen == correct:
+                        score += 1
+                pct = round(score / len(mcqs) * 100)
+                st.markdown(
+                    f'<div class="score-badge"><div class="score-num">{score}<span style="font-size:1.4rem;color:#8a6b7c;">/{len(mcqs)}</span></div>'
+                    f'<div class="score-lbl">{pct}% correct</div></div>',
+                    unsafe_allow_html=True)
+                st.markdown("#### Review")
+                for i, q in enumerate(mcqs):
+                    chosen = st.session_state.get(f"ans_{i}")
+                    correct = q["options"][q["answer_index"]]
+                    right = (chosen == correct)
+                    box = "correct-box" if right else "wrong-box"
+                    mark = "✅ Correct" if right else "❌ Wrong"
+                    your_ans = chosen if chosen else "(not answered)"
+                    st.markdown(
+                        f'<div class="{box}"><b>Q{i+1}. {q["question"]}</b><br>'
+                        f'{mark}<br>Your answer: {your_ans}<br>'
+                        f'Correct answer: {correct}<br>'
+                        f'<i>{q.get("explanation","")}</i><br>'
+                        f'<small>📖 {q.get("page","")}</small></div>',
+                        unsafe_allow_html=True)
 
 
 # ---------------- FOOTER ----------------
