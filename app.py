@@ -707,8 +707,6 @@ if "sel_subject" not in st.session_state:
     st.session_state["sel_subject"] = list(SOURCES.keys())[0]
 
 if st.session_state["panel_open"]:
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-
     col1, col2 = st.columns(2)
     with col1:
         st.markdown('<div class="side-step">Subject</div>', unsafe_allow_html=True)
@@ -748,7 +746,6 @@ if st.session_state["panel_open"]:
         st.session_state["dark"] = dark_on
         st.rerun()
 
-    st.markdown('</div>', unsafe_allow_html=True)
 else:
     subject = st.session_state["sel_subject"]
     source_type = st.session_state.get("sel_source",
