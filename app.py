@@ -48,7 +48,7 @@ GROQ_MODEL = "llama-3.3-70b-versatile"
 ZOOM = 2
 
 # ---- PASTE YOUR KEY BELOW (keep the quotes) ----
-MY_KEY = ""
+MY_KEY = "PASTE-YOUR-KEY-HERE"
 # ------------------------------------------------
 
 GROQ_API_KEY = ""
@@ -268,6 +268,57 @@ header[data-testid="stHeader"]{ visibility:hidden !important; height:0 !importan
 div[data-testid="stToolbar"], div[data-testid="stDecoration"],
 div[data-testid="stStatusWidget"], #MainMenu{ display:none !important; }
 section[data-testid="stSidebar"]{ min-width:310px !important; }
+
+/* ===== hide the now-empty sidebar completely ===== */
+section[data-testid="stSidebar"]{ display:none !important; }
+div[data-testid="stSidebarCollapseButton"],
+div[data-testid="stSidebarCollapsedControl"]{ display:none !important; }
+
+/* ===== Study Panel expander styling ===== */
+div[data-testid="stExpander"]{
+  background:#fff !important; border:1px solid var(--line) !important;
+  border-radius:18px !important; box-shadow:var(--shadow) !important;
+  margin-bottom:18px !important; overflow:hidden !important;
+}
+div[data-testid="stExpander"] summary{
+  font-family:'Plus Jakarta Sans',sans-serif !important; font-weight:700 !important;
+  color:var(--pink-900) !important; font-size:.95rem !important;
+  padding:14px 18px !important; background:var(--pink-50) !important;
+}
+div[data-testid="stExpander"] summary:hover{ background:#ffeaf4 !important; }
+div[data-testid="stExpander"] svg{ fill:var(--pink-700) !important;
+  width:20px !important; height:20px !important; }
+
+/* ===== MOBILE ===== */
+@media (max-width: 640px){
+  .block-container{ padding:.8rem .7rem 2rem !important; max-width:100% !important; }
+  .hero{ padding:18px 18px !important; border-radius:20px !important; }
+  .hero-title{ font-size:1.4rem !important; line-height:1.2 !important; }
+  .hero-sub{ font-size:.85rem !important; }
+  .hero-eyebrow{ font-size:.65rem !important; }
+  .chip{ font-size:.7rem !important; padding:4px 10px !important; }
+  .card{ padding:16px 16px !important; border-radius:15px !important; }
+  .card-title{ font-size:1rem !important; }
+  .mcq-card{ padding:13px 15px !important; }
+  .mcq-q{ font-size:.93rem !important; }
+  .score-num{ font-size:2rem !important; }
+  .stButton>button{ width:100% !important; padding:.65rem 1rem !important; }
+  div[role="radiogroup"]{ flex-wrap:wrap !important; }
+  div[role="radiogroup"] label{ font-size:.82rem !important; padding:7px 12px !important; }
+  .foot{ flex-direction:column !important; align-items:flex-start !important;
+         padding:18px !important; }
+  .foot-links{ width:100% !important; }
+  .foot-links a{ font-size:.75rem !important; padding:7px 11px !important; }
+  div[data-testid="stExpander"] summary{ font-size:.85rem !important;
+    padding:12px 14px !important; }
+  /* stack the two-column rows on small screens */
+  div[data-testid="stHorizontalBlock"]{ flex-direction:column !important; gap:0 !important; }
+  div[data-testid="stHorizontalBlock"] > div{ width:100% !important; flex:1 1 100% !important; }
+}
+@media (max-width: 400px){
+  .hero-title{ font-size:1.2rem !important; }
+  .chip{ font-size:.65rem !important; }
+}
 </style>
 """
 
@@ -357,6 +408,14 @@ div[role="radiogroup"] label p,div[role="radiogroup"] label div{ color:#f0e4ee !
 /* alerts */
 div[data-testid="stAlert"]{ background:#2a1830 !important;
   border:1px solid #4a2f4c !important; color:#f0e4ee !important; }
+
+/* expander in dark mode */
+div[data-testid="stExpander"]{ background:#221527 !important;
+  border:1px solid #3d2740 !important; }
+div[data-testid="stExpander"] summary{ background:#2a1830 !important;
+  color:#ffd6ea !important; }
+div[data-testid="stExpander"] summary:hover{ background:#33203a !important; }
+div[data-testid="stExpander"] svg{ fill:#ffb3d8 !important; }
 
 div[data-testid="stSidebarCollapsedControl"] button{
   background:#2a1830 !important; border:1px solid #4a2f4c !important;
@@ -581,67 +640,54 @@ except Exception as e:
     st.error(f"Setup problem: {e}")
     st.stop()
 
-# ---------------- SIDEBAR ----------------
-with st.sidebar:
-    st.markdown('<div class="side-title">Study Panel</div>'
-                '<div class="side-note">Pick a source, then a topic.</div>',
-                unsafe_allow_html=True)
+# ---------------- STUDY PANEL (works on mobile + desktop) ----------------
+with st.expander("⚙️  Study Panel — choose subject, source & topic", expanded=True):
+    col1, col2 = st.columns(2)
 
-    dark_on = st.toggle("Dark mode", value=st.session_state["dark"], key="dark_toggle")
-    if dark_on != st.session_state["dark"]:
-        st.session_state["dark"] = dark_on
-        st.rerun()
-    if st.session_state["dark"]:
-        st.markdown(DARK_CSS, unsafe_allow_html=True)
-    st.markdown('<div class="side-step">Subject</div>', unsafe_allow_html=True)
-    subject = st.selectbox("Subject", list(SOURCES.keys()),
-                           key="sel_subject", label_visibility="collapsed")
+    with col1:
+        st.markdown('<div class="side-step">Subject</div>', unsafe_allow_html=True)
+        subject = st.selectbox("Subject", list(SOURCES.keys()),
+                               key="sel_subject", label_visibility="collapsed")
 
-    # Book or Slides — only the options that exist for this subject
-    source_options = list(SOURCES[subject].keys())  # e.g. ["Book", "Slides"] or ["Slides"]
-    st.markdown('<div class="side-step">Study from</div>', unsafe_allow_html=True)
-    source_type = st.radio("Source", source_options, key="sel_source",
-                           label_visibility="collapsed", horizontal=True)
-    # The actual PDF file name to search inside
+    with col2:
+        source_options = list(SOURCES[subject].keys())
+        st.markdown('<div class="side-step">Study from</div>', unsafe_allow_html=True)
+        source_type = st.radio("Source", source_options, key="sel_source",
+                               label_visibility="collapsed", horizontal=True)
+
     book_choice = SOURCES[subject][source_type]
 
-    # Optional syllabus topic picker (only for subjects that have a syllabus)
     picked_topic = ""
     if subject in SYLLABUS:
-        st.markdown('<div class="side-step">Topic</div>', unsafe_allow_html=True)
-        chapters = list(SYLLABUS[subject].keys())
-        chapter = st.selectbox("Chapter", chapters, key="sel_chapter")
-        topics = SYLLABUS[subject][chapter]
-        picked_topic = st.selectbox("Topic", topics, key="sel_topic")
+        c1, c2 = st.columns(2)
+        with c1:
+            st.markdown('<div class="side-step">Chapter</div>', unsafe_allow_html=True)
+            chapter = st.selectbox("Chapter", list(SYLLABUS[subject].keys()),
+                                   key="sel_chapter", label_visibility="collapsed")
+        with c2:
+            st.markdown('<div class="side-step">Topic</div>', unsafe_allow_html=True)
+            picked_topic = st.selectbox("Topic", SYLLABUS[subject][chapter],
+                                        key="sel_topic", label_visibility="collapsed")
     st.session_state["picked_topic"] = picked_topic
 
     st.markdown('<div class="side-step">Mode</div>', unsafe_allow_html=True)
     if "mode" not in st.session_state:
         st.session_state["mode"] = "study"
-    if st.button("🩺 Topic Study", key="mode_study", use_container_width=True):
-        st.session_state["mode"] = "study"
-    if st.button("📝 MCQs Test", key="mode_mcq", use_container_width=True):
-        st.session_state["mode"] = "mcq"
+    m1, m2 = st.columns(2)
+    with m1:
+        if st.button("🩺 Topic Study", key="mode_study", use_container_width=True):
+            st.session_state["mode"] = "study"
+    with m2:
+        if st.button("📝 MCQs Test", key="mode_mcq", use_container_width=True):
+            st.session_state["mode"] = "mcq"
 
-    st.markdown(
-        """
-        <div class="side-card">
-          <div style="font-weight:700;color:#9d1b5c;font-size:.9rem;">Created by Abbas Khan</div>
-          <div style="color:#8a6b7c;font-size:.76rem;margin-top:2px;">BS AHS — 2nd Semester</div>
-          <div class="side-links">
-            <a href="tel:+923459059934">
-              <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg">0345-9059934</a>
-            <a href="mailto:abbaskhan98491@gmail.com">
-              <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/gmail.svg">Email</a>
-            <a href="https://www.tiktok.com/@abbas_khan455" target="_blank">
-              <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg">TikTok</a>
-            <a href="https://www.instagram.com/dentistabbaskhan" target="_blank">
-              <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg">Instagram</a>
-          </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    dark_on = st.toggle("Dark mode", value=st.session_state.get("dark", False),
+                        key="dark_toggle")
+    if dark_on != st.session_state.get("dark", False):
+        st.session_state["dark"] = dark_on
+        st.rerun()
+    if st.session_state.get("dark", False):
+        st.markdown(DARK_CSS, unsafe_allow_html=True)
 
 # ---- MODE 1: STUDY ----
 if st.session_state.get("mode", "study") == "study":
