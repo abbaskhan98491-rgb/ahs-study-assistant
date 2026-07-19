@@ -369,6 +369,30 @@ div[data-testid="stExpander"] summary div{
   .stButton>button{ margin-bottom:6px !important; }
   .hero-chips{ gap:6px !important; margin-top:12px !important; }
 }
+
+/* ===== BULLETPROOF: kill any stray icon-font text in expander header ===== */
+div[data-testid="stExpander"] summary{
+  font-size:0 !important; line-height:0 !important;
+}
+div[data-testid="stExpander"] summary > *{
+  font-size:0 !important; line-height:0 !important; color:transparent !important;
+}
+/* bring back ONLY the label text */
+div[data-testid="stExpander"] summary [data-testid="stMarkdownContainer"],
+div[data-testid="stExpander"] summary [data-testid="stMarkdownContainer"] *{
+  font-size:.95rem !important; line-height:1.4 !important;
+  color:var(--pink-900) !important;
+  font-family:'Plus Jakarta Sans',sans-serif !important; font-weight:700 !important;
+}
+/* our chevron must stay visible */
+div[data-testid="stExpander"] summary::after{
+  font-size:0 !important; color:transparent !important;
+}
+@media (max-width: 640px){
+  div[data-testid="stExpander"] summary [data-testid="stMarkdownContainer"],
+  div[data-testid="stExpander"] summary [data-testid="stMarkdownContainer"] *{
+    font-size:.86rem !important; }
+}
 </style>
 """
 
@@ -471,6 +495,10 @@ div[data-testid="stExpander"] summary::after{
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffb3d8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") !important;
 }
 div[data-testid="stExpander"] summary p{ color:#ffd6ea !important; }
+
+div[data-testid="stExpander"] summary [data-testid="stMarkdownContainer"],
+div[data-testid="stExpander"] summary [data-testid="stMarkdownContainer"] *{
+  color:#ffd6ea !important; }
 
 div[data-testid="stSidebarCollapsedControl"] button{
   background:#2a1830 !important; border:1px solid #4a2f4c !important;
