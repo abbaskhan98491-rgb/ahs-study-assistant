@@ -579,9 +579,13 @@ DETAILED ANSWER:"""
     )
     answer = response.choices[0].message.content
 
+    # Slides are visual by nature: PowerPoint diagrams are vector drawings, not
+    # embedded images, so has_diagram is False for them. For slide files we show
+    # every source page instead.
     diagram_pages, seen = [], set()
     for m in metas:
-        if m.get("has_diagram") and (m["book"], m["page"]) not in seen:
+        is_slide = "slide" in str(m.get("book", "")).lower()
+        if (m.get("has_diagram") or is_slide) and (m["book"], m["page"]) not in seen:
             diagram_pages.append((m["book"], m["page"]))
             seen.add((m["book"], m["page"]))
     return answer, diagram_pages
