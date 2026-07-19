@@ -40,11 +40,12 @@ BOOKS_DIR = "books" if os.path.isdir("books") else "books_small"
 DB_DIR = "rag_db"
 COLLECTION_NAME = "semester_books"
 EMBED_MODEL = "all-MiniLM-L6-v2"
-TOP_K = 10
-MCQ_CONTEXT_K = 18          # more chunks for making questions
+TOP_K = 6
+MCQ_CONTEXT_K = 10          # more chunks for making questions
 MCQ_TOTAL = 30              # how many questions to make
 MCQ_BATCH = 10               # generate this many per API call
-GROQ_MODEL = "llama-3.3-70b-versatile"
+GROQ_MODEL = "llama-3.3-70b-versatile"      # detailed answers
+GROQ_MCQ_MODEL = "llama-3.1-8b-instant"     # MCQs: faster, much bigger free quota
 ZOOM = 2.2
 
 # ---- PASTE YOUR KEY BELOW (keep the quotes) ----
@@ -68,7 +69,6 @@ except Exception:
 if not GEMINI_API_KEY:
     GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 
-GEMINI_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash"]
 
 
 # ---------------- THEME ----------------
@@ -520,14 +520,51 @@ button[data-testid="stBaseButton-headerNoPadding"]::after{
 """
 
 # ---------------- LLM CALL WITH AUTOMATIC FALLBACK ----------------
+@st.cache_data(ttl=3600, show_spinner=False)
+def _gemini_available_models(api_key):
+    """Ask Google which models this key can actually use.
+
+    Model names change over time, so hard-coding them causes 404 errors.
+    We look them up instead and prefer the fast 'flash' ones.
+    """
+    import requests
+    url = f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}"
+    r = requests.get(url, timeout=30)
+    r.raise_for_status()
+    models = []
+    for m in r.json().get("models", []):
+        if "generateContent" in m.get("supportedGenerationMethods", []):
+            name = m.get("name", "").replace("models/", "")
+            if name:
+                models.append(name)
+
+    def rank(n):
+        s = 0
+        if "flash" in n: s -= 10          # fast + biggest free quota
+        if "lite" in n: s -= 2
+        if "pro" in n: s += 5             # slower, smaller free quota
+        if "vision" in n or "embedding" in n or "tts" in n: s += 50
+        return s
+
+    return sorted(models, key=rank)
+
+
 def _call_gemini(prompt, max_tokens, temperature):
     """Backup provider. Uses the plain REST API so no extra SDK is needed."""
     import requests
     if not GEMINI_API_KEY:
         raise RuntimeError("no gemini key")
 
+    try:
+        models = _gemini_available_models(GEMINI_API_KEY)
+    except Exception as e:
+        raise RuntimeError(f"gemini model lookup failed: {e}")
+
+    if not models:
+        raise RuntimeError("gemini: no usable models for this key")
+
     last = ""
-    for model_name in GEMINI_MODELS:
+    for model_name in models[:3]:      # try the top few
         url = (f"https://generativelanguage.googleapis.com/v1beta/models/"
                f"{model_name}:generateContent?key={GEMINI_API_KEY}")
         body = {
@@ -540,13 +577,15 @@ def _call_gemini(prompt, max_tokens, temperature):
             if r.status_code == 200:
                 data = r.json()
                 return data["candidates"][0]["content"]["parts"][0]["text"]
-            last = f"{r.status_code} {r.text[:180]}"
+            last = f"{model_name}: {r.status_code} {r.text[:160]}"
+            if r.status_code == 429:
+                continue               # this model is rate-limited, try next
         except Exception as e:
-            last = str(e)
+            last = f"{model_name}: {e}"
     raise RuntimeError(f"gemini failed: {last}")
 
 
-def call_llm(prompt, groq_client, max_tokens=2000, temperature=0.3):
+def call_llm(prompt, groq_client, max_tokens=2000, temperature=0.3, model=None):
     """Try Groq first (fastest). If it is rate-limited or fails, use Gemini.
 
     Returns (text, provider_name). Raises only if every provider fails.
@@ -556,7 +595,7 @@ def call_llm(prompt, groq_client, max_tokens=2000, temperature=0.3):
     # --- provider 1: Groq ---
     try:
         resp = groq_client.chat.completions.create(
-            model=GROQ_MODEL,
+            model=model or GROQ_MODEL,
             messages=[{"role": "user", "content": prompt}],
             temperature=temperature,
             max_tokens=max_tokens,
@@ -700,8 +739,8 @@ JSON:"""
     last_error = ""
     for attempt in range(4):
         try:
-            raw, provider = call_llm(prompt, groq_client,
-                                     max_tokens=6000, temperature=0.5)
+            raw, provider = call_llm(prompt, groq_client, max_tokens=6000,
+                                     temperature=0.5, model=GROQ_MCQ_MODEL)
             st.session_state["last_provider"] = provider
             text = raw.strip()
             text = text.replace("```json", "").replace("```", "").strip()
@@ -931,10 +970,11 @@ with main_col:
                     st.error("Groq is busy and the backup (Gemini) key is missing or "
                              "wrong. Add GEMINI_API_KEY in Manage app → Settings → Secrets.")
                 elif "rate" in low or "429" in low or "quota" in low:
-                    st.error("Both providers are rate-limited right now. "
-                             "Wait a minute and try again.")
+                    st.error("Rate limit reached. Wait a minute and try again.")
                 else:
-                    st.error(f"Could not get an answer. Reason: {err}")
+                    st.error("Could not get an answer.")
+                with st.expander("Technical details (for debugging)"):
+                    st.code(err or "no error text captured")
             else:
                 st.markdown("#### Answer")
                 st.markdown(answer)
@@ -970,6 +1010,8 @@ with main_col:
             progress.empty()
             if not mcqs:
                 reason = st.session_state.get("mcq_last_error", "")
+                with st.expander("Technical details (for debugging)"):
+                    st.code(reason or "no error text captured")
                 if "rate" in reason.lower() or "429" in reason:
                     st.warning("Groq's free limit is hit right now. Wait a minute and press Generate again.")
                 elif reason:
