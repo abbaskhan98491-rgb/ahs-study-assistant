@@ -41,7 +41,7 @@ DB_DIR = "rag_db"
 COLLECTION_NAME = "semester_books"
 EMBED_MODEL = "all-MiniLM-L6-v2"
 TOP_K = 10
-MCQ_CONTEXT_K = 24          # more chunks for making questions
+MCQ_CONTEXT_K = 18          # more chunks for making questions
 MCQ_TOTAL = 30              # how many questions to make
 MCQ_BATCH = 6               # generate this many per API call
 GROQ_MODEL = "llama-3.3-70b-versatile"
@@ -602,21 +602,15 @@ def generate_mcq_batch(topic, context, n, avoid_questions, groq_client):
     prompt = f"""You are a medical exam question writer. Using ONLY the textbook
 context below, write {n} multiple-choice questions (MCQs) on the topic: "{topic}".
 
-QUESTION VARIETY — this matters. Do NOT make every question start with "What is".
-Spread the {n} questions across these styles, roughly evenly:
-1. Clinical scenario / case vignette — a short patient or lab situation, then ask
-   what is happening, what is affected, or what would result.
-   Example style: "A patient cannot feel pain on one side of the body after an
-   injury. Which structure is most likely damaged?"
-2. Applied / cause-and-effect — "If X is blocked/damaged/increased, what happens?"
-3. Negative stem — "Which of the following is NOT a function of ...?"
-4. Comparison — "Which of the following correctly differentiates A from B?"
-5. Identification of a structure, step, or sequence — "Which step comes
-   immediately after ...?" or "Which structure is responsible for ...?"
-6. Direct recall (definition, number, classification) — use this for at most a
-   quarter of the questions, not more.
+VARIETY: do NOT start every question with "What is". Mix these styles:
+clinical scenario ("A patient has X. Which structure is affected?"),
+cause-and-effect ("If X is blocked, what happens?"),
+negative ("Which is NOT a function of X?"),
+comparison ("Which correctly differentiates A from B?"),
+sequence ("Which step comes immediately after X?"),
+and plain recall (at most a quarter of the questions).
 
-STRICT RULES:
+RULES:
 - Exactly 4 options each. Exactly ONE is correct.
 - Wrong options must be plausible, not obviously silly.
 - Base every question AND the correct answer ONLY on the context given.
@@ -641,39 +635,67 @@ CONTEXT:
 
 JSON:"""
 
-    for attempt in range(2):
+    last_error = ""
+    for attempt in range(4):
         try:
             resp = groq_client.chat.completions.create(
                 model=GROQ_MODEL,
                 messages=[{"role": "user", "content": prompt}],
-                temperature=0.4,
-                max_tokens=3000,
+                temperature=0.5,
+                max_tokens=6000,
             )
             text = resp.choices[0].message.content.strip()
-            # strip code fences if present
             text = text.replace("```json", "").replace("```", "").strip()
-            start = text.find("[")
-            end = text.rfind("]")
-            if start != -1 and end != -1:
-                text = text[start:end + 1]
-            data = json.loads(text)
-            # keep only well-formed items
+
+            start_i = text.find("[")
+            if start_i != -1:
+                text = text[start_i:]
+
+            data = None
+            try:
+                end_i = text.rfind("]")
+                data = json.loads(text[:end_i + 1] if end_i != -1 else text)
+            except json.JSONDecodeError:
+                # Answer was cut off mid-way: salvage the complete objects.
+                data = []
+                depth, obj_start = 0, None
+                for i, ch in enumerate(text):
+                    if ch == "{":
+                        if depth == 0:
+                            obj_start = i
+                        depth += 1
+                    elif ch == "}":
+                        depth -= 1
+                        if depth == 0 and obj_start is not None:
+                            try:
+                                data.append(json.loads(text[obj_start:i + 1]))
+                            except json.JSONDecodeError:
+                                pass
+                            obj_start = None
+
             clean = []
-            for item in data:
+            for item in (data or []):
                 if (isinstance(item.get("options"), list)
                         and len(item["options"]) == 4
                         and isinstance(item.get("answer_index"), int)
                         and 0 <= item["answer_index"] <= 3
                         and item.get("question")):
                     clean.append(item)
-            return clean
-        except json.JSONDecodeError:
-            continue
+
+            if clean:
+                return clean
+            last_error = "model returned no usable questions"
+
         except Exception as e:
-            if "rate" in str(e).lower():
-                time.sleep(3)
+            last_error = str(e)
+            msg = last_error.lower()
+            if "rate" in msg or "429" in msg or "quota" in msg:
+                time.sleep(6 * (attempt + 1))   # back off and retry
                 continue
-            raise
+            time.sleep(2)
+
+    if last_error:
+        st.session_state["mcq_last_error"] = last_error
     return []
 
 
@@ -868,7 +890,13 @@ with main_col:
                 mcqs = []
             progress.empty()
             if not mcqs:
-                st.warning("Could not make questions (topic may be thin in the books, or rate limit hit). Try a clearer topic or wait a minute.")
+                reason = st.session_state.get("mcq_last_error", "")
+                if "rate" in reason.lower() or "429" in reason:
+                    st.warning("Groq's free limit is hit right now. Wait a minute and press Generate again.")
+                elif reason:
+                    st.warning(f"Could not make questions. Reason: {reason}")
+                else:
+                    st.warning("Could not make questions — this topic may be too thin in the selected source. Try a broader topic, or switch Book/Slides.")
             else:
                 st.session_state["mcqs"] = mcqs
                 st.session_state["submitted"] = False
