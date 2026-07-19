@@ -595,16 +595,34 @@ DETAILED ANSWER:"""
 def generate_mcq_batch(topic, context, n, avoid_questions, groq_client):
     avoid_txt = ""
     if avoid_questions:
-        joined = "\n".join(f"- {q}" for q in avoid_questions[-20:])
-        avoid_txt = f"\nDo NOT repeat or rephrase any of these existing questions:\n{joined}\n"
+        joined = "\n".join(f"- {q}" for q in avoid_questions[-40:])
+        avoid_txt = ("\nALREADY USED — do not repeat these, and do not ask the same "
+                     "fact in different words:\n" + joined + "\n")
 
-    prompt = f"""You are a medical exam question writer. Using ONLY the textbook context below,
-write {n} multiple-choice questions (MCQs) on the topic: "{topic}".
+    prompt = f"""You are a medical exam question writer. Using ONLY the textbook
+context below, write {n} multiple-choice questions (MCQs) on the topic: "{topic}".
 
-Strict rules:
-- Each question has exactly 4 options.
-- Exactly ONE option is correct. The other 3 must be plausible but clearly wrong.
-- Base every question and answer ONLY on the context. Do not use outside knowledge.
+QUESTION VARIETY — this matters. Do NOT make every question start with "What is".
+Spread the {n} questions across these styles, roughly evenly:
+1. Clinical scenario / case vignette — a short patient or lab situation, then ask
+   what is happening, what is affected, or what would result.
+   Example style: "A patient cannot feel pain on one side of the body after an
+   injury. Which structure is most likely damaged?"
+2. Applied / cause-and-effect — "If X is blocked/damaged/increased, what happens?"
+3. Negative stem — "Which of the following is NOT a function of ...?"
+4. Comparison — "Which of the following correctly differentiates A from B?"
+5. Identification of a structure, step, or sequence — "Which step comes
+   immediately after ...?" or "Which structure is responsible for ...?"
+6. Direct recall (definition, number, classification) — use this for at most a
+   quarter of the questions, not more.
+
+STRICT RULES:
+- Exactly 4 options each. Exactly ONE is correct.
+- Wrong options must be plausible, not obviously silly.
+- Base every question AND the correct answer ONLY on the context given.
+  Do not use outside knowledge. Do not invent facts.
+- Every question must test a DIFFERENT fact or idea. No two questions may ask
+  about the same fact, even in different words.
 - Add a short explanation and the page number for the correct answer.
 {avoid_txt}
 Return ONLY valid JSON, no other text. Use this exact format:
@@ -667,18 +685,39 @@ def generate_all_mcqs(topic, selected_book, model, collection, groq_client, prog
         f"[{m['book']}, page {m['page']}]\n{c}" for c, m in zip(chunks, metas)
     )
 
-    all_mcqs, avoid = [], []
-    while len(all_mcqs) < MCQ_TOTAL:
+    def key_of(q):
+        # crude fingerprint so near-identical questions get filtered out
+        words = "".join(ch.lower() for ch in q if ch.isalnum() or ch == " ").split()
+        stop = {"the", "of", "a", "an", "is", "are", "what", "which", "following",
+                "in", "to", "and", "for", "from", "that", "this", "how", "many"}
+        return " ".join(sorted(w for w in words if w not in stop))[:110]
+
+    all_mcqs, avoid, seen_keys = [], [], set()
+    empty_rounds = 0
+
+    while len(all_mcqs) < MCQ_TOTAL and empty_rounds < 3:
         need = min(MCQ_BATCH, MCQ_TOTAL - len(all_mcqs))
-        batch = generate_mcq_batch(topic, context, need, avoid, groq_client)
-        if not batch:
-            break  # give up if a batch fails twice
+        # ask for a couple extra, since duplicates get dropped
+        batch = generate_mcq_batch(topic, context, need + 2, avoid, groq_client)
+
+        added = 0
         for q in batch:
+            k = key_of(q["question"])
+            if k in seen_keys:
+                continue          # duplicate — skip it
+            seen_keys.add(k)
             all_mcqs.append(q)
             avoid.append(q["question"])
+            added += 1
+            if len(all_mcqs) >= MCQ_TOTAL:
+                break
+
+        empty_rounds = 0 if added else empty_rounds + 1
+
         progress.progress(min(len(all_mcqs) / MCQ_TOTAL, 1.0),
                           text=f"Made {len(all_mcqs)} of {MCQ_TOTAL} questions...")
         time.sleep(1)  # gentle on the free rate limit
+
     return all_mcqs[:MCQ_TOTAL]
 
 
