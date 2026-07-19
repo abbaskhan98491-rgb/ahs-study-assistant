@@ -43,7 +43,7 @@ EMBED_MODEL = "all-MiniLM-L6-v2"
 TOP_K = 10
 MCQ_CONTEXT_K = 18          # more chunks for making questions
 MCQ_TOTAL = 30              # how many questions to make
-MCQ_BATCH = 6               # generate this many per API call
+MCQ_BATCH = 10               # generate this many per API call
 GROQ_MODEL = "llama-3.3-70b-versatile"
 ZOOM = 2.2
 
@@ -797,7 +797,7 @@ def generate_all_mcqs(topic, selected_book, model, collection, groq_client, prog
 
         progress.progress(min(len(all_mcqs) / MCQ_TOTAL, 1.0),
                           text=f"Made {len(all_mcqs)} of {MCQ_TOTAL} questions...")
-        time.sleep(1)  # gentle on the free rate limit
+        time.sleep(0.3)  # small pause between batches
 
     return all_mcqs[:MCQ_TOTAL]
 
@@ -917,13 +917,30 @@ with main_col:
                                  placeholder="e.g. Explain the citric acid cycle")
         if st.button("Get Answer", key="ask_btn") and question.strip():
             with st.spinner("Reading your books..."):
-                answer, diagram_pages = answer_question(
-                    question, book_choice, model, collection, groq_client)
-            st.markdown("#### Answer")
-            st.markdown(answer)
-            prov = st.session_state.get("last_provider", "")
-            if prov:
-                st.caption(f"Answered using: {prov}")
+                try:
+                    answer, diagram_pages = answer_question(
+                        question, book_choice, model, collection, groq_client)
+                except Exception as e:
+                    answer, diagram_pages = None, []
+                    st.session_state['answer_error'] = str(e)
+            if answer is None:
+                err = st.session_state.get("answer_error", "")
+                low = err.lower()
+                if "gemini" in low and ("no gemini key" in low or "api key" in low
+                                        or "400" in low or "403" in low):
+                    st.error("Groq is busy and the backup (Gemini) key is missing or "
+                             "wrong. Add GEMINI_API_KEY in Manage app → Settings → Secrets.")
+                elif "rate" in low or "429" in low or "quota" in low:
+                    st.error("Both providers are rate-limited right now. "
+                             "Wait a minute and try again.")
+                else:
+                    st.error(f"Could not get an answer. Reason: {err}")
+            else:
+                st.markdown("#### Answer")
+                st.markdown(answer)
+                prov = st.session_state.get("last_provider", "")
+                if prov:
+                    st.caption(f"Answered using: {prov}")
             if diagram_pages:
                 st.markdown("#### Diagrams from your source")
                 for bk, pg in diagram_pages[:8]:
