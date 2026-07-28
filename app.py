@@ -690,30 +690,42 @@ def retrieve(question, selected_book, model, collection, k):
 
 # ---------------- MODE 1: Q&A ----------------
 def answer_question(question, selected_book, model, collection, groq_client):
-    chunks, metas = retrieve(question, selected_book, model, collection, TOP_K)
+    # Pull more chunks so the specific aspect asked (types, functions, steps,
+    # classification, etc.) is more likely to be in the retrieved text.
+    chunks, metas = retrieve(question, selected_book, model, collection, TOP_K + 6)
     if not chunks:
         return "No matching text found in that book. Try 'Both'.", []
 
     context = "\n\n---\n\n".join(
         f"[{m['book']}, page {m['page']}]\n{c}" for c, m in zip(chunks, metas)
     )
-    prompt = f"""You are a medical study tutor. Answer the student's question in DETAIL,
-using ONLY the context provided below from their textbooks.
+    prompt = f"""You are a medical study tutor. Answer the student's question using
+ONLY the context provided below from their textbooks.
 
-Rules:
-- Write a full, well-structured explanation, like a textbook or exam answer.
-- Use clear headings and bullet points where helpful.
-- Define key terms, explain the mechanism step by step, and mention clinical significance if present.
+MOST IMPORTANT RULE — ANSWER EXACTLY WHAT IS ASKED:
+- Read the question carefully and answer that SPECIFIC aspect only.
+- "Types of X" / "classification of X" -> list and explain the TYPES. Do NOT give
+  a definition or introduction unless the student asked for it.
+- "Function of X" -> explain the functions.
+- "Define X" / "What is X" -> give the definition and a short explanation.
+- "Steps of X" / "mechanism of X" -> give the ordered steps.
+- "Difference between X and Y" -> compare them point by point.
+Do not pad the answer with unrelated sections. Match the answer to the question.
+
+OTHER RULES:
+- Write a clear, well-structured answer, like an exam answer.
+- Use headings and bullet points where helpful.
 - Cite the book name and page number for the main points.
-- If context is not enough, say what is missing. Do NOT invent facts.
+- If the exact thing asked is not in the context, say so plainly instead of
+  answering a different question. Do NOT invent facts.
 
 CONTEXT:
 {context}
 
 QUESTION: {question}
 
-DETAILED ANSWER:"""
-    answer, provider = call_llm(prompt, groq_client, max_tokens=2000, temperature=0.3)
+ANSWER (answer the specific thing asked):"""
+    answer, provider = call_llm(prompt, groq_client, max_tokens=2000, temperature=0.2)
     st.session_state["last_provider"] = provider
 
     # Slides are visual by nature: PowerPoint diagrams are vector drawings, not
