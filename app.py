@@ -914,11 +914,11 @@ if panel_col is not None:
 
         picked_topic = ""
         if subject in SYLLABUS:
-            st.markdown('<div class="side-step">Chapter</div>', unsafe_allow_html=True)
-            chapter = st.selectbox("Chapter", list(SYLLABUS[subject].keys()),
-                                   key="sel_chapter", label_visibility="collapsed")
+            all_topics = []
+            for chapter_topics in SYLLABUS[subject].values():
+                all_topics.extend(chapter_topics)
             st.markdown('<div class="side-step">Topic</div>', unsafe_allow_html=True)
-            picked_topic = st.selectbox("Topic", SYLLABUS[subject][chapter],
+            picked_topic = st.selectbox("Topic", all_topics,
                                         key="sel_topic", label_visibility="collapsed")
         st.session_state["picked_topic"] = picked_topic
 
