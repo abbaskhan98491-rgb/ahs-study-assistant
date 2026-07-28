@@ -395,6 +395,42 @@ div[data-testid="stButton"] button[kind="secondary"]{ }
   div[data-testid="stHorizontalBlock"] > div:first-child{
     padding:14px !important; margin-bottom:14px !important; }
 }
+
+/* ===== COMPACT HOME PAGE (less scrolling before an answer) ===== */
+.block-container{ padding-top:1rem !important; padding-bottom:1.2rem !important; }
+
+/* smaller hero */
+.hero{ padding:16px 22px !important; margin-bottom:12px !important; border-radius:20px !important; }
+.hero-eyebrow{ font-size:.66rem !important; margin-bottom:3px !important; }
+.hero-title{ font-size:1.55rem !important; margin:0 0 5px 0 !important; line-height:1.1 !important; }
+.hero-sub{ font-size:.85rem !important; }
+.hero-chips{ margin-top:10px !important; gap:6px !important; }
+.chip{ padding:4px 11px !important; font-size:.72rem !important; }
+
+/* tighter panel */
+.panel-head{ font-size:.95rem !important; padding-bottom:7px !important; margin-bottom:2px !important; }
+.side-step{ margin:9px 0 4px !important; font-size:.68rem !important; }
+
+/* trim vertical gaps between widgets */
+div[data-testid="stVerticalBlock"]{ gap:.45rem !important; }
+div[data-testid="stElementContainer"]{ margin-bottom:0 !important; }
+.stButton{ margin-bottom:2px !important; }
+
+/* smaller toggle button + cards */
+div[data-testid="stButton"] button{ padding:.5rem 1.2rem !important; }
+.card{ padding:16px 20px !important; margin-bottom:12px !important; }
+.card-title{ font-size:1rem !important; }
+.card-sub{ margin-bottom:0 !important; }
+
+/* footer closer, smaller */
+.foot{ margin-top:16px !important; padding:16px 22px !important; }
+
+@media (max-width: 640px){
+  .hero{ padding:14px 16px !important; }
+  .hero-title{ font-size:1.3rem !important; }
+  .hero-sub{ font-size:.8rem !important; }
+  .block-container{ padding-top:.6rem !important; }
+}
 </style>
 """
 
