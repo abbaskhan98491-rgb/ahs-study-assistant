@@ -433,15 +433,13 @@ div[data-testid="stButton"] button{ padding:.5rem 1.2rem !important; }
 }
 
 
-/* ===== small Mode buttons (the two right after #mode-anchor) ===== */
-#mode-anchor ~ div [data-testid="stButton"] button,
-div:has(> #mode-anchor) ~ div button,
-div:has(#mode-anchor) button{
-  padding:.4rem 1rem !important;
-  font-size:.82rem !important;
-  min-height:0 !important;
-  width:auto !important;
-  display:inline-flex !important;
+
+/* ===== the two action buttons (Topic Study / Generate MCQs) match ===== */
+.st-key-btn_study button, .st-key-btn_mcq button{
+  width:100% !important;
+  min-height:48px !important;
+  font-size:.9rem !important;
+  padding:.55rem 1rem !important;
 }
 </style>
 """
@@ -972,15 +970,7 @@ if panel_col is not None:
         source_type = st.radio("Source", source_options, key="sel_source",
                                label_visibility="collapsed")
 
-        picked_topic = ""
-        if subject in SYLLABUS:
-            all_topics = []
-            for chapter_topics in SYLLABUS[subject].values():
-                all_topics.extend(chapter_topics)
-            st.markdown('<div class="side-step">Topic</div>', unsafe_allow_html=True)
-            picked_topic = st.selectbox("Topic", all_topics,
-                                        key="sel_topic", label_visibility="collapsed")
-        st.session_state["picked_topic"] = picked_topic
+        st.session_state["picked_topic"] = ""
 
         dark_on = st.toggle("Dark mode", value=st.session_state.get("dark", False),
                             key="dark_toggle")
