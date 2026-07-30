@@ -739,15 +739,34 @@ ANSWER:"""
     answer, provider = call_llm(prompt, groq_client, max_tokens=2000, temperature=0.25)
     st.session_state["last_provider"] = provider
 
-    # Diagrams: only from the TOP few most-relevant chunks (retrieval returns them
-    # in order of relevance). Using all chunks pulled in far-away, unrelated pages.
-    TOP_DIAGRAM_CHUNKS = 4
-    diagram_pages, seen = [], set()
+    # Diagrams: take pages only from the very top chunks, and drop any page that
+    # sits far away from the main answer pages (those are almost always unrelated,
+    # e.g. cover, acknowledgments, a chapter hundreds of pages off).
+    TOP_DIAGRAM_CHUNKS = 5
+    candidate_pages = []
     for m in metas[:TOP_DIAGRAM_CHUNKS]:
         is_slide = "slide" in str(m.get("book", "")).lower()
-        if (m.get("has_diagram") or is_slide) and (m["book"], m["page"]) not in seen:
-            diagram_pages.append((m["book"], m["page"]))
-            seen.add((m["book"], m["page"]))
+        if m.get("has_diagram") or is_slide:
+            candidate_pages.append((m["book"], m["page"]))
+
+    diagram_pages = []
+    if candidate_pages:
+        # The main answer page = the page of the single most relevant chunk.
+        anchor_page = metas[0]["page"]
+        seen = set()
+        for bk, pg in candidate_pages:
+            # keep only pages within ~40 pages of the top hit (same section)
+            if abs(pg - anchor_page) <= 40 and (bk, pg) not in seen:
+                diagram_pages.append((bk, pg))
+                seen.add((bk, pg))
+        # if the filter removed everything, fall back to the 2 closest candidates
+        if not diagram_pages:
+            for bk, pg in candidate_pages[:2]:
+                if (bk, pg) not in seen:
+                    diagram_pages.append((bk, pg))
+                    seen.add((bk, pg))
+
+    diagram_pages = diagram_pages[:3]
     return answer, diagram_pages
 
 
