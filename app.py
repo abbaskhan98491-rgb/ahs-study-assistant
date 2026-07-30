@@ -434,12 +434,18 @@ div[data-testid="stButton"] button{ padding:.5rem 1.2rem !important; }
 
 
 
-/* ===== the two action buttons (Topic Study / Generate MCQs) match ===== */
-.st-key-btn_study button, .st-key-btn_mcq button{
-  width:100% !important;
-  min-height:48px !important;
-  font-size:.9rem !important;
-  padding:.55rem 1rem !important;
+
+/* ===== action buttons: equal height, full width in their column ===== */
+.stButton > button{
+  min-height:46px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+/* columns hold their buttons flush to the top so both align */
+div[data-testid="stHorizontalBlock"] div[data-testid="column"]{
+  display:flex !important;
+  align-items:flex-start !important;
 }
 </style>
 """
@@ -998,7 +1004,7 @@ with main_col:
                           value=default_q,
                           placeholder="e.g. Types of amino acids")
 
-    b1, b2 = st.columns(2)
+    b1, b2 = st.columns(2, gap="medium")
     with b1:
         study_clicked = st.button("Topic Study", key="btn_study",
                                   use_container_width=True)
