@@ -713,37 +713,37 @@ def answer_question(question, selected_book, model, collection, groq_client):
     prompt = f"""You are a medical study tutor. Answer the student's question using
 ONLY the context provided below from their textbooks.
 
-MOST IMPORTANT RULE — ANSWER EXACTLY WHAT IS ASKED:
-- Read the question carefully and answer that SPECIFIC aspect only.
-- "Types of X" / "classification of X" -> list and explain the TYPES. Do NOT give
-  a definition or introduction unless the student asked for it.
-- "Function of X" -> explain the functions.
-- "Define X" / "What is X" -> give the definition and a short explanation.
-- "Steps of X" / "mechanism of X" -> give the ordered steps.
-- "Difference between X and Y" -> compare them point by point.
-Do not pad the answer with unrelated sections. Match the answer to the question.
+ANSWER WHAT IS ASKED:
+- If the question names a topic (e.g. "mandible", "receptor", "glycolysis"),
+  give a clear, useful answer about that topic from the context: what it is,
+  and its key points (structure, types, functions, or relations as available).
+- If the question asks a specific aspect, answer THAT aspect:
+  "Types of X" -> list the types. "Function of X" -> the functions.
+  "Define X" -> the definition. "Steps of X" -> the ordered steps.
+  "Difference between X and Y" -> compare point by point.
+- Do NOT refuse a short or one-word topic by calling it "too broad".
+  A single topic name is a valid question — just explain that topic.
+- Only say the answer is missing if the topic genuinely is not in the context.
 
-OTHER RULES:
-- Write a clear, well-structured answer, like an exam answer.
-- Use headings and bullet points where helpful.
+STYLE:
+- Clear and well-structured, like an exam answer. Headings/bullets where helpful.
 - Cite the book name and page number for the main points.
-- If the exact thing asked is not in the context, say so plainly instead of
-  answering a different question. Do NOT invent facts.
+- Do NOT invent facts that are not in the context.
 
 CONTEXT:
 {context}
 
 QUESTION: {question}
 
-ANSWER (answer the specific thing asked):"""
-    answer, provider = call_llm(prompt, groq_client, max_tokens=2000, temperature=0.2)
+ANSWER:"""
+    answer, provider = call_llm(prompt, groq_client, max_tokens=2000, temperature=0.25)
     st.session_state["last_provider"] = provider
 
-    # Slides are visual by nature: PowerPoint diagrams are vector drawings, not
-    # embedded images, so has_diagram is False for them. For slide files we show
-    # every source page instead.
+    # Diagrams: only from the TOP few most-relevant chunks (retrieval returns them
+    # in order of relevance). Using all chunks pulled in far-away, unrelated pages.
+    TOP_DIAGRAM_CHUNKS = 4
     diagram_pages, seen = [], set()
-    for m in metas:
+    for m in metas[:TOP_DIAGRAM_CHUNKS]:
         is_slide = "slide" in str(m.get("book", "")).lower()
         if (m.get("has_diagram") or is_slide) and (m["book"], m["page"]) not in seen:
             diagram_pages.append((m["book"], m["page"]))
@@ -1037,7 +1037,7 @@ with main_col:
                 st.caption(f"Answered using: {prov}")
             if diagram_pages:
                 st.markdown("#### Diagrams from your source")
-                for bk, pg in diagram_pages[:8]:
+                for bk, pg in diagram_pages[:4]:
                     try:
                         st.image(render_page(bk, pg), caption=f"{bk} — page {pg}",
                                  use_container_width=True)
