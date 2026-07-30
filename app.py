@@ -382,8 +382,8 @@ div[data-testid="stExpander"] summary::after{
   padding-bottom:10px; margin-bottom:4px;
   border-bottom:1px solid var(--line);
 }
-/* give the left column a card feel */
-div[data-testid="stHorizontalBlock"] > div:first-child{
+/* card feel ONLY for the panel column (the one holding .panel-head) */
+div[data-testid="column"]:has(.panel-head){
   background:#fff; border:1px solid var(--line); border-radius:18px;
   padding:18px 18px 14px; box-shadow:var(--shadow);
   align-self:flex-start;
@@ -392,7 +392,7 @@ div[data-testid="stHorizontalBlock"] > div:first-child{
 div[data-testid="stButton"] button[kind="secondary"]{ }
 
 @media (max-width: 640px){
-  div[data-testid="stHorizontalBlock"] > div:first-child{
+  div[data-testid="column"]:has(.panel-head){
     padding:14px !important; margin-bottom:14px !important; }
 }
 
@@ -441,11 +441,6 @@ div[data-testid="stButton"] button{ padding:.5rem 1.2rem !important; }
   display:flex !important;
   align-items:center !important;
   justify-content:center !important;
-}
-/* columns hold their buttons flush to the top so both align */
-div[data-testid="stHorizontalBlock"] div[data-testid="column"]{
-  display:flex !important;
-  align-items:flex-start !important;
 }
 </style>
 """
@@ -538,7 +533,7 @@ div[data-testid="stAlert"]{ background:#2a1830 !important;
   border:1px solid #4a2f4c !important; color:#f0e4ee !important; }
 
 .panel-head{ color:#ffd6ea !important; border-bottom-color:#3d2740 !important; }
-div[data-testid="stHorizontalBlock"] > div:first-child{
+div[data-testid="column"]:has(.panel-head){
   background:#221527 !important; border-color:#3d2740 !important; }
 
 /* expander in dark mode */
