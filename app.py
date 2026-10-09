@@ -58,6 +58,17 @@ MY_KEYS = [
 ]
 # ------------------------------------------------------------------------
 
+def _looks_real(v):
+    """True only for a real key. Placeholder text is all CAPS and dashes,
+    while every real API key contains lowercase letters."""
+    v = (v or "").strip()
+    if len(v) < 12:
+        return False
+    if not any(c.islower() for c in v):   # "DOOSRI-GROQ-KEY" -> thrown away
+        return False
+    return True
+
+
 def _collect_groq_keys():
     """Gather every Groq key available, in the order we should try them."""
     found = []
@@ -82,21 +93,38 @@ def _collect_groq_keys():
         v = (v or "").strip()
         if v and v != "PASTE-YOUR-KEY-HERE":
             found.append(v)
-    # drop blanks and duplicates, keep the order
-    return list(dict.fromkeys([k for k in found if k]))
+    # drop blanks, placeholders and duplicates, keep the order
+    return list(dict.fromkeys([k for k in found if _looks_real(k)]))
 
 
 GROQ_KEYS = _collect_groq_keys()
 GROQ_API_KEY = GROQ_KEYS[0] if GROQ_KEYS else ""
 
-# Backup provider: used automatically when Groq is rate-limited or fails.
-GEMINI_API_KEY = ""
-try:
-    GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
-except Exception:
-    GEMINI_API_KEY = ""
-if not GEMINI_API_KEY:
-    GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+# ---- OTHER PROVIDERS (used automatically when Groq is busy) ----
+# Put these in .streamlit/secrets.toml, or paste between the quotes below.
+MY_CEREBRAS_KEY = ""
+MY_GEMINI_KEY = ""
+
+
+def _one_key(secret_name, typed_value):
+    """Look for a key in Streamlit secrets, then the environment, then here.
+    Placeholder text is ignored, so a half-filled file costs no time."""
+    try:
+        v = st.secrets[secret_name]
+        if _looks_real(v):
+            return str(v).strip()
+    except Exception:
+        pass
+    v = os.environ.get(secret_name, "")
+    if _looks_real(v):
+        return v.strip()
+    return typed_value.strip() if _looks_real(typed_value) else ""
+
+
+CEREBRAS_API_KEY = _one_key("CEREBRAS_API_KEY", MY_CEREBRAS_KEY)
+GEMINI_API_KEY = _one_key("GEMINI_API_KEY", MY_GEMINI_KEY)
+
+CEREBRAS_MODELS = ["llama-3.3-70b", "llama3.1-8b"]
 
 
 
@@ -625,6 +653,35 @@ def _gemini_available_models(api_key):
     return sorted(models, key=rank)
 
 
+def _call_cerebras(prompt, max_tokens, temperature):
+    """Second provider. Plain REST, so no extra package is needed."""
+    import requests
+    if not CEREBRAS_API_KEY:
+        raise RuntimeError("no cerebras key")
+
+    last = ""
+    for model_name in CEREBRAS_MODELS:
+        try:
+            r = requests.post(
+                "https://api.cerebras.ai/v1/chat/completions",
+                headers={"Authorization": f"Bearer {CEREBRAS_API_KEY}",
+                         "Content-Type": "application/json"},
+                json={"model": model_name,
+                      "messages": [{"role": "user", "content": prompt}],
+                      "temperature": temperature,
+                      "max_tokens": max_tokens},
+                timeout=90,
+            )
+            if r.status_code == 200:
+                return r.json()["choices"][0]["message"]["content"]
+            last = f"{model_name}: {r.status_code} {r.text[:160]}"
+            if r.status_code in (429, 503):
+                continue          # busy right now, try the other model
+        except Exception as e:
+            last = f"{model_name}: {e}"
+    raise RuntimeError(f"cerebras failed: {last}")
+
+
 def _call_gemini(prompt, max_tokens, temperature):
     """Backup provider. Uses the plain REST API so no extra SDK is needed."""
     import requests
@@ -662,7 +719,7 @@ def _call_gemini(prompt, max_tokens, temperature):
 
 
 def call_llm(prompt, groq_client, max_tokens=2000, temperature=0.3, model=None):
-    """Try each Groq key in turn. If all fail or hit the limit, use Gemini.
+    """Try every Groq key, then Cerebras, then Gemini. First one that works wins.
 
     Returns (text, provider_name). Raises only if every provider fails.
     """
@@ -684,7 +741,14 @@ def call_llm(prompt, groq_client, max_tokens=2000, temperature=0.3, model=None):
             errors.append(f"Groq key {i}: {e}")
             continue
 
-    # --- provider 2: Gemini ---
+    # --- provider 2: Cerebras ---
+    try:
+        text = _call_cerebras(prompt, max_tokens, temperature)
+        return text, "Cerebras"
+    except Exception as e:
+        errors.append(f"Cerebras: {e}")
+
+    # --- provider 3: Gemini ---
     try:
         text = _call_gemini(prompt, max_tokens, temperature)
         return text, "Gemini"
