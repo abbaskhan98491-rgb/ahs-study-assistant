@@ -791,18 +791,23 @@ def retrieve(question, selected_book, model, collection, k):
 
 
 # ---------------- MODE 1: Q&A ----------------
-def answer_question(question, selected_book, model, collection, groq_client):
+def answer_question(question, subject, selected_book, model, collection, groq_client):
     # Pull more chunks so the specific aspect asked (types, functions, steps,
     # classification, etc.) is more likely to be in the retrieved text.
     chunks, metas = retrieve(question, selected_book, model, collection, TOP_K + 6)
     if not chunks:
-        return "No matching text found in that book. Try 'Both'.", []
+        return ("Nothing on that was found in this source. Try the other "
+                "source (Book / Slides) in the Study Panel, or word the "
+                "topic the way the book words it."), []
 
     context = "\n\n---\n\n".join(
         f"[{m['book']}, page {m['page']}]\n{c}" for c, m in zip(chunks, metas)
     )
-    prompt = f"""You are a medical study tutor. Answer the student's question using
-ONLY the context provided below from their textbooks.
+    tutor = "an English language tutor" if subject == "English" else "a medical study tutor"
+    prompt = f"""You are {tutor} teaching {subject} to a BS Paramedics student.
+Answer the student's question using ONLY the {subject} context below, which
+comes from "{selected_book}". Do not use any other subject, and do not use
+your own knowledge.
 
 ANSWER WHAT IS ASKED:
 - If the question names a topic (e.g. "mandible", "receptor", "glycolysis"),
@@ -821,7 +826,7 @@ STYLE:
 - Cite the book name and page number for the main points.
 - Do NOT invent facts that are not in the context.
 
-CONTEXT:
+{subject} CONTEXT (from {selected_book}):
 {context}
 
 QUESTION: {question}
@@ -862,23 +867,11 @@ ANSWER:"""
 
 
 # ---------------- MODE 2: MCQ generation ----------------
-def generate_mcq_batch(topic, context, n, avoid_questions, groq_client):
-    avoid_txt = ""
-    if avoid_questions:
-        joined = "\n".join(f"- {q}" for q in avoid_questions[-40:])
-        avoid_txt = ("\nALREADY USED — do not repeat these, and do not ask the same "
-                     "fact in different words:\n" + joined + "\n")
+# ---------------- MCQ STYLE RULES (from the real KMU past papers) ----------------
+# The student picks a subject in the app. Only that subject's rules are put in
+# the prompt, so an English paper never sees the Biochemistry rules.
 
-    prompt = f"""You are writing a Khyber Medical University MCQ paper for
-BS Paramedics, 2nd Semester. Using ONLY the textbook context below, write
-{n} multiple-choice questions on the topic: "{topic}".
-
-First decide the subject from the context, then follow that subject's
-rules below. A science source gets science questions. An English or
-literature source gets language questions, never medical ones.
-
-PART 1 - RULES FOR EVERY SUBJECT
-- Stems are SHORT, usually 8 to 20 words.
+MCQ_RULES_GENERAL = """- Stems are SHORT, usually 8 to 20 words.
 - There are NO patient stories and no case histories anywhere. Never
   write "A 55-year-old man presents with..." The real papers have none.
 - Most stems are an unfinished sentence that the options complete.
@@ -907,10 +900,9 @@ NO REPEATS - this matters most:
   question has used. Walk through the context and cover different parts of it.
 - Do NOT put a combining option ("All of the above", "Both A and B",
   "None of these") in a NEGATIVE or EXCEPT question - it makes the logic
-  break. Use combining options only in ordinary questions.
+  break. Use combining options only in ordinary questions."""
 
-PART 2 - IF THE SUBJECT IS ANATOMY OR PHYSIOLOGY
-1. Blank at the end:
+MCQ_RULES_SCIENCE = """1. Blank at the end:
    "Filum terminale is attached to which segment of spinal cord,"
    "The name thenar eminence is given to short muscles of the,"
 2. Blank in the middle:
@@ -926,10 +918,9 @@ PART 2 - IF THE SUBJECT IS ANATOMY OR PHYSIOLOGY
 5. Statement style, where the four options are short sentences:
    "Regarding the femoral artery:"   "The sciatic nerve:"
 6. Negative, as described in Part 1.
-Options are structures: nerves, muscles, bones, arteries, veins, spaces.
+Options are structures: nerves, muscles, bones, arteries, veins, spaces."""
 
-PART 3 - IF THE SUBJECT IS BIOCHEMISTRY
-1. Name the enzyme, product, site or coenzyme:
+MCQ_RULES_BIOCHEM = """1. Name the enzyme, product, site or coenzyme:
    "The synthesis of urea occurs in"
    "Uric acid is end product of"
    "The precursor for glycogen synthesis is"
@@ -949,10 +940,9 @@ PART 3 - IF THE SUBJECT IS BIOCHEMISTRY
    "An enzyme marker of acute pancreatitis is"
    "Which of the following enzymes is not used in the diagnosis of
     myocardial infarction?"
-6. Negative, as described in Part 1.
+6. Negative, as described in Part 1."""
 
-PART 4 - IF THE SUBJECT IS ENGLISH
-Write LANGUAGE questions only. No medicine, no biology, no anatomy.
+MCQ_RULES_ENGLISH = """Write LANGUAGE questions only. No medicine, no biology, no anatomy.
 1. Grammar transformation, where the options are four full sentences:
    "I respect my teacher."
    "Rustam said, 'I want peace'."
@@ -979,16 +969,57 @@ Write LANGUAGE questions only. No medicine, no biology, no anatomy.
 7. Essay, listening and presentation:
    "In which type of essay the writer describes a place, an object and an event"
    "The important component of hearing is ....?"
-8. Negative, as described in Part 1.
+8. Negative, as described in Part 1."""
 
-RULES FOR THE OUTPUT:
+MCQ_RULES_OUTPUT = """RULES FOR THE OUTPUT:
 - Exactly 4 options each. Exactly ONE is correct.
 - Wrong options must be plausible, not obviously silly.
 - Base every question AND the correct answer ONLY on the context given.
   Do not use outside knowledge. Do not invent facts.
 - Every question must test a DIFFERENT fact or idea. No two questions may
   ask about the same fact, even in different words.
-- Add a short explanation and the page number for the correct answer.
+- Add a short explanation and the page number for the correct answer."""
+
+MCQ_RULES_BY_SUBJECT = {
+    "Anatomy": MCQ_RULES_SCIENCE,
+    "Physiology": MCQ_RULES_SCIENCE,
+    "Biochemistry": MCQ_RULES_BIOCHEM,
+    "English": MCQ_RULES_ENGLISH,
+}
+
+
+def generate_mcq_batch(topic, subject, book_name, context, n, avoid_questions, groq_client):
+    avoid_txt = ""
+    if avoid_questions:
+        joined = "\n".join(f"- {q}" for q in avoid_questions[-40:])
+        avoid_txt = ("\nALREADY USED — do not repeat these, and do not ask the same "
+                     "fact in different words:\n" + joined + "\n")
+
+    subject_rules = MCQ_RULES_BY_SUBJECT.get(subject, "")
+    subject_part = ""
+    if subject_rules:
+        subject_part = (f"\nPART 2 - HOW {subject.upper()} QUESTIONS ARE WRITTEN\n"
+                        + subject_rules + "\n")
+
+    prompt = f"""You are writing a Khyber Medical University MCQ paper for
+BS Paramedics, 2nd Semester.
+
+THE SUBJECT IS: {subject}
+THE ONLY SOURCE IS: {book_name}
+
+Write {n} multiple-choice questions on the topic: "{topic}".
+
+Every question, every option, and every correct answer must come from the
+{subject} text printed at the bottom of this message. Do not use your own
+knowledge. Do not bring in any other subject. If the text does not cover
+something, do not ask about it.
+
+PART 1 - RULES FOR EVERY SUBJECT
+{MCQ_RULES_GENERAL}
+{subject_part}
+{MCQ_RULES_OUTPUT}
+- The page reference must name "{book_name}" and a page number taken from
+  the context headings, never a page you guessed.
 {avoid_txt}
 Return ONLY valid JSON, no other text. Use this exact format:
 [
@@ -997,11 +1028,11 @@ Return ONLY valid JSON, no other text. Use this exact format:
     "options": ["A ...", "B ...", "C ...", "D ..."],
     "answer_index": 0,
     "explanation": "....",
-    "page": "book name, page X"
+    "page": "{book_name}, page X"
   }}
 ]
 
-CONTEXT:
+{subject} CONTEXT:
 {context}
 
 JSON:"""
@@ -1067,7 +1098,7 @@ JSON:"""
     return []
 
 
-def generate_all_mcqs(topic, selected_book, model, collection, groq_client, progress):
+def generate_all_mcqs(topic, subject, selected_book, model, collection, groq_client, progress):
     chunks, metas = retrieve(topic, selected_book, model, collection, MCQ_CONTEXT_K)
     if not chunks:
         return []
@@ -1156,7 +1187,8 @@ def generate_all_mcqs(topic, selected_book, model, collection, groq_client, prog
 
         need = min(MCQ_BATCH, MCQ_TOTAL - len(all_mcqs))
         # ask for extras, since repeats get thrown away
-        batch = generate_mcq_batch(topic, context, need + 4, avoid, groq_client)
+        batch = generate_mcq_batch(topic, subject, selected_book, context,
+                                   need + 4, avoid, groq_client)
 
         added = 0
         for q in batch:
@@ -1294,7 +1326,7 @@ with main_col:
         with st.spinner("Reading your books..."):
             try:
                 answer, diagram_pages = answer_question(
-                    query, book_choice, model, collection, groq_client)
+                    query, subject, book_choice, model, collection, groq_client)
             except Exception as e:
                 answer, diagram_pages = None, []
                 st.session_state['answer_error'] = str(e)
@@ -1331,7 +1363,8 @@ with main_col:
         topic = query
         progress = st.progress(0.0, text="Starting...")
         try:
-            mcqs = generate_all_mcqs(topic, book_choice, model, collection, groq_client, progress)
+            mcqs = generate_all_mcqs(topic, subject, book_choice, model,
+                                         collection, groq_client, progress)
         except Exception as e:
             st.error(f"Problem generating MCQs: {e}")
             mcqs = []
