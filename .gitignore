@@ -4,4 +4,8 @@ __pycache__/
 .claude/
 *.pyc
 package-lock.json
-.streamlit/secrets.toml
+.streamlit/
+secrets.toml
+app_BACKUP_*.py
+.env
+.env.local

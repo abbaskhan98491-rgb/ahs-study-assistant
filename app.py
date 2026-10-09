@@ -41,24 +41,53 @@ DB_DIR = "rag_db"
 COLLECTION_NAME = "semester_books"
 EMBED_MODEL = "all-MiniLM-L6-v2"
 TOP_K = 6
-MCQ_CONTEXT_K = 10          # more chunks for making questions
-MCQ_TOTAL = 30              # how many questions to make
+MCQ_CONTEXT_K = 20          # more chunks for making questions
+MCQ_TOTAL = 70              # real KMU paper is 70 questions
 MCQ_BATCH = 10               # generate this many per API call
 GROQ_MODEL = "llama-3.3-70b-versatile"      # detailed answers
 GROQ_MCQ_MODEL = "llama-3.1-8b-instant"     # MCQs: faster, much bigger free quota
 ZOOM = 2.2
 
-# ---- PASTE YOUR KEY BELOW (keep the quotes) ----
-MY_KEY = "PASTE-YOUR-KEY-HERE"
-# ------------------------------------------------
+# ---- PASTE YOUR GROQ KEYS BELOW (keep the quotes, comma after each) ----
+# You can put 1, 2, 3 or more. The app uses the first one; if it hits the
+# free limit, it moves to the next one by itself. Leave the extras as "".
+MY_KEYS = [
+    "PASTE-YOUR-KEY-HERE",
+    "",
+    "",
+]
+# ------------------------------------------------------------------------
 
-GROQ_API_KEY = ""
-try:
-    GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
-except Exception:
-    GROQ_API_KEY = ""
-if not GROQ_API_KEY:
-    GROQ_API_KEY = os.environ.get("GROQ_API_KEY", MY_KEY)
+def _collect_groq_keys():
+    """Gather every Groq key available, in the order we should try them."""
+    found = []
+    # 1. Streamlit Cloud secrets (GROQ_API_KEY, GROQ_API_KEY_2, GROQ_API_KEY_3 ...)
+    try:
+        for name in ["GROQ_API_KEY", "GROQ_API_KEY_2", "GROQ_API_KEY_3",
+                     "GROQ_API_KEY_4", "GROQ_API_KEY_5"]:
+            try:
+                v = st.secrets[name]
+            except Exception:
+                v = ""
+            if v:
+                found.append(str(v).strip())
+    except Exception:
+        pass
+    # 2. Environment variable
+    v = os.environ.get("GROQ_API_KEY", "")
+    if v:
+        found.append(v.strip())
+    # 3. The list typed above
+    for v in MY_KEYS:
+        v = (v or "").strip()
+        if v and v != "PASTE-YOUR-KEY-HERE":
+            found.append(v)
+    # drop blanks and duplicates, keep the order
+    return list(dict.fromkeys([k for k in found if k]))
+
+
+GROQ_KEYS = _collect_groq_keys()
+GROQ_API_KEY = GROQ_KEYS[0] if GROQ_KEYS else ""
 
 # Backup provider: used automatically when Groq is rate-limited or fails.
 GEMINI_API_KEY = ""
@@ -633,23 +662,27 @@ def _call_gemini(prompt, max_tokens, temperature):
 
 
 def call_llm(prompt, groq_client, max_tokens=2000, temperature=0.3, model=None):
-    """Try Groq first (fastest). If it is rate-limited or fails, use Gemini.
+    """Try each Groq key in turn. If all fail or hit the limit, use Gemini.
 
     Returns (text, provider_name). Raises only if every provider fails.
     """
     errors = []
 
-    # --- provider 1: Groq ---
-    try:
-        resp = groq_client.chat.completions.create(
-            model=model or GROQ_MODEL,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=temperature,
-            max_tokens=max_tokens,
-        )
-        return resp.choices[0].message.content, "Groq"
-    except Exception as e:
-        errors.append(f"Groq: {e}")
+    # --- provider 1: Groq, trying every key we have in turn ---
+    for i, key in enumerate(GROQ_KEYS, start=1):
+        try:
+            client = Groq(api_key=key)
+            resp = client.chat.completions.create(
+                model=model or GROQ_MODEL,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+            label = "Groq" if len(GROQ_KEYS) == 1 else f"Groq (key {i})"
+            return resp.choices[0].message.content, label
+        except Exception as e:
+            errors.append(f"Groq key {i}: {e}")
+            continue
 
     # --- provider 2: Gemini ---
     try:
@@ -778,24 +811,114 @@ def generate_mcq_batch(topic, context, n, avoid_questions, groq_client):
         avoid_txt = ("\nALREADY USED — do not repeat these, and do not ask the same "
                      "fact in different words:\n" + joined + "\n")
 
-    prompt = f"""You are a medical exam question writer. Using ONLY the textbook
-context below, write {n} multiple-choice questions (MCQs) on the topic: "{topic}".
+    prompt = f"""You are writing a Khyber Medical University MCQ paper for
+BS Paramedics, 2nd Semester. Using ONLY the textbook context below, write
+{n} multiple-choice questions on the topic: "{topic}".
 
-VARIETY: do NOT start every question with "What is". Mix these styles:
-clinical scenario ("A patient has X. Which structure is affected?"),
-cause-and-effect ("If X is blocked, what happens?"),
-negative ("Which is NOT a function of X?"),
-comparison ("Which correctly differentiates A from B?"),
-sequence ("Which step comes immediately after X?"),
-and plain recall (at most a quarter of the questions).
+First decide the subject from the context, then follow that subject's
+rules below. A science source gets science questions. An English or
+literature source gets language questions, never medical ones.
 
-RULES:
+PART 1 - RULES FOR EVERY SUBJECT
+- Stems are SHORT, usually 8 to 20 words.
+- There are NO patient stories and no case histories anywhere. Never
+  write "A 55-year-old man presents with..." The real papers have none.
+- Most stems are an unfinished sentence that the options complete.
+- Options are SHORT, usually one to five words.
+- All four options must be the same kind of thing: all enzymes, or all
+  bones, or all tenses, or all numbers. Never mix kinds.
+- In about one question out of three, make the last option a combining
+  one: "All of the above", "All of these", "Both A and B", or
+  "None of the above". Sometimes it is correct, sometimes it is not.
+- For number questions keep all four values close together, for example
+  6, 7, 8, 10 - never 2, 8, 50, 900.
+- About one question in six must be NEGATIVE. Use the real wordings:
+  "All of the following are ... Except?"
+  "Which of the following is NOT ..."
+  "... comprises of all EXCEPT:"
+  "Which of the following, regarding X, is INCORRECT?"
+- Never repeat the same option twice in one question.
+- Spread the correct answer evenly across A, B, C and D.
+
+PART 2 - IF THE SUBJECT IS ANATOMY OR PHYSIOLOGY
+1. Blank at the end:
+   "Filum terminale is attached to which segment of spinal cord,"
+   "The name thenar eminence is given to short muscles of the,"
+2. Blank in the middle:
+   "The ......... is triangular and occupies the central area of the palm."
+   "The ......... gland is the largest salivary gland?"
+3. Describe first, then name it:
+   "The largest bone of the foot and forms the prominence of the heel is,"
+   "A strong membrane that unites the shafts of the radius and the ulna is"
+4. Supply, origin, insertion, relation:
+   "What is the nerve of the anterior compartment of the thigh?"
+   "Pectoralis minor originates from"
+   "Which nerve supplies the heart?"
+5. Statement style, where the four options are short sentences:
+   "Regarding the femoral artery:"   "The sciatic nerve:"
+6. Negative, as described in Part 1.
+Options are structures: nerves, muscles, bones, arteries, veins, spaces.
+
+PART 3 - IF THE SUBJECT IS BIOCHEMISTRY
+1. Name the enzyme, product, site or coenzyme:
+   "The synthesis of urea occurs in"
+   "Uric acid is end product of"
+   "The precursor for glycogen synthesis is"
+2. Count or value - very common in the real paper:
+   "A fatty acid with 14 carbons will undergo how many cycles of beta oxidation"
+   "The first step of urea cycle consumes how many ATP"
+   "One FADH2 is equal to"
+3. Inhibition and regulation:
+   "Phosphofructokinase is"
+   "Carnitine acyltransferase I is inhibited by"
+4. Name the disease or defect, then ask its cause. Do NOT describe the
+   symptoms of an unnamed patient:
+   "Albinism is caused by the deficiency of"
+   "McArdle disease is a condition in which:"
+   "An important etiological factor in kwashiorkor is"
+5. Clinical enzymology and markers:
+   "An enzyme marker of acute pancreatitis is"
+   "Which of the following enzymes is not used in the diagnosis of
+    myocardial infarction?"
+6. Negative, as described in Part 1.
+
+PART 4 - IF THE SUBJECT IS ENGLISH
+Write LANGUAGE questions only. No medicine, no biology, no anatomy.
+1. Grammar transformation, where the options are four full sentences:
+   "I respect my teacher."
+   "Rustam said, 'I want peace'."
+   "He did not drive a car. The affirmative sentence of this is"
+2. Direct and indirect narration:
+   "I said to him, 'who are you'?"
+   "The boy said to the girl, 'I can hear you'. The indirect narration is"
+3. Identify the phrase or clause in quoted words:
+   "The students look 'at the beautiful baby'. The quoted words are"
+   Options: Adjective phrase, Noun clause, Adjective clause,
+   Prepositional phrase.
+4. Report, letter and memo terminology:
+   "Appendix is placed at the ......... of report."
+   "A memo should be ended on the note of ........."
+   "Letter that is sent to family, friend and relative is called ........."
+   "In full block letter everything must be to the extreme ......... of page."
+5. Counting:
+   "In report writing there are ......... parts."
+   "There are ......... kinds of clauses?"
+   "Writing styles can be divided into ......... different kinds."
+6. Word meaning and word form:
+   "The noun of poor is ........."
+   "Comprehension means ........."
+7. Essay, listening and presentation:
+   "In which type of essay the writer describes a place, an object and an event"
+   "The important component of hearing is ....?"
+8. Negative, as described in Part 1.
+
+RULES FOR THE OUTPUT:
 - Exactly 4 options each. Exactly ONE is correct.
 - Wrong options must be plausible, not obviously silly.
 - Base every question AND the correct answer ONLY on the context given.
   Do not use outside knowledge. Do not invent facts.
-- Every question must test a DIFFERENT fact or idea. No two questions may ask
-  about the same fact, even in different words.
+- Every question must test a DIFFERENT fact or idea. No two questions may
+  ask about the same fact, even in different words.
 - Add a short explanation and the page number for the correct answer.
 {avoid_txt}
 Return ONLY valid JSON, no other text. Use this exact format:
@@ -946,8 +1069,9 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-if GROQ_API_KEY == "PASTE-YOUR-KEY-HERE" or not GROQ_API_KEY:
-    st.error("Groq API key missing. Paste it into MY_KEY at the top of app.py.")
+if not GROQ_KEYS:
+    st.error("No Groq API key found. Paste at least one key into MY_KEYS "
+             "near the top of app.py.")
     st.stop()
 
 try:
