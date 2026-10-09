@@ -5,6 +5,7 @@ RUN LOCALLY:  streamlit run app.py
 """
 
 import os
+import re
 import json
 import time
 import streamlit as st
@@ -12,7 +13,6 @@ import fitz
 import chromadb
 from sentence_transformers import SentenceTransformer
 from groq import Groq
-from syllabus import SYLLABUS
 
 # ---------------- SOURCES: subject -> Book / Slides file names ----------------
 # These must match the exact PDF file names in the books/ folder.
@@ -41,8 +41,8 @@ DB_DIR = "rag_db"
 COLLECTION_NAME = "semester_books"
 EMBED_MODEL = "all-MiniLM-L6-v2"
 TOP_K = 6
-MCQ_CONTEXT_K = 20          # more chunks for making questions
-MCQ_TOTAL = 70              # real KMU paper is 70 questions
+MCQ_CONTEXT_K = 45          # wide context, else 40 questions start repeating
+MCQ_TOTAL = 40              # 40 questions per topic
 MCQ_BATCH = 10               # generate this many per API call
 GROQ_MODEL = "llama-3.3-70b-versatile"      # detailed answers
 GROQ_MCQ_MODEL = "llama-3.1-8b-instant"     # MCQs: faster, much bigger free quota
@@ -771,12 +771,6 @@ def load_collection():
 
 
 @st.cache_data
-def get_book_list(_collection):
-    sample = _collection.get(limit=20000, include=["metadatas"])
-    return sorted({m["book"] for m in sample["metadatas"]})
-
-
-@st.cache_data
 def render_page(book, page):
     path = os.path.join(BOOKS_DIR, book)
     doc = fitz.open(path)
@@ -903,6 +897,17 @@ PART 1 - RULES FOR EVERY SUBJECT
   "Which of the following, regarding X, is INCORRECT?"
 - Never repeat the same option twice in one question.
 - Spread the correct answer evenly across A, B, C and D.
+
+NO REPEATS - this matters most:
+- Never ask the same fact twice, not even in different words. "Which enzyme
+  hydrolyses triacylglycerol in adipose tissue" and "The stored fat in adipose
+  tissue is hydrolysed by" are the SAME question and only one may appear.
+- Never let the same correct answer be right more than twice in the whole set.
+- Before writing each question, pick a fact from the context that no earlier
+  question has used. Walk through the context and cover different parts of it.
+- Do NOT put a combining option ("All of the above", "Both A and B",
+  "None of these") in a NEGATIVE or EXCEPT question - it makes the logic
+  break. Use combining options only in ordinary questions.
 
 PART 2 - IF THE SUBJECT IS ANATOMY OR PHYSIOLOGY
 1. Blank at the end:
@@ -1070,27 +1075,98 @@ def generate_all_mcqs(topic, selected_book, model, collection, groq_client, prog
         f"[{m['book']}, page {m['page']}]\n{c}" for c, m in zip(chunks, metas)
     )
 
-    def key_of(q):
-        # crude fingerprint so near-identical questions get filtered out
-        words = "".join(ch.lower() for ch in q if ch.isalnum() or ch == " ").split()
-        stop = {"the", "of", "a", "an", "is", "are", "what", "which", "following",
-                "in", "to", "and", "for", "from", "that", "this", "how", "many"}
-        return " ".join(sorted(w for w in words if w not in stop))[:110]
+    # ---- words we ignore when comparing two questions ----
+    STOP = {"the", "of", "a", "an", "is", "are", "was", "were", "what", "which",
+            "following", "in", "to", "and", "for", "from", "that", "this", "how",
+            "many", "all", "does", "do", "with", "its", "about", "within", "one",
+            "or", "by", "be", "as", "at", "on", "it", "their", "these", "those",
+            "there", "than", "then", "most", "also", "known", "called",
+            "acid", "acids"}
 
-    all_mcqs, avoid, seen_keys = [], [], set()
+    def stem(w):
+        """Cut common endings so 'enzyme' and 'enzymes', 'hydrolysed' and
+        'hydrolyses' count as the same word."""
+        for suf in ("ation", "izes", "ises", "ing", "ied", "ies", "ed", "es", "s"):
+            if len(w) > len(suf) + 3 and w.endswith(suf):
+                return w[:-len(suf)]
+        return w
+
+    def words_of(text):
+        """The meaningful words of a piece of text, for comparing two of them."""
+        return {stem(w) for w in re.findall(r"[a-z0-9]+", str(text).lower())
+                if w not in STOP and len(w) > 2}
+
+    def overlap(a, b):
+        """0 means nothing in common, 1 means exactly the same words."""
+        both = a | b
+        return len(a & b) / len(both) if both else 0.0
+
+    def fingerprint(q):
+        """Three word-sets: the question, all the options, the correct option."""
+        opts = [str(o) for o in (q.get("options") or [])]
+        try:
+            ans = opts[q["answer_index"]]
+        except Exception:
+            ans = ""
+        return (words_of(q.get("question", "")),
+                words_of(" ".join(opts)),
+                words_of(ans))
+
+    def is_repeat(fp, kept, answer_counts, strict):
+        """True if this question asks something we already have.
+
+        Three signs of a repeat, any one is enough:
+          - the wording is nearly the same
+          - the correct answer is the same AND the subject is the same
+          - the wording is close AND the options are mostly the same
+        The strict rules run first. If the book simply has no more material,
+        the loop below loosens them so the student still gets a full paper.
+        """
+        qw, ow, aw = fp
+        if len(qw) < 2:
+            return True                      # empty or broken question
+        for pqw, pow_, paw in kept:
+            qsame = overlap(qw, pqw)
+            if qsame > (0.65 if strict else 0.80):
+                return True
+            if not strict:
+                continue
+            if overlap(aw, paw) > 0.6 and qsame > 0.25:
+                return True
+            if qsame > 0.45 and overlap(ow, pow_) > 0.5:
+                return True
+        if strict and aw and answer_counts.get(" ".join(sorted(aw)), 0) >= 2:
+            return True                      # same answer already right twice
+        return False
+
+    all_mcqs, avoid, kept = [], [], []
+    answer_counts = {}
+    strict = True
     empty_rounds = 0
 
-    while len(all_mcqs) < MCQ_TOTAL and empty_rounds < 3:
+    while len(all_mcqs) < MCQ_TOTAL:
+        if empty_rounds >= 3:
+            if strict:
+                # nothing new is getting through; loosen the filter rather
+                # than hand back fewer questions than asked for
+                strict = False
+                empty_rounds = 0
+            else:
+                break
+
         need = min(MCQ_BATCH, MCQ_TOTAL - len(all_mcqs))
-        # ask for a couple extra, since duplicates get dropped
-        batch = generate_mcq_batch(topic, context, need + 2, avoid, groq_client)
+        # ask for extras, since repeats get thrown away
+        batch = generate_mcq_batch(topic, context, need + 4, avoid, groq_client)
 
         added = 0
         for q in batch:
-            k = key_of(q["question"])
-            if k in seen_keys:
-                continue          # duplicate — skip it
-            seen_keys.add(k)
+            fp = fingerprint(q)
+            if is_repeat(fp, kept, answer_counts, strict):
+                continue
+            kept.append(fp)
+            akey = " ".join(sorted(fp[2]))
+            if akey:
+                answer_counts[akey] = answer_counts.get(akey, 0) + 1
             all_mcqs.append(q)
             avoid.append(q["question"])
             added += 1
@@ -1133,16 +1209,15 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-if not GROQ_KEYS:
-    st.error("No Groq API key found. Paste at least one key into MY_KEYS "
-             "near the top of app.py.")
+if not (GROQ_KEYS or CEREBRAS_API_KEY or GEMINI_API_KEY):
+    st.error("No API key found. Add GROQ_API_KEY, CEREBRAS_API_KEY or "
+             "GEMINI_API_KEY in .streamlit/secrets.toml")
     st.stop()
 
 try:
     model = load_model()
     collection = load_collection()
-    groq_client = Groq(api_key=GROQ_API_KEY)
-    books = get_book_list(collection)
+    groq_client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 except Exception as e:
     st.error(f"Setup problem: {e}")
     st.stop()
@@ -1272,6 +1347,11 @@ with main_col:
             else:
                 st.warning("Could not make questions — this topic may be too thin in the selected source. Try a broader topic, or switch Book/Slides.")
         else:
+            # wipe the previous quiz's picks, else the new questions open
+            # with the old answers already selected and the score is wrong
+            for _old in [k for k in list(st.session_state.keys())
+                         if k.startswith("ans_")]:
+                del st.session_state[_old]
             st.session_state["mcqs"] = mcqs
             st.session_state["submitted"] = False
             st.success(f"{len(mcqs)} questions ready — answer them below.")
