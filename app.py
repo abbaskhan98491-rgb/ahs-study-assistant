@@ -5,14 +5,21 @@ RUN LOCALLY:  streamlit run app.py
 """
 
 import os
+# Keep numerical libraries from reserving many thread stacks on small PCs.
+# Explicit settings supplied by the user still take precedence.
+os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
+os.environ.setdefault("OMP_NUM_THREADS", "2")
 import re
-import json
 import time
+from study_utils import parse_mcqs, compact_context, friendly_error
 import streamlit as st
-import fitz
-import chromadb
-from sentence_transformers import SentenceTransformer
-from groq import Groq
+from ui_theme import LIGHT_CSS as SANRIO_CSS, DARK_CSS
+from quiz_ui import render_mcqs
+from diagram_utils import select_diagram_pages
+from topic_suggestions import get_topic_suggestions
+from mcq_order import balance_mcq_options
+from study_format import classify_study_request, build_study_instructions
+from provider_router import route_completion, load_speed_profile, GROQ_STUDY_MODEL, GROQ_MCQ_MODEL
 
 # ---------------- SOURCES: subject -> Book / Slides file names ----------------
 # These must match the exact PDF file names in the books/ folder.
@@ -36,35 +43,25 @@ SOURCES = {
 
 
 # ---------------- CONFIG ----------------
-BOOKS_DIR = "books" if os.path.isdir("books") else "books_small"
+BOOKS_DIR = "books_optimized" if os.path.isdir("books_optimized") else ("books_small" if os.path.isdir("books_small") else "books")
 DB_DIR = "rag_db"
 COLLECTION_NAME = "semester_books"
 EMBED_MODEL = "all-MiniLM-L6-v2"
 TOP_K = 6
 MCQ_CONTEXT_K = 45          # wide context, else 40 questions start repeating
 MCQ_TOTAL = 40              # 40 questions per topic
-MCQ_BATCH = 10               # generate this many per API call
-GROQ_MODEL = "llama-3.3-70b-versatile"      # detailed answers
-GROQ_MCQ_MODEL = "llama-3.1-8b-instant"     # MCQs: faster, much bigger free quota
-ZOOM = 2.2
+MCQ_BATCH = 16               # generate this many per API call
+GROQ_MODEL = GROQ_STUDY_MODEL
+ZOOM = 1.5
 
-# ---- PASTE YOUR GROQ KEYS BELOW (keep the quotes, comma after each) ----
-# You can put 1, 2, 3 or more. The app uses the first one; if it hits the
-# free limit, it moves to the next one by itself. Leave the extras as "".
-MY_KEYS = [
-    "PASTE-YOUR-KEY-HERE",
-    "",
-    "",
-]
-# ------------------------------------------------------------------------
+# Credentials belong in Streamlit secrets or environment variables.
 
 def _looks_real(v):
-    """True only for a real key. Placeholder text is all CAPS and dashes,
-    while every real API key contains lowercase letters."""
+    """Ignore placeholders without making assumptions about key letter case."""
     v = (v or "").strip()
     if len(v) < 12:
         return False
-    if not any(c.islower() for c in v):   # "DOOSRI-GROQ-KEY" -> thrown away
+    if "PASTE" in v.upper() or "YOUR-KEY" in v.upper():
         return False
     return True
 
@@ -88,11 +85,6 @@ def _collect_groq_keys():
     v = os.environ.get("GROQ_API_KEY", "")
     if v:
         found.append(v.strip())
-    # 3. The list typed above
-    for v in MY_KEYS:
-        v = (v or "").strip()
-        if v and v != "PASTE-YOUR-KEY-HERE":
-            found.append(v)
     # drop blanks, placeholders and duplicates, keep the order
     return list(dict.fromkeys([k for k in found if _looks_real(k)]))
 
@@ -100,14 +92,11 @@ def _collect_groq_keys():
 GROQ_KEYS = _collect_groq_keys()
 GROQ_API_KEY = GROQ_KEYS[0] if GROQ_KEYS else ""
 
-# ---- OTHER PROVIDERS (used automatically when Groq is busy) ----
-# Put these in .streamlit/secrets.toml, or paste between the quotes below.
-MY_CEREBRAS_KEY = ""
-MY_GEMINI_KEY = ""
+# ---- OTHER PROVIDERS (ranked by validated response speed) ----
 
 
-def _one_key(secret_name, typed_value):
-    """Look for a key in Streamlit secrets, then the environment, then here.
+def _one_key(secret_name):
+    """Look for a key in Streamlit secrets, then the environment.
     Placeholder text is ignored, so a half-filled file costs no time."""
     try:
         v = st.secrets[secret_name]
@@ -118,713 +107,126 @@ def _one_key(secret_name, typed_value):
     v = os.environ.get(secret_name, "")
     if _looks_real(v):
         return v.strip()
-    return typed_value.strip() if _looks_real(typed_value) else ""
-
-
-CEREBRAS_API_KEY = _one_key("CEREBRAS_API_KEY", MY_CEREBRAS_KEY)
-GEMINI_API_KEY = _one_key("GEMINI_API_KEY", MY_GEMINI_KEY)
-
-CEREBRAS_MODELS = ["llama-3.3-70b", "llama3.1-8b"]
-
-
-
-# ---------------- THEME ----------------
-SANRIO_CSS = """
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
-
-:root{
-  --pink-900:#9d1b5c; --pink-700:#c9256f; --pink-500:#ff6fae;
-  --pink-300:#ffb3d4; --pink-100:#ffe4f0; --pink-50:#fff5fa;
-  --ink:#3d2436; --muted:#8a6b7c;
-  --card:#ffffff; --line:#f6d9e7;
-  --shadow:0 1px 2px rgba(157,27,92,.04), 0 8px 24px -12px rgba(157,27,92,.18);
-  --shadow-lg:0 2px 4px rgba(157,27,92,.05), 0 20px 40px -20px rgba(157,27,92,.28);
-  --r:18px;
-}
-
-.stApp{ background:
-   radial-gradient(1100px 500px at 12% -8%, #ffe9f4 0%, transparent 60%),
-   radial-gradient(900px 460px at 92% 4%, #eaf1ff 0%, transparent 55%),
-   linear-gradient(180deg,#fffafc 0%, #fdf4f9 100%);
-}
-html,body,p,div,span,label,li,input,textarea{
-  font-family:'Inter',system-ui,sans-serif !important; color:var(--ink);
-  -webkit-font-smoothing:antialiased;
-}
-h1,h2,h3,h4{ font-family:'Plus Jakarta Sans',sans-serif !important;
-  color:var(--pink-900) !important; letter-spacing:-.02em; }
-
-/* hide streamlit chrome */
-#MainMenu,footer,header[data-testid="stHeader"]{visibility:hidden; height:0;}
-.block-container{ padding-top:1.6rem; padding-bottom:3rem; max-width:1080px; }
-
-/* ---------- HEADER ---------- */
-.hero{
-  background:linear-gradient(135deg,#ffffff 0%,#fff6fb 100%);
-  border:1px solid var(--line); border-radius:26px;
-  padding:26px 30px; margin-bottom:22px; box-shadow:var(--shadow-lg);
-  position:relative; overflow:hidden;
-}
-.hero:before{content:"";position:absolute;inset:0 0 auto 0;height:4px;
-  background:linear-gradient(90deg,var(--pink-500),#b98bff,#7fb5ff);}
-.hero-eyebrow{ font-size:.72rem; font-weight:700; letter-spacing:.14em;
-  text-transform:uppercase; color:var(--pink-500); margin-bottom:6px; }
-.hero-title{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
-  font-size:2.05rem; line-height:1.15; color:var(--pink-900);
-  margin:0 0 8px 0; letter-spacing:-.03em; }
-.hero-sub{ color:var(--muted); font-size:.95rem; margin:0; }
-.hero-chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
-.chip{ background:var(--pink-50); border:1px solid var(--line);
-  color:var(--pink-700); font-size:.76rem; font-weight:600;
-  padding:5px 12px; border-radius:999px; }
-
-/* ---------- CARDS ---------- */
-.card{ background:var(--card); border:1px solid var(--line);
-  border-radius:var(--r); padding:22px 24px; box-shadow:var(--shadow);
-  margin-bottom:16px; }
-.card-title{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:700;
-  font-size:1.1rem; color:var(--pink-900); margin:0 0 4px 0; }
-.card-sub{ color:var(--muted); font-size:.86rem; margin:0 0 14px 0; }
-
-/* ---------- INPUTS ---------- */
-.stTextInput input, .stSelectbox div[data-baseweb="select"]>div{
-  border-radius:12px !important; border:1px solid var(--line) !important;
-  background:#fff !important; font-size:.92rem !important;
-}
-.stTextInput input:focus{ border-color:var(--pink-300) !important;
-  box-shadow:0 0 0 3px rgba(255,111,174,.14) !important; }
-
-/* ---------- BUTTONS ---------- */
-.stButton>button{
-  background:linear-gradient(135deg,var(--pink-500) 0%,#ff5aa3 100%) !important;
-  color:#fff !important; border:none !important; border-radius:12px !important;
-  padding:.6rem 1.5rem !important; font-family:'Plus Jakarta Sans',sans-serif !important;
-  font-weight:700 !important; font-size:.9rem !important; letter-spacing:.01em;
-  box-shadow:0 1px 2px rgba(201,37,111,.2), 0 8px 20px -8px rgba(255,90,163,.5) !important;
-  transition:transform .15s ease, box-shadow .15s ease !important;
-}
-.stButton>button:hover{ transform:translateY(-1px);
-  box-shadow:0 2px 4px rgba(201,37,111,.22), 0 14px 28px -10px rgba(255,90,163,.6) !important; }
-.stButton>button:active{ transform:translateY(0); }
-
-/* ---------- RADIO (Book / Slides) ---------- */
-div[role="radiogroup"]{ gap:8px !important; }
-div[role="radiogroup"] label{
-  background:#fff; border:1px solid var(--line); border-radius:11px;
-  padding:8px 14px !important; font-weight:600; font-size:.86rem;
-  transition:all .15s ease; cursor:pointer;
-}
-div[role="radiogroup"] label:hover{ border-color:var(--pink-300); }
-
-/* ---------- SIDEBAR ---------- */
-section[data-testid="stSidebar"]{
-  background:linear-gradient(180deg,#fffdfe 0%,#fff4f9 100%);
-  border-right:1px solid var(--line);
-}
-section[data-testid="stSidebar"] .block-container{ padding-top:1.4rem; }
-.side-title{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
-  font-size:1.15rem; color:var(--pink-900); margin-bottom:2px; }
-.side-note{ color:var(--muted); font-size:.78rem; margin-bottom:16px; }
-.side-step{ font-size:.72rem; font-weight:700; letter-spacing:.1em;
-  text-transform:uppercase; color:var(--pink-500); margin:16px 0 6px; }
-.side-card{ background:#fff; border:1px solid var(--line);
-  border-radius:14px; padding:14px 16px; margin-top:16px; box-shadow:var(--shadow); }
-.side-links{ display:flex; flex-direction:column; gap:2px; margin-top:8px; }
-.side-links a{ display:flex; align-items:center; gap:9px; color:var(--pink-700);
-  text-decoration:none; font-weight:600; font-size:.83rem; padding:6px 8px;
-  border-radius:9px; transition:background .15s ease; }
-.side-links a:hover{ background:var(--pink-50); }
-.side-links img{ width:17px; height:17px;
-  filter:invert(20%) sepia(84%) saturate(2400%) hue-rotate(310deg); }
-
-
-/* ---------- MCQ ---------- */
-.mcq-card{ background:#fff; border:1px solid var(--line); border-left:3px solid var(--pink-300);
-  border-radius:14px; padding:16px 20px; margin:0 0 6px 0; box-shadow:var(--shadow); }
-.mcq-num{ font-size:.7rem; font-weight:700; letter-spacing:.1em; color:var(--pink-500);
-  text-transform:uppercase; }
-.mcq-q{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:600;
-  color:var(--ink); font-size:1rem; margin-top:3px; line-height:1.45; }
-.correct-box{ background:#f0fdf5; border:1px solid #bbf0d0; border-left:3px solid #34c77b;
-  border-radius:13px; padding:14px 18px; margin-bottom:10px; font-size:.9rem; }
-.wrong-box{ background:#fff5f6; border:1px solid #ffd4da; border-left:3px solid #ff5a76;
-  border-radius:13px; padding:14px 18px; margin-bottom:10px; font-size:.9rem; }
-.score-badge{ background:linear-gradient(135deg,#fff 0%,#fff6fb 100%);
-  border:1px solid var(--line); border-radius:20px; padding:26px;
-  text-align:center; box-shadow:var(--shadow-lg); margin-bottom:20px; }
-.score-num{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
-  font-size:2.6rem; color:var(--pink-700); line-height:1; }
-.score-lbl{ color:var(--muted); font-size:.84rem; margin-top:6px;
-  letter-spacing:.08em; text-transform:uppercase; font-weight:600; }
-
-/* ---------- FOOTER ---------- */
-.foot{ margin-top:34px; padding:22px 26px; background:#fff;
-  border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow);
-  display:flex; justify-content:space-between; align-items:center;
-  flex-wrap:wrap; gap:14px; }
-.foot-name{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:700;
-  color:var(--pink-900); font-size:.95rem; }
-.foot-role{ color:var(--muted); font-size:.79rem; margin-top:2px; }
-.foot-links{ display:flex; gap:6px; flex-wrap:wrap; }
-.foot-links a{ display:flex; align-items:center; gap:7px; text-decoration:none;
-  background:var(--pink-50); border:1px solid var(--line); color:var(--pink-700);
-  font-size:.8rem; font-weight:600; padding:8px 14px; border-radius:10px;
-  transition:all .15s ease; }
-.foot-links a:hover{ background:#fff; border-color:var(--pink-300);
-  transform:translateY(-1px); }
-.foot-links img{ width:15px; height:15px;
-  filter:invert(20%) sepia(84%) saturate(2400%) hue-rotate(310deg); }
-
-
-/* wrapper: pin to top-left, above everything */
-div[data-testid="stSidebarCollapsedControl"]{
-  position:fixed !important; top:12px !important; left:12px !important;
-  z-index:2147483647 !important;
-  display:flex !important; opacity:1 !important; visibility:visible !important;
-  transform:none !important; width:auto !important; height:auto !important;
-}
-/* the reopen button itself: big pink pill, impossible to miss */
-div[data-testid="stSidebarCollapsedControl"] button{
-  background:linear-gradient(135deg,#ff6fae 0%,#ff5aa3 100%) !important;
-  border:none !important; border-radius:12px !important;
-  width:46px !important; height:46px !important;
-  box-shadow:0 4px 10px rgba(201,37,111,.28), 0 14px 30px -10px rgba(255,90,163,.65) !important;
-  opacity:1 !important; visibility:visible !important;
-  display:flex !important; align-items:center !important; justify-content:center !important;
-  overflow:hidden !important; font-size:0 !important; cursor:pointer !important;
-}
-div[data-testid="stSidebarCollapsedControl"] button *{
-  visibility:hidden !important; font-size:0 !important; color:transparent !important;
-}
-div[data-testid="stSidebarCollapsedControl"] button::after{
-  content:"" !important; visibility:visible !important;
-  display:block !important; width:22px !important; height:22px !important;
-  background-repeat:no-repeat !important; background-position:center !important;
-  background-size:22px 22px !important;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='16' rx='2.5'/><line x1='9.5' y1='4' x2='9.5' y2='20'/></svg>") !important;
-}
-
-/* the close button inside the sidebar: clean white square with panel icon */
-div[data-testid="stSidebarCollapseButton"] button{
-  background:#fff !important; border:1px solid #f6d9e7 !important;
-  border-radius:10px !important; width:34px !important; height:34px !important;
-  box-shadow:0 1px 3px rgba(157,27,92,.12) !important;
-  display:flex !important; align-items:center !important; justify-content:center !important;
-  overflow:hidden !important; font-size:0 !important;
-}
-div[data-testid="stSidebarCollapseButton"] button *{
-  visibility:hidden !important; font-size:0 !important; color:transparent !important;
-}
-div[data-testid="stSidebarCollapseButton"] button::after{
-  content:"" !important; visibility:visible !important;
-  display:block !important; width:18px !important; height:18px !important;
-  background-repeat:no-repeat !important; background-position:center !important;
-  background-size:18px 18px !important;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c9256f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='16' rx='2.5'/><line x1='9.5' y1='4' x2='9.5' y2='20'/></svg>") !important;
-}
-
-
-/* hide the Deploy text / toolbar so only our button shows */
-div[data-testid="stToolbar"], div[data-testid="stDecoration"],
-div[data-testid="stStatusWidget"]{ display:none !important; }
-
-/* ===== Sidebar stays open — collapse control removed on purpose ===== */
-div[data-testid="stSidebarCollapseButton"],
-div[data-testid="stSidebarCollapsedControl"]{ display:none !important; }
-header[data-testid="stHeader"]{ visibility:hidden !important; height:0 !important; }
-div[data-testid="stToolbar"], div[data-testid="stDecoration"],
-div[data-testid="stStatusWidget"], #MainMenu{ display:none !important; }
-section[data-testid="stSidebar"]{ min-width:310px !important; }
-
-/* ===== hide the now-empty sidebar completely ===== */
-section[data-testid="stSidebar"]{ display:none !important; }
-div[data-testid="stSidebarCollapseButton"],
-div[data-testid="stSidebarCollapsedControl"]{ display:none !important; }
-
-/* ===== MOBILE ===== */
-@media (max-width: 640px){
-  .block-container{ padding:.8rem .7rem 2rem !important; max-width:100% !important; }
-  .hero{ padding:18px 18px !important; border-radius:20px !important; }
-  .hero-title{ font-size:1.4rem !important; line-height:1.2 !important; }
-  .hero-sub{ font-size:.85rem !important; }
-  .hero-eyebrow{ font-size:.65rem !important; }
-  .chip{ font-size:.7rem !important; padding:4px 10px !important; }
-  .card{ padding:16px 16px !important; border-radius:15px !important; }
-  .card-title{ font-size:1rem !important; }
-  .mcq-card{ padding:13px 15px !important; }
-  .mcq-q{ font-size:.93rem !important; }
-  .score-num{ font-size:2rem !important; }
-  .stButton>button{ width:100% !important; padding:.65rem 1rem !important; }
-  div[role="radiogroup"]{ flex-wrap:wrap !important; }
-  div[role="radiogroup"] label{ font-size:.82rem !important; padding:7px 12px !important; }
-  .foot{ flex-direction:column !important; align-items:flex-start !important;
-         padding:18px !important; }
-  .foot-links{ width:100% !important; }
-  .foot-links a{ font-size:.75rem !important; padding:7px 11px !important; }
-  div[data-testid="stExpander"] summary{ font-size:.85rem !important;
-    padding:12px 14px !important; }
-  /* stack the two-column rows on small screens */
-  div[data-testid="stHorizontalBlock"]{ flex-direction:column !important; gap:0 !important; }
-  div[data-testid="stHorizontalBlock"] > div{ width:100% !important; flex:1 1 100% !important; }
-}
-@media (max-width: 400px){
-  .hero-title{ font-size:1.2rem !important; }
-  .chip{ font-size:.65rem !important; }
-}
-
-/* hide Streamlit's icon element (renders as raw text when font fails) */
-div[data-testid="stExpander"] summary [data-testid="stExpanderToggleIcon"],
-div[data-testid="stExpander"] summary span[class*="material"],
-div[data-testid="stExpander"] summary i,
-div[data-testid="stExpander"] summary svg{
-  display:none !important; font-size:0 !important; width:0 !important;
-  visibility:hidden !important;
-}
-
-/* our own chevron on the right */
-div[data-testid="stExpander"] summary::after{
-  content:"" !important; flex:0 0 auto !important;
-  width:20px !important; height:20px !important;
-  background-repeat:no-repeat !important; background-position:center !important;
-  background-size:20px 20px !important;
-  transition:transform .2s ease !important;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c9256f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") !important;
-}
-div[data-testid="stExpander"] details[open] > summary::after,
-div[data-testid="stExpander"][open] summary::after{ transform:rotate(180deg) !important; }
-
-/* keep the label text tidy */
-div[data-testid="stExpander"] summary p,
-div[data-testid="stExpander"] summary div{
-  margin:0 !important; font-family:'Plus Jakarta Sans',sans-serif !important;
-  font-weight:700 !important; color:var(--pink-900) !important;
-  overflow:hidden !important; text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-}
-
-/* extra mobile polish */
-@media (max-width: 640px){
-  div[data-testid="stExpander"] summary::after{
-    width:18px !important; height:18px !important; background-size:18px 18px !important; }
-  div[data-testid="stExpander"] summary p{ font-size:.84rem !important; }
-  .side-step{ margin:12px 0 5px !important; font-size:.66rem !important; }
-  div[data-testid="stExpander"] .stSelectbox,
-  div[data-testid="stExpander"] div[role="radiogroup"]{ margin-bottom:2px !important; }
-  .stButton>button{ margin-bottom:6px !important; }
-  .hero-chips{ gap:6px !important; margin-top:12px !important; }
-}
-
-/* bring back ONLY the label text */
-div[data-testid="stExpander"] summary [data-testid="stMarkdownContainer"],
-div[data-testid="stExpander"] summary [data-testid="stMarkdownContainer"] *{
-  font-size:.95rem !important; line-height:1.4 !important;
-  color:var(--pink-900) !important;
-  font-family:'Plus Jakarta Sans',sans-serif !important; font-weight:700 !important;
-}
-/* our chevron must stay visible */
-div[data-testid="stExpander"] summary::after{
-  font-size:0 !important; color:transparent !important;
-}
-@media (max-width: 640px){
-  div[data-testid="stExpander"] summary [data-testid="stMarkdownContainer"],
-  div[data-testid="stExpander"] summary [data-testid="stMarkdownContainer"] *{
-    font-size:.86rem !important; }
-}
-
-/* ===== side panel look (desktop) ===== */
-.panel-head{
-  font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
-  font-size:1.05rem; color:var(--pink-900);
-  padding-bottom:10px; margin-bottom:4px;
-  border-bottom:1px solid var(--line);
-}
-/* card feel ONLY for the panel column (the one holding .panel-head) */
-div[data-testid="column"]:has(.panel-head){
-  background:#fff; border:1px solid var(--line); border-radius:18px;
-  padding:18px 18px 14px; box-shadow:var(--shadow);
-  align-self:flex-start;
-}
-/* panel toggle button: small, not full width, on desktop */
-div[data-testid="stButton"] button[kind="secondary"]{ }
-
-@media (max-width: 640px){
-  div[data-testid="column"]:has(.panel-head){
-    padding:14px !important; margin-bottom:14px !important; }
-}
-
-/* ===== COMPACT HOME PAGE (less scrolling before an answer) ===== */
-.block-container{ padding-top:1rem !important; padding-bottom:1.2rem !important; }
-
-/* smaller hero */
-.hero{ padding:16px 22px !important; margin-bottom:12px !important; border-radius:20px !important; }
-.hero-eyebrow{ font-size:.66rem !important; margin-bottom:3px !important; }
-.hero-title{ font-size:1.55rem !important; margin:0 0 5px 0 !important; line-height:1.1 !important; }
-.hero-sub{ font-size:.85rem !important; }
-.hero-chips{ margin-top:10px !important; gap:6px !important; }
-.chip{ padding:4px 11px !important; font-size:.72rem !important; }
-
-/* tighter panel */
-.panel-head{ font-size:.95rem !important; padding-bottom:7px !important; margin-bottom:2px !important; }
-.side-step{ margin:9px 0 4px !important; font-size:.68rem !important; }
-
-/* trim vertical gaps between widgets */
-div[data-testid="stVerticalBlock"]{ gap:.45rem !important; }
-div[data-testid="stElementContainer"]{ margin-bottom:0 !important; }
-.stButton{ margin-bottom:2px !important; }
-
-/* smaller toggle button + cards */
-div[data-testid="stButton"] button{ padding:.5rem 1.2rem !important; }
-.card{ padding:16px 20px !important; margin-bottom:12px !important; }
-.card-title{ font-size:1rem !important; }
-.card-sub{ margin-bottom:0 !important; }
-
-/* footer closer, smaller */
-.foot{ margin-top:16px !important; padding:16px 22px !important; }
-
-@media (max-width: 640px){
-  .hero{ padding:14px 16px !important; }
-  .hero-title{ font-size:1.3rem !important; }
-  .hero-sub{ font-size:.8rem !important; }
-  .block-container{ padding-top:.6rem !important; }
-}
-
-
-
-
-/* ===== action buttons: equal height, full width in their column ===== */
-.stButton > button{
-  min-height:46px !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-}
-</style>
-"""
-
-
-
-# ---------------- DARK MODE OVERRIDES ----------------
-DARK_CSS = """
-<style>
-/* ---- base surface ---- */
-.stApp{ background:
-   radial-gradient(1100px 500px at 12% -8%, #2a1826 0%, transparent 60%),
-   radial-gradient(900px 460px at 92% 4%, #1a2036 0%, transparent 55%),
-   linear-gradient(180deg,#17101a 0%, #120c14 100%) !important; }
-
-html,body,p,div,span,label,li,small{ color:#ece0e8 !important; }
-h1,h2,h3,h4{ color:#ffd6ea !important; }
-.stMarkdown p, .stMarkdown li{ color:#ddd0da !important; }
-
-/* ---- hero ---- */
-.hero{ background:linear-gradient(135deg,#251527 0%,#2c1a2c 100%) !important;
-       border:1px solid #3d2740 !important; }
-.hero-eyebrow{ color:#ff8fc4 !important; }
-.hero-title{ color:#ffe0ef !important; }
-.hero-sub{ color:#b9a4b4 !important; }
-.chip{ background:#33203a !important; border:1px solid #4a2f4c !important;
-       color:#ffb3d8 !important; }
-
-/* ---- cards ---- */
-.card{ background:#221527 !important; border:1px solid #3d2740 !important; }
-.card-title{ color:#ffd6ea !important; }
-.card-sub{ color:#b09aab !important; }
-
-.mcq-card{ background:#221527 !important; border:1px solid #3d2740 !important;
-           border-left:3px solid #ff6fae !important; }
-.mcq-num{ color:#ff8fc4 !important; }
-.mcq-q{ color:#f0e4ee !important; }
-
-.score-badge{ background:linear-gradient(135deg,#221527 0%,#2c1a2c 100%) !important;
-              border:1px solid #3d2740 !important; }
-.score-num{ color:#ffb3d8 !important; }
-.score-lbl{ color:#b09aab !important; }
-
-.correct-box{ background:#132a1d !important; border:1px solid #2f6647 !important;
-              border-left:3px solid #3ad48a !important; color:#dcf0e4 !important; }
-.correct-box b,.correct-box i,.correct-box small{ color:#dcf0e4 !important; }
-.wrong-box{ background:#2b1620 !important; border:1px solid #70303f !important;
-            border-left:3px solid #ff6b85 !important; color:#f6dde2 !important; }
-.wrong-box b,.wrong-box i,.wrong-box small{ color:#f6dde2 !important; }
-
-/* ---- sidebar ---- */
-section[data-testid="stSidebar"]{
-  background:linear-gradient(180deg,#1c1220 0%,#221527 100%) !important;
-  border-right:1px solid #3d2740 !important; }
-.side-title{ color:#ffd6ea !important; }
-.side-note{ color:#b09aab !important; }
-.side-step{ color:#ff8fc4 !important; }
-.side-card{ background:#2a1830 !important; border:1px solid #4a2f4c !important; }
-.side-card div{ color:#ece0e8 !important; }
-
-/* ---- links ---- */
-.side-links a,.foot-links a{ background:#33203a !important;
-  border:1px solid #4a2f4c !important; color:#ffb3d8 !important; }
-.side-links a:hover,.foot-links a:hover{ background:#3d2745 !important; }
-.side-links img,.foot-links img{
-  filter:invert(78%) sepia(35%) saturate(1500%) hue-rotate(292deg) !important; }
-
-/* ---- footer ---- */
-.foot{ background:#221527 !important; border:1px solid #3d2740 !important; }
-.foot-name{ color:#ffd6ea !important; }
-.foot-role{ color:#b09aab !important; }
-
-/* ---- inputs ---- */
-.stTextInput input{ background:#2a1830 !important; border:1px solid #4a2f4c !important;
-                    color:#f0e4ee !important; }
-.stTextInput input::placeholder{ color:#8a7284 !important; }
-.stSelectbox div[data-baseweb="select"]>div{
-  background:#2a1830 !important; border:1px solid #4a2f4c !important; color:#f0e4ee !important; }
-.stSelectbox svg{ fill:#ffb3d8 !important; }
-div[data-baseweb="popover"] div,div[data-baseweb="popover"] li{
-  background:#2a1830 !important; color:#f0e4ee !important; }
-div[data-baseweb="popover"] li:hover{ background:#3d2745 !important; }
-
-div[role="radiogroup"] label{ background:#2a1830 !important;
-  border:1px solid #4a2f4c !important; }
-div[role="radiogroup"] label p,div[role="radiogroup"] label div{ color:#f0e4ee !important; }
-
-/* alerts */
-div[data-testid="stAlert"]{ background:#2a1830 !important;
-  border:1px solid #4a2f4c !important; color:#f0e4ee !important; }
-
-.panel-head{ color:#ffd6ea !important; border-bottom-color:#3d2740 !important; }
-div[data-testid="column"]:has(.panel-head){
-  background:#221527 !important; border-color:#3d2740 !important; }
-
-/* expander in dark mode */
-div[data-testid="stExpander"]{ background:#221527 !important;
-  border:1px solid #3d2740 !important; }
-div[data-testid="stExpander"] summary{ background:#2a1830 !important;
-  color:#ffd6ea !important; }
-div[data-testid="stExpander"] summary:hover{ background:#33203a !important; }
-div[data-testid="stExpander"] svg{ fill:#ffb3d8 !important; }
-
-div[data-testid="stExpander"] summary::after{
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffb3d8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") !important;
-}
-div[data-testid="stExpander"] summary p{ color:#ffd6ea !important; }
-
-div[data-testid="stExpander"] summary [data-testid="stMarkdownContainer"],
-div[data-testid="stExpander"] summary [data-testid="stMarkdownContainer"] *{
-  color:#ffd6ea !important; }
-
-div[data-testid="stSidebarCollapsedControl"] button{
-  background:#2a1830 !important; border:1px solid #4a2f4c !important;
-  box-shadow:0 2px 4px rgba(0,0,0,.4), 0 12px 28px -12px rgba(0,0,0,.8) !important;
-}
-
-div[data-testid="stSidebarCollapseButton"] button::after,
-div[data-testid="stSidebarCollapsedControl"] button::after,
-button[data-testid="stBaseButton-headerNoPadding"]::after{
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffb3d8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='16' rx='2.5'/><line x1='9.5' y1='4' x2='9.5' y2='20'/></svg>") !important;
-}
-</style>
-"""
-
-# ---------------- LLM CALL WITH AUTOMATIC FALLBACK ----------------
-@st.cache_data(ttl=3600, show_spinner=False)
-def _gemini_available_models(api_key):
-    """Ask Google which models this key can actually use.
-
-    Model names change over time, so hard-coding them causes 404 errors.
-    We look them up instead and prefer the fast 'flash' ones.
-    """
-    import requests
-    url = f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}"
-    r = requests.get(url, timeout=30)
-    r.raise_for_status()
-    models = []
-    for m in r.json().get("models", []):
-        if "generateContent" in m.get("supportedGenerationMethods", []):
-            name = m.get("name", "").replace("models/", "")
-            if name:
-                models.append(name)
-
-    def rank(n):
-        s = 0
-        if "flash" in n: s -= 10          # fast + biggest free quota
-        if "lite" in n: s -= 2
-        if "pro" in n: s += 5             # slower, smaller free quota
-        if "vision" in n or "embedding" in n or "tts" in n: s += 50
-        return s
-
-    return sorted(models, key=rank)
-
-
-def _call_cerebras(prompt, max_tokens, temperature):
-    """Second provider. Plain REST, so no extra package is needed."""
-    import requests
-    if not CEREBRAS_API_KEY:
-        raise RuntimeError("no cerebras key")
-
-    last = ""
-    for model_name in CEREBRAS_MODELS:
-        try:
-            r = requests.post(
-                "https://api.cerebras.ai/v1/chat/completions",
-                headers={"Authorization": f"Bearer {CEREBRAS_API_KEY}",
-                         "Content-Type": "application/json"},
-                json={"model": model_name,
-                      "messages": [{"role": "user", "content": prompt}],
-                      "temperature": temperature,
-                      "max_tokens": max_tokens},
-                timeout=90,
-            )
-            if r.status_code == 200:
-                return r.json()["choices"][0]["message"]["content"]
-            last = f"{model_name}: {r.status_code} {r.text[:160]}"
-            if r.status_code in (429, 503):
-                continue          # busy right now, try the other model
-        except Exception as e:
-            last = f"{model_name}: {e}"
-    raise RuntimeError(f"cerebras failed: {last}")
-
-
-def _call_gemini(prompt, max_tokens, temperature):
-    """Backup provider. Uses the plain REST API so no extra SDK is needed."""
-    import requests
-    if not GEMINI_API_KEY:
-        raise RuntimeError("no gemini key")
-
-    try:
-        models = _gemini_available_models(GEMINI_API_KEY)
-    except Exception as e:
-        raise RuntimeError(f"gemini model lookup failed: {e}")
-
-    if not models:
-        raise RuntimeError("gemini: no usable models for this key")
-
-    last = ""
-    for model_name in models[:3]:      # try the top few
-        url = (f"https://generativelanguage.googleapis.com/v1beta/models/"
-               f"{model_name}:generateContent?key={GEMINI_API_KEY}")
-        body = {
-            "contents": [{"parts": [{"text": prompt}]}],
-            "generationConfig": {"temperature": temperature,
-                                 "maxOutputTokens": max_tokens},
-        }
-        try:
-            r = requests.post(url, json=body, timeout=90)
-            if r.status_code == 200:
-                data = r.json()
-                return data["candidates"][0]["content"]["parts"][0]["text"]
-            last = f"{model_name}: {r.status_code} {r.text[:160]}"
-            if r.status_code == 429:
-                continue               # this model is rate-limited, try next
-        except Exception as e:
-            last = f"{model_name}: {e}"
-    raise RuntimeError(f"gemini failed: {last}")
-
-
-def call_llm(prompt, groq_client, max_tokens=2000, temperature=0.3, model=None):
-    """Try every Groq key, then Cerebras, then Gemini. First one that works wins.
-
-    Returns (text, provider_name). Raises only if every provider fails.
-    """
-    errors = []
-
-    # --- provider 1: Groq, trying every key we have in turn ---
-    for i, key in enumerate(GROQ_KEYS, start=1):
-        try:
-            client = Groq(api_key=key)
-            resp = client.chat.completions.create(
-                model=model or GROQ_MODEL,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=temperature,
-                max_tokens=max_tokens,
-            )
-            label = "Groq" if len(GROQ_KEYS) == 1 else f"Groq (key {i})"
-            return resp.choices[0].message.content, label
-        except Exception as e:
-            errors.append(f"Groq key {i}: {e}")
-            continue
-
-    # --- provider 2: Cerebras ---
-    try:
-        text = _call_cerebras(prompt, max_tokens, temperature)
-        return text, "Cerebras"
-    except Exception as e:
-        errors.append(f"Cerebras: {e}")
-
-    # --- provider 3: Gemini ---
-    try:
-        text = _call_gemini(prompt, max_tokens, temperature)
-        return text, "Gemini"
-    except Exception as e:
-        errors.append(f"Gemini: {e}")
-
-    raise RuntimeError(" | ".join(errors))
+    return ""
+
+
+CEREBRAS_API_KEY = _one_key("CEREBRAS_API_KEY")
+GEMINI_API_KEY = _one_key("GEMINI_API_KEY")
+
+# ---------------- LLM CALL WITH AUTOMATIC FAST FALLBACK ----------------
+def call_llm(prompt, groq_client, max_tokens=2000, temperature=0.3, model=None,
+             *, task=None, validator=None):
+    """Prefer measured valid responses; never benchmark on a study click."""
+    request_task = "mcq" if model == GROQ_MCQ_MODEL else task or "topic"
+    if "ai_router_state" not in st.session_state:
+        st.session_state["ai_router_state"] = load_speed_profile()
+    result = route_completion(
+        prompt, groq_keys=GROQ_KEYS, cerebras_key=CEREBRAS_API_KEY,
+        gemini_key=GEMINI_API_KEY, state=st.session_state["ai_router_state"],
+        task=request_task, max_tokens=max_tokens, temperature=temperature,
+        validator=validator,
+        deadline=st.session_state.get("mcq_request_deadline") if request_task == "mcq" else None,
+    )
+    st.session_state["last_provider_model"] = result.model
+    st.session_state["last_api_seconds"] = result.elapsed
+    return result.text, result.provider
 
 
 # ---------------- CACHED LOADERS ----------------
 @st.cache_resource
 def load_model():
-    return SentenceTransformer(EMBED_MODEL)
+    # Avoid importing PyTorch until the student actually starts studying.
+    from sentence_transformers import SentenceTransformer
+    try:
+        # A cached model does not need repeated network checks on every restart.
+        return SentenceTransformer(EMBED_MODEL, local_files_only=True)
+    except OSError:
+        return SentenceTransformer(EMBED_MODEL)
 
 
 @st.cache_resource
 def load_collection():
+    import chromadb
     client = chromadb.PersistentClient(path=DB_DIR)
     return client.get_collection(COLLECTION_NAME)
 
 
-@st.cache_data
+@st.cache_data(max_entries=24, ttl=3600)
 def render_page(book, page):
+    import pymupdf as fitz
     path = os.path.join(BOOKS_DIR, book)
-    doc = fitz.open(path)
-    pix = doc[page - 1].get_pixmap(matrix=fitz.Matrix(ZOOM, ZOOM))
-    img_bytes = pix.tobytes("png")
-    doc.close()
+    if not os.path.isfile(path):
+        path = next((os.path.join(folder, book) for folder in ("books_small", "books")
+                     if os.path.isfile(os.path.join(folder, book))), path)
+    with fitz.open(path) as doc:
+        pix = doc[page - 1].get_pixmap(matrix=fitz.Matrix(ZOOM, ZOOM))
+        # Text pages often compress better as PNG; diagrams may favor JPEG.
+        png = pix.tobytes("png")
+        jpeg = pix.tobytes("jpeg", jpg_quality=80)
+        img_bytes = min((png, jpeg), key=len)
     return img_bytes
 
 
+@st.cache_data(max_entries=128, ttl=3600, show_spinner=False)
+def get_relevant_diagram_pages(question, chunks, metas, selected_book):
+    """Check a few retrieved source pages; never invent a diagram reference."""
+    path = os.path.join(BOOKS_DIR, selected_book)
+    if not os.path.isfile(path):
+        path = next((os.path.join(folder, selected_book) for folder in ("books_small", "books")
+                     if os.path.isfile(os.path.join(folder, selected_book))), path)
+    return select_diagram_pages(question, chunks, metas, selected_book, path)
+
+
 # ---------------- CORE: retrieve ----------------
-def retrieve(question, selected_book, model, collection, k):
-    q_emb = model.encode([question]).tolist()
-    args = {"query_embeddings": q_emb, "n_results": k}
+@st.cache_data(ttl=300, max_entries=128, show_spinner=False)
+def retrieve(question, selected_book, _model, _collection, k, focus_topics=()):
+    searches = list(focus_topics) or [question]
+    q_emb = _model.encode(searches).tolist()
+    per_search = k if len(searches) == 1 else min(6, max(2, (k + len(searches) - 1) // len(searches)))
+    args = {"query_embeddings": q_emb, "n_results": per_search}
     if selected_book != "Both / All books":
         args["where"] = {"book": selected_book}
-    results = collection.query(**args)
-    return results["documents"][0], results["metadatas"][0]
+    results = _collection.query(**args)
+    if len(searches) == 1:
+        return results["documents"][0], results["metadatas"][0]
+    chunks, metas, seen = [], [], set()
+    # One batched embedding/query, then round-robin source passages across topics.
+    for rank in range(per_search):
+        for docs, metadata in zip(results['documents'], results['metadatas']):
+            if rank >= len(docs):
+                continue
+            text, meta = docs[rank], metadata[rank]
+            identity = (meta['book'], meta['page'], text)
+            if identity not in seen:
+                chunks.append(text)
+                metas.append(meta)
+                seen.add(identity)
+            if len(chunks) >= k:
+                return chunks, metas
+    return chunks, metas
 
 
 # ---------------- MODE 1: Q&A ----------------
-def answer_question(question, subject, selected_book, model, collection, groq_client):
-    # Pull more chunks so the specific aspect asked (types, functions, steps,
-    # classification, etc.) is more likely to be in the retrieved text.
-    chunks, metas = retrieve(question, selected_book, model, collection, TOP_K + 6)
+def answer_question(question, subject, selected_book, model, collection, groq_client, focus_topics=()):
+    intent = classify_study_request(question)
+    base_k = 10 if intent == "topic" else TOP_K
+    context_k = min(45, max(base_k, len(focus_topics) * 2))
+    chunks, metas = retrieve(question, selected_book, model, collection, context_k, focus_topics)
     if not chunks:
         return ("Nothing on that was found in this source. Try the other "
                 "source (Book / Slides) in the Study Panel, or word the "
                 "topic the way the book words it."), []
 
-    context = "\n\n---\n\n".join(
-        f"[{m['book']}, page {m['page']}]\n{c}" for c, m in zip(chunks, metas)
-    )
+    context = compact_context(chunks, metas)
     tutor = "an English language tutor" if subject == "English" else "a medical study tutor"
     prompt = f"""You are {tutor} teaching {subject} to a BS Paramedics student.
 Answer the student's question using ONLY the {subject} context below, which
 comes from "{selected_book}". Do not use any other subject, and do not use
 your own knowledge.
 
-ANSWER WHAT IS ASKED:
-- If the question names a topic (e.g. "mandible", "receptor", "glycolysis"),
-  give a clear, useful answer about that topic from the context: what it is,
-  and its key points (structure, types, functions, or relations as available).
-- If the question asks a specific aspect, answer THAT aspect:
-  "Types of X" -> list the types. "Function of X" -> the functions.
-  "Define X" -> the definition. "Steps of X" -> the ordered steps.
-  "Difference between X and Y" -> compare point by point.
-- Do NOT refuse a short or one-word topic by calling it "too broad".
-  A single topic name is a valid question — just explain that topic.
-- Only say the answer is missing if the topic genuinely is not in the context.
-
-STYLE:
-- Clear and well-structured, like an exam answer. Headings/bullets where helpful.
-- Cite the book name and page number for the main points.
-- Do NOT invent facts that are not in the context.
+{build_study_instructions(question, intent)}
+- A single topic name is a valid request for full teaching. Do not dismiss it as too broad.
+- Only say the answer is missing if the topic is absent from the supplied context.
 
 {subject} CONTEXT (from {selected_book}):
 {context}
@@ -832,37 +234,13 @@ STYLE:
 QUESTION: {question}
 
 ANSWER:"""
-    answer, provider = call_llm(prompt, groq_client, max_tokens=2000, temperature=0.25)
+    output_budget = {"definition": 600, "specific": 1800, "topic": 2500}[intent]
+    answer, provider = call_llm(prompt, groq_client,
+                                max_tokens=output_budget, temperature=0.25, task=intent)
     st.session_state["last_provider"] = provider
 
-    # Diagrams: take pages only from the very top chunks, and drop any page that
-    # sits far away from the main answer pages (those are almost always unrelated,
-    # e.g. cover, acknowledgments, a chapter hundreds of pages off).
-    TOP_DIAGRAM_CHUNKS = 5
-    candidate_pages = []
-    for m in metas[:TOP_DIAGRAM_CHUNKS]:
-        is_slide = "slide" in str(m.get("book", "")).lower()
-        if m.get("has_diagram") or is_slide:
-            candidate_pages.append((m["book"], m["page"]))
-
-    diagram_pages = []
-    if candidate_pages:
-        # The main answer page = the page of the single most relevant chunk.
-        anchor_page = metas[0]["page"]
-        seen = set()
-        for bk, pg in candidate_pages:
-            # keep only pages within ~40 pages of the top hit (same section)
-            if abs(pg - anchor_page) <= 40 and (bk, pg) not in seen:
-                diagram_pages.append((bk, pg))
-                seen.add((bk, pg))
-        # if the filter removed everything, fall back to the 2 closest candidates
-        if not diagram_pages:
-            for bk, pg in candidate_pages[:2]:
-                if (bk, pg) not in seen:
-                    diagram_pages.append((bk, pg))
-                    seen.add((bk, pg))
-
-    diagram_pages = diagram_pages[:3]
+    diagram_pages = ([] if intent == "definition"
+                     else get_relevant_diagram_pages(question, chunks, metas, selected_book))
     return answer, diagram_pages
 
 
@@ -973,9 +351,21 @@ MCQ_RULES_ENGLISH = """Write LANGUAGE questions only. No medicine, no biology, n
 
 MCQ_RULES_OUTPUT = """RULES FOR THE OUTPUT:
 - Exactly 4 options each. Exactly ONE is correct.
+- Write only the option text, without A/B/C/D labels; the interface adds labels.
 - Wrong options must be plausible, not obviously silly.
 - Base every question AND the correct answer ONLY on the context given.
   Do not use outside knowledge. Do not invent facts.
+- For numbers/classifications, state exactly what is being counted. Distinguish
+  original components from fused/named groups and nerves from ganglia. Omit a
+  numerical question if the supplied context leaves the counting level unclear.
+- Put that counting level in the question itself, not just its explanation.
+  For example, specify "original segmental ganglia before fusion" versus
+  "named groups after fusion". Never ask a bare ganglion count.
+- Options must differ in meaning. Reordering the same list of structures does
+  not make different answers unless the stem explicitly asks for their order.
+- Never use a synonym of the correct answer as a distractor. For example,
+  anterior and ventral spinal roots name the same root, as do posterior and
+  dorsal roots. Check that only one option answers the exact stem.
 - Every question must test a DIFFERENT fact or idea. No two questions may
   ask about the same fact, even in different words.
 - Add a short explanation and the page number for the correct answer."""
@@ -989,6 +379,8 @@ MCQ_RULES_BY_SUBJECT = {
 
 
 def generate_mcq_batch(topic, subject, book_name, context, n, avoid_questions, groq_client):
+    st.session_state.pop('mcq_last_error', None)
+    st.session_state.pop('mcq_last_error_kind', None)
     avoid_txt = ""
     if avoid_questions:
         joined = "\n".join(f"- {q}" for q in avoid_questions[-40:])
@@ -1018,6 +410,7 @@ PART 1 - RULES FOR EVERY SUBJECT
 {MCQ_RULES_GENERAL}
 {subject_part}
 {MCQ_RULES_OUTPUT}
+- Keep each explanation to ONE short sentence (at most 20 words).
 - The page reference must name "{book_name}" and a page number taken from
   the context headings, never a page you guessed.
 {avoid_txt}
@@ -1025,7 +418,7 @@ Return ONLY valid JSON, no other text. Use this exact format:
 [
   {{
     "question": "....",
-    "options": ["A ...", "B ...", "C ...", "D ..."],
+    "options": ["First option text", "Second option text", "Third option text", "Fourth option text"],
     "answer_index": 0,
     "explanation": "....",
     "page": "{book_name}, page X"
@@ -1038,48 +431,14 @@ Return ONLY valid JSON, no other text. Use this exact format:
 JSON:"""
 
     last_error = ""
-    for attempt in range(4):
+    error_kind = "validation"
+    for attempt in range(1):
         try:
-            raw, provider = call_llm(prompt, groq_client, max_tokens=6000,
-                                     temperature=0.5, model=GROQ_MCQ_MODEL)
+            raw, provider = call_llm(prompt, groq_client, max_tokens=min(6000, n * 300 + 200),
+                                     temperature=0.5, model=GROQ_MCQ_MODEL,
+                                     validator=lambda text: len(parse_mcqs(text, book_name, context)) >= max(1, n // 2))
             st.session_state["last_provider"] = provider
-            text = raw.strip()
-            text = text.replace("```json", "").replace("```", "").strip()
-
-            start_i = text.find("[")
-            if start_i != -1:
-                text = text[start_i:]
-
-            data = None
-            try:
-                end_i = text.rfind("]")
-                data = json.loads(text[:end_i + 1] if end_i != -1 else text)
-            except json.JSONDecodeError:
-                # Answer was cut off mid-way: salvage the complete objects.
-                data = []
-                depth, obj_start = 0, None
-                for i, ch in enumerate(text):
-                    if ch == "{":
-                        if depth == 0:
-                            obj_start = i
-                        depth += 1
-                    elif ch == "}":
-                        depth -= 1
-                        if depth == 0 and obj_start is not None:
-                            try:
-                                data.append(json.loads(text[obj_start:i + 1]))
-                            except json.JSONDecodeError:
-                                pass
-                            obj_start = None
-
-            clean = []
-            for item in (data or []):
-                if (isinstance(item.get("options"), list)
-                        and len(item["options"]) == 4
-                        and isinstance(item.get("answer_index"), int)
-                        and 0 <= item["answer_index"] <= 3
-                        and item.get("question")):
-                    clean.append(item)
+            clean = parse_mcqs(raw, book_name, context)
 
             if clean:
                 return clean
@@ -1087,25 +446,38 @@ JSON:"""
 
         except Exception as e:
             last_error = str(e)
-            msg = last_error.lower()
-            if "rate" in msg or "429" in msg or "quota" in msg:
-                time.sleep(6 * (attempt + 1))   # back off and retry
-                continue
-            time.sleep(2)
+            error_kind = "provider"
+            # The provider chain already tried the available services.
+            break
 
     if last_error:
         st.session_state["mcq_last_error"] = last_error
+        st.session_state["mcq_last_error_kind"] = error_kind
     return []
 
 
-def generate_all_mcqs(topic, subject, selected_book, model, collection, groq_client, progress):
-    chunks, metas = retrieve(topic, selected_book, model, collection, MCQ_CONTEXT_K)
+def generate_all_mcqs(topic, subject, selected_book, model, collection, groq_client, progress,
+                      focus_topics=(), existing_mcqs=()):
+    started = time.perf_counter()
+    st.session_state.pop("mcq_last_error", None)
+    st.session_state.pop("mcq_last_error_kind", None)
+    st.session_state.pop("mcq_request_deadline", None)
+    st.session_state["mcq_timing"] = {"batches": 0}
+    cache_key = (topic.strip().casefold(), subject, selected_book, MCQ_TOTAL)
+    cache = st.session_state.setdefault("quiz_cache", {})
+    cached = cache.get(cache_key) if not existing_mcqs else None
+    if cached and time.monotonic() - cached[0] < 3600:
+        if any(q.get("_option_order_version") != 2 for q in cached[1]):
+            cached = (cached[0], balance_mcq_options(cached[1]), cached[2])
+            cache[cache_key] = cached
+        st.session_state["last_provider"] = cached[2]
+        st.session_state["mcq_timing"].update(search_seconds=0, total_seconds=0, cached=True)
+        progress.progress(1.0, text="Saved questions ready.")
+        return cached[1]
+    chunks, metas = retrieve(topic, selected_book, model, collection, MCQ_CONTEXT_K, focus_topics)
+    st.session_state["mcq_timing"]["search_seconds"] = time.perf_counter() - started
     if not chunks:
-        return []
-    context = "\n\n---\n\n".join(
-        f"[{m['book']}, page {m['page']}]\n{c}" for c, m in zip(chunks, metas)
-    )
-
+        return list(existing_mcqs[:MCQ_TOTAL])
     # ---- words we ignore when comparing two questions ----
     STOP = {"the", "of", "a", "an", "is", "are", "was", "were", "what", "which",
             "following", "in", "to", "and", "for", "from", "that", "this", "how",
@@ -1124,8 +496,9 @@ def generate_all_mcqs(topic, subject, selected_book, model, collection, groq_cli
 
     def words_of(text):
         """The meaningful words of a piece of text, for comparing two of them."""
-        return {stem(w) for w in re.findall(r"[a-z0-9]+", str(text).lower())
-                if w not in STOP and len(w) > 2}
+        text = re.sub(r"^[A-D][.)\s]+", "", str(text))
+        return {stem(w) for w in re.findall(r"[a-z0-9]+", text.lower())
+                if w not in STOP and (len(w) > 2 or w.isdigit())}
 
     def overlap(a, b):
         """0 means nothing in common, 1 means exactly the same words."""
@@ -1170,12 +543,25 @@ def generate_all_mcqs(topic, subject, selected_book, model, collection, groq_cli
             return True                      # same answer already right twice
         return False
 
-    all_mcqs, avoid, kept = [], [], []
+    all_mcqs = list(existing_mcqs[:MCQ_TOTAL])
+    avoid = [q['question'] for q in all_mcqs]
+    kept = [fingerprint(q) for q in all_mcqs]
     answer_counts = {}
+    for _, _, answer_words in kept:
+        answer_key = ' '.join(sorted(answer_words))
+        if answer_key:
+            answer_counts[answer_key] = answer_counts.get(answer_key, 0) + 1
     strict = True
     empty_rounds = 0
 
-    while len(all_mcqs) < MCQ_TOTAL:
+    # Bound the work even when only one new question survives each batch.
+    rounds = 0
+    st.session_state["mcq_request_deadline"] = time.monotonic() + 150
+    while len(all_mcqs) < MCQ_TOTAL and rounds < 10:
+        if time.monotonic() >= st.session_state["mcq_request_deadline"]:
+            st.session_state["mcq_last_error"] = "The generation time budget was reached. You can continue this set."
+            break
+        rounds += 1
         if empty_rounds >= 3:
             if strict:
                 # nothing new is getting through; loosen the filter rather
@@ -1186,9 +572,22 @@ def generate_all_mcqs(topic, subject, selected_book, model, collection, groq_cli
                 break
 
         need = min(MCQ_BATCH, MCQ_TOTAL - len(all_mcqs))
+        # Retrieve a wide pool once, then cover different parts in each batch.
+        # Sending all 45 chunks every time wastes tokens and hits free quotas.
+        window_size = 15
+        window_count = (len(chunks) + window_size - 1) // window_size
+        offset = ((rounds - 1) % window_count) * window_size
+        batch_context = compact_context(chunks[offset:offset + window_size],
+                                        metas[offset:offset + window_size])
         # ask for extras, since repeats get thrown away
-        batch = generate_mcq_batch(topic, subject, selected_book, context,
-                                   need + 4, avoid, groq_client)
+        progress.progress(len(all_mcqs) / MCQ_TOTAL,
+                          text=f"Made {len(all_mcqs)} of {MCQ_TOTAL} questions. Generating batch {rounds}...")
+        st.session_state["mcq_timing"]["batches"] = rounds
+        batch = generate_mcq_batch(topic, subject, selected_book, batch_context,
+                                   need + 2, avoid, groq_client)
+        if (not batch and st.session_state.get("mcq_last_error")
+                and st.session_state.get("mcq_last_error_kind", "provider") == "provider"):
+            break
 
         added = 0
         for q in batch:
@@ -1209,9 +608,51 @@ def generate_all_mcqs(topic, subject, selected_book, model, collection, groq_cli
 
         progress.progress(min(len(all_mcqs) / MCQ_TOTAL, 1.0),
                           text=f"Made {len(all_mcqs)} of {MCQ_TOTAL} questions...")
-        time.sleep(0.3)  # small pause between batches
 
+    st.session_state["mcq_timing"]["total_seconds"] = time.perf_counter() - started
+    st.session_state.pop("mcq_request_deadline", None)
+    prefix_count = min(len(existing_mcqs), MCQ_TOTAL)
+    all_mcqs = (all_mcqs[:prefix_count]
+                + balance_mcq_options(all_mcqs[prefix_count:], all_mcqs[:prefix_count]))
+    if len(all_mcqs) >= MCQ_TOTAL:
+        if len(cache) >= 6:
+            del cache[next(iter(cache))]
+        cache[cache_key] = (time.monotonic(), all_mcqs[:MCQ_TOTAL],
+                            st.session_state.get("last_provider", ""))
     return all_mcqs[:MCQ_TOTAL]
+
+
+def _use_topic_suggestion(topic_queries):
+    selected = st.session_state.get("topic_suggestion")
+    if selected in topic_queries:
+        st.session_state["query_text"] = topic_queries[selected]
+
+
+def _custom_topic_changed():
+    # A suggestion supplies the spelling; the editable question controls scope.
+    st.session_state["topic_suggestion"] = None
+
+
+def _upgrade_mcq_option_order():
+    """Repair saved sets once while preserving the meaning of chosen answers."""
+    old_questions = st.session_state.get("mcqs", [])
+    if not old_questions or all(q.get("_option_order_version") == 2 for q in old_questions):
+        return
+    reordered = balance_mcq_options(old_questions)
+    saved_answers = st.session_state.get("_mcq_answer_state", {}).get("answers", {})
+    for index, (old, new) in enumerate(zip(old_questions, reordered)):
+        mapping = {old["options"][origin]: new["options"][position]
+                   for position, origin in enumerate(new["_option_origin_indices"])}
+        key = f"ans_{index}"
+        if key in st.session_state:
+            st.session_state[key] = mapping.get(st.session_state[key])
+        if index in saved_answers:
+            choice = mapping.get(saved_answers[index])
+            if choice is not None:
+                saved_answers[index] = choice
+            else:
+                saved_answers.pop(index)
+    st.session_state["mcqs"] = reordered
 
 
 # ==================== UI ====================
@@ -1223,214 +664,215 @@ st.markdown(SANRIO_CSS, unsafe_allow_html=True)
 if "dark" not in st.session_state:
     st.session_state["dark"] = False
 
-st.markdown(
-    """
-    <div class="hero">
-      <div class="hero-eyebrow">BS Allied Health Sciences</div>
-      <div class="hero-title">2nd Semester Study Assistant</div>
-      <p class="hero-sub">Ask any topic or generate practice MCQs — answered only from your own books and slides.</p>
-      <div class="hero-chips">
-        <span class="chip">Physiology</span>
-        <span class="chip">Biochemistry</span>
-        <span class="chip">Anatomy</span>
-        <span class="chip">English</span>
-        <span class="chip">Book + Slides</span>
-      </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
 
 if not (GROQ_KEYS or CEREBRAS_API_KEY or GEMINI_API_KEY):
     st.error("No API key found. Add GROQ_API_KEY, CEREBRAS_API_KEY or "
              "GEMINI_API_KEY in .streamlit/secrets.toml")
     st.stop()
 
-try:
-    model = load_model()
-    collection = load_collection()
-    groq_client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
-except Exception as e:
-    st.error(f"Setup problem: {e}")
-    st.stop()
+# Load the search resources on demand, then reuse Streamlit's resource cache.
+model, collection, groq_client = None, None, None
+_upgrade_mcq_option_order()
 
-# ---------------- STUDY PANEL (left column on desktop, top on mobile) ----------------
-if "panel_open" not in st.session_state:
-    st.session_state["panel_open"] = True
-if "mode" not in st.session_state:
-    st.session_state["mode"] = "study"
+# ---------------- SIMPLE STUDY CONTROLS ----------------
 if "sel_subject" not in st.session_state:
-    st.session_state["sel_subject"] = list(SOURCES.keys())[0]
+    st.session_state["sel_subject"] = st.session_state.get("saved_subject", "Physiology")
 
-btn_label = "Hide Study Panel" if st.session_state["panel_open"] else "Show Study Panel"
-if st.button(btn_label, key="panel_toggle"):
-    st.session_state["panel_open"] = not st.session_state["panel_open"]
-    st.rerun()
-
-if st.session_state["panel_open"]:
-    panel_col, main_col = st.columns([1, 2.3], gap="large")
-else:
-    panel_col, main_col = None, st.container()
-
-if panel_col is not None:
-    with panel_col:
-        st.markdown('<div class="panel-head">Study Panel</div>', unsafe_allow_html=True)
-
-        st.markdown('<div class="side-step">Subject</div>', unsafe_allow_html=True)
-        subject = st.selectbox("Subject", list(SOURCES.keys()),
-                               key="sel_subject", label_visibility="collapsed")
-
-        st.markdown('<div class="side-step">Study from</div>', unsafe_allow_html=True)
-        source_options = list(SOURCES[subject].keys())
-        source_type = st.radio("Source", source_options, key="sel_source",
-                               label_visibility="collapsed")
-
-        st.session_state["picked_topic"] = ""
-
-        dark_on = st.toggle("Dark mode", value=st.session_state.get("dark", False),
-                            key="dark_toggle")
-        if dark_on != st.session_state.get("dark", False):
-            st.session_state["dark"] = dark_on
-            st.rerun()
-else:
-    subject = st.session_state["sel_subject"]
-    source_type = st.session_state.get("sel_source", list(SOURCES[subject].keys())[0])
-    if source_type not in SOURCES[subject]:
-        source_type = list(SOURCES[subject].keys())[0]
-
-book_choice = SOURCES[subject][source_type]
-
+active_sources = SOURCES[st.session_state["sel_subject"]]
+active_source = st.session_state.get("sel_source", st.session_state.get("saved_source"))
+if active_source not in active_sources:
+    active_source = next(iter(active_sources))
+active_book = active_sources[active_source]
+saved_study = st.session_state.get("study_result")
+has_results = bool((st.session_state.get("mcqs") and st.session_state.get("quiz_book") == active_book)
+                   or (saved_study and saved_study[0] == active_book))
+layout_marker = "results-layout" if has_results else "landing-layout"
+st.markdown(f'<div class="{layout_marker}"></div>', unsafe_allow_html=True)
+heading_col, theme_control = st.columns([5, 1], gap="small")
+with heading_col:
+    st.markdown('<div class="hero"><div class="hero-eyebrow">BS Allied Health Sciences &middot; Semester 2</div>'
+                '<div class="hero-title">2nd Semester Study Assistant</div></div>', unsafe_allow_html=True)
+with theme_control:
+    dark_on = st.toggle("Dark mode", value=st.session_state.get("dark", False), key="dark_toggle")
+    if dark_on != st.session_state.get("dark", False):
+        st.session_state["dark"] = dark_on
+        st.rerun()
 if st.session_state.get("dark", False):
     st.markdown(DARK_CSS, unsafe_allow_html=True)
 
-with main_col:
-    st.markdown('<div class="card"><div class="card-title">Study Assistant</div>'
-                f'<div class="card-sub">Source: {subject} &middot; {source_type}</div></div>',
-                unsafe_allow_html=True)
+with st.container(border=True):
+    subject_col, source_col = st.columns([2, 1], gap="medium")
+    with subject_col:
+        subject = st.selectbox("Subject", list(SOURCES.keys()), key="sel_subject")
+    with source_col:
+        source_options = list(SOURCES[subject].keys())
+        if st.session_state.get("sel_source") not in source_options:
+            saved_source = st.session_state.get("saved_source")
+            st.session_state["sel_source"] = saved_source if saved_source in source_options else source_options[0]
+        source_type = st.radio("Study from", source_options, key="sel_source", horizontal=True)
+    st.session_state["saved_subject"] = subject
+    st.session_state["saved_source"] = source_type
 
-    default_q = st.session_state.get("picked_topic", "")
-    query = st.text_input("Your question or topic:",
-                          value=default_q,
-                          placeholder="e.g. Types of amino acids")
+book_choice = SOURCES[subject][source_type]
+
+
+with st.container():
+    with st.container(key="setup_controls"):
+        if st.session_state.get("query_subject", subject) != subject:
+            st.session_state["query_text"] = ""
+            st.session_state["topic_suggestion"] = None
+        st.session_state["query_subject"] = subject
+        topic_queries = dict(get_topic_suggestions(subject))
+        if st.session_state.get("topic_suggestion") not in topic_queries:
+            st.session_state["topic_suggestion"] = None
+        st.selectbox("Find a syllabus topic", tuple(topic_queries), index=None,
+                     key="topic_suggestion", placeholder="Type a few letters, e.g. ner",
+                     filter_mode="fuzzy", on_change=_use_topic_suggestion, args=(topic_queries,),
+                     help="Search topics and subtopics for this subject. Select one to fill the question below.")
+        query = st.text_input("Your question or topic", key="query_text",
+                              placeholder="Choose a topic above or type your own question",
+                              on_change=_custom_topic_changed)
+        fresh_mcqs = st.checkbox("Make fresh questions", key="fresh_mcqs",
+                                 help="Generate another set instead of reusing saved MCQs for this topic.")
+        request = query
+        focus_topics = ()
 
     b1, b2 = st.columns(2, gap="medium")
     with b1:
         study_clicked = st.button("Topic Study", key="btn_study",
-                                  use_container_width=True)
+                                  width="stretch", type="secondary")
     with b2:
-        mcq_clicked = st.button("Generate MCQs", key="btn_mcq",
-                                use_container_width=True)
+        mcq_clicked = st.button("Generate 40 MCQs", key="btn_mcq",
+                                width="stretch", type="primary")
 
-    # ---- Topic Study ----
+    if study_clicked:
+        st.session_state["workspace_view"] = "Study notes"
+    elif mcq_clicked:
+        st.session_state["workspace_view"] = "MCQs"
+    workspace_view = st.session_state.get("workspace_view", "Study notes")
+    if workspace_view == "Practice quiz":
+        workspace_view = "MCQs"
+        st.session_state["workspace_view"] = workspace_view
+    if (study_clicked or mcq_clicked) and not query.strip():
+        st.info("Type a topic or question first.")
+
+    # Keep the answer on screen across theme changes and MCQ interactions.
     if study_clicked and query.strip():
+        st.session_state.pop("study_result", None)
         with st.spinner("Reading your books..."):
             try:
+                model, collection = load_model(), load_collection()
                 answer, diagram_pages = answer_question(
-                    query, subject, book_choice, model, collection, groq_client)
-            except Exception as e:
-                answer, diagram_pages = None, []
-                st.session_state['answer_error'] = str(e)
-        if answer is None:
-            err = st.session_state.get("answer_error", "")
-            low = err.lower()
-            if "gemini" in low and ("no gemini key" in low or "api key" in low
-                                    or "400" in low or "403" in low):
-                st.error("Groq is busy and the backup (Gemini) key is missing or "
-                         "wrong. Add GEMINI_API_KEY in Manage app → Settings → Secrets.")
-            elif "rate" in low or "429" in low or "quota" in low:
-                st.error("Rate limit reached. Wait a minute and try again.")
-            else:
-                st.error("Could not get an answer.")
-            with st.expander("Technical details (for debugging)"):
-                st.code(err or "no error text captured")
-        else:
-            st.markdown("#### Answer")
-            st.markdown(answer)
-            prov = st.session_state.get("last_provider", "")
-            if prov:
-                st.caption(f"Answered using: {prov}")
-            if diagram_pages:
-                st.markdown("#### Diagrams from your source")
-                for bk, pg in diagram_pages[:4]:
+                    request, subject, book_choice, model, collection, groq_client, focus_topics)
+                st.session_state["study_result"] = (book_choice, query, answer,
+                    diagram_pages, st.session_state.get("last_provider", ""))
+                st.rerun()
+            except Exception as error:
+                st.error(friendly_error(error))
+    result = st.session_state.get("study_result")
+    if result and result[0] == book_choice and workspace_view == "Study notes":
+        _, answered_topic, answer, diagram_pages, provider = result
+        st.markdown("### Study notes")
+        st.caption(f"Topic: {answered_topic}")
+        st.markdown(answer)
+        st.caption(f"Answered using: {provider}")
+        if diagram_pages:
+            with st.expander("Diagrams from your source"):
+                # Expander contents execute even while collapsed; gate PDF work.
+                page_choice = st.selectbox("Source page", diagram_pages,
+                    format_func=lambda item: f"{item[0]} - PDF page {item[1]}",
+                    key="source_page_choice")
+                if st.button("Load selected page", key="load_source_page"):
+                    st.session_state["loaded_source_page"] = (book_choice, answered_topic, page_choice)
+                if st.session_state.get("loaded_source_page") == (book_choice, answered_topic, page_choice):
+                    bk, pg = page_choice
                     try:
-                        st.image(render_page(bk, pg), caption=f"{bk} — page {pg}",
-                                 use_container_width=True)
+                        st.image(render_page(bk, pg), caption=f"{bk} - PDF page {pg}",
+                                 width="stretch")
                     except Exception:
-                        st.write(f"(Could not render {bk} page {pg})")
+                        st.caption(f"Could not show page {pg}.")
+
 
     # ---- Generate MCQs ----
     if mcq_clicked and query.strip():
-        topic = query
+        topic = request
+        if fresh_mcqs:
+            st.session_state.get("quiz_cache", {}).pop(
+                (topic.strip().casefold(), subject, book_choice, MCQ_TOTAL), None)
+        quiz_started = time.perf_counter()
         progress = st.progress(0.0, text="Starting...")
         try:
+            saved = st.session_state.get("quiz_cache", {}).get(
+                (topic.strip().casefold(), subject, book_choice, MCQ_TOTAL))
+            if saved and time.monotonic() - saved[0] < 3600:
+                model, collection = None, None
+            else:
+                model, collection = load_model(), load_collection()
             mcqs = generate_all_mcqs(topic, subject, book_choice, model,
-                                         collection, groq_client, progress)
-        except Exception as e:
-            st.error(f"Problem generating MCQs: {e}")
+                                         collection, groq_client, progress, focus_topics)
+        except Exception as error:
+            st.error(friendly_error(error))
             mcqs = []
         progress.empty()
         if not mcqs:
             reason = st.session_state.get("mcq_last_error", "")
-            with st.expander("Technical details (for debugging)"):
-                st.code(reason or "no error text captured")
             if "rate" in reason.lower() or "429" in reason:
                 st.warning("Groq's free limit is hit right now. Wait a minute and press Generate again.")
             elif reason:
-                st.warning(f"Could not make questions. Reason: {reason}")
+                st.warning("Could not make valid questions. Try again or choose a broader topic.")
             else:
                 st.warning("Could not make questions — this topic may be too thin in the selected source. Try a broader topic, or switch Book/Slides.")
         else:
-            # wipe the previous quiz's picks, else the new questions open
-            # with the old answers already selected and the score is wrong
+            # A new question set starts without the previous choices.
             for _old in [k for k in list(st.session_state.keys())
                          if k.startswith("ans_")]:
                 del st.session_state[_old]
             st.session_state["mcqs"] = mcqs
-            st.session_state["submitted"] = False
+            st.session_state["quiz_book"] = book_choice
+            st.session_state["quiz_topic"] = query
+            st.session_state["quiz_request"] = topic
+            st.session_state["quiz_focus"] = focus_topics
+            st.session_state["quiz_id"] = st.session_state.get("quiz_id", 0) + 1
+            if len(mcqs) < MCQ_TOTAL:
+                st.warning(f"{len(mcqs)} of 40 questions ready. Some questions were repeated, invalid, "
+                           "or the provider stopped. You can generate the remaining questions below.")
             st.success(f"{len(mcqs)} questions ready — answer them below.")
+        if mcqs:
+            st.session_state["quiz_ready_seconds"] = time.perf_counter() - quiz_started
+            st.rerun()
 
-    # Show the quiz if we have questions (stays visible after clicking)
-    if "mcqs" in st.session_state and st.session_state["mcqs"]:
-        mcqs = st.session_state["mcqs"]
-        st.markdown("---")
-        for i, q in enumerate(mcqs):
-            st.markdown(f'<div class="mcq-card"><div class="mcq-num">Question {i+1}</div>'
-                        f'<div class="mcq-q">{q["question"]}</div></div>',
-                        unsafe_allow_html=True)
-            st.radio("Choose:", q["options"], key=f"ans_{i}", index=None,
-                     label_visibility="collapsed")
-
-        if st.button("Submit & See Score", key="submit_btn"):
-            st.session_state["submitted"] = True
-
-        if st.session_state.get("submitted"):
-            score = 0
-            for i, q in enumerate(mcqs):
-                chosen = st.session_state.get(f"ans_{i}")
-                correct = q["options"][q["answer_index"]]
-                if chosen == correct:
-                    score += 1
-            pct = round(score / len(mcqs) * 100)
-            st.markdown(
-                f'<div class="score-badge"><div class="score-num">{score}<span style="font-size:1.4rem;color:#8a6b7c;">/{len(mcqs)}</span></div>'
-                f'<div class="score-lbl">{pct}% correct</div></div>',
-                unsafe_allow_html=True)
-            st.markdown("#### Review")
-            for i, q in enumerate(mcqs):
-                chosen = st.session_state.get(f"ans_{i}")
-                correct = q["options"][q["answer_index"]]
-                right = (chosen == correct)
-                box = "correct-box" if right else "wrong-box"
-                mark = "✅ Correct" if right else "❌ Wrong"
-                your_ans = chosen if chosen else "(not answered)"
-                st.markdown(
-                    f'<div class="{box}"><b>Q{i+1}. {q["question"]}</b><br>'
-                    f'{mark}<br>Your answer: {your_ans}<br>'
-                    f'Correct answer: {correct}<br>'
-                    f'<i>{q.get("explanation","")}</i><br>'
-                    f'<small>📖 {q.get("page","")}</small></div>',
-                    unsafe_allow_html=True)
-
+    if workspace_view == "MCQs":
+        if st.session_state.get("mcqs") and st.session_state.get("quiz_book") == book_choice:
+            current_mcqs = st.session_state["mcqs"]
+            st.caption(f"{len(current_mcqs)} / 40 questions ready · "
+                       f"Prepared in {st.session_state.get('quiz_ready_seconds', 0):.1f}s"
+                       + (f" · {st.session_state.get('last_provider')}" if st.session_state.get('last_provider') else ""))
+            if len(current_mcqs) < MCQ_TOTAL:
+                st.info(f"{len(current_mcqs)} / {MCQ_TOTAL} MCQs available. "
+                        "A narrow topic may not support 40 different questions from this source.")
+                if st.button("Complete remaining questions", key="complete_mcqs", type="primary"):
+                    progress = st.progress(len(current_mcqs) / MCQ_TOTAL,
+                                           text="Keeping your questions and making the rest...")
+                    try:
+                        model, collection = load_model(), load_collection()
+                        completed = generate_all_mcqs(st.session_state["quiz_request"], subject,
+                            book_choice, model, collection, groq_client, progress,
+                            st.session_state.get("quiz_focus", ()), current_mcqs)
+                        st.session_state["mcqs"] = completed
+                        if len(completed) > len(current_mcqs):
+                            st.rerun()
+                        else:
+                            st.warning("No new valid questions were added. Try again when the provider "
+                                       "is available, or choose a broader topic.")
+                    except Exception as error:
+                        st.error(friendly_error(error))
+                    progress.empty()
+            render_mcqs(st.session_state["mcqs"], st.session_state.get("quiz_id", 0),
+                        st.session_state.get("quiz_topic", ""))
+        elif has_results:
+            st.caption("Type a topic above and generate MCQs to start.")
+    elif has_results and (not result or result[0] != book_choice):
+        st.caption("Choose a topic above and open Topic Study to see your notes.")
 
 
 # ---------------- FOOTER ----------------

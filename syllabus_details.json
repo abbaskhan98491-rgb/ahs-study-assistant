@@ -1,0 +1,2854 @@
+{
+  "source": "BS Allied Health 2nd sem.pdf",
+  "edition": "KMU 2021-22 semester 2",
+  "row_counts": {
+    "Biochemistry": {
+      "cognitive": 37,
+      "practical": 16,
+      "affective": 16
+    },
+    "Physiology": {
+      "cognitive": 155,
+      "practical": 16,
+      "affective": 16
+    },
+    "Anatomy": {
+      "cognitive": 110,
+      "practical": 19,
+      "affective": 16
+    },
+    "English": {
+      "cognitive": 45,
+      "practical": 3,
+      "affective": 3
+    }
+  },
+  "subjects": {
+    "Biochemistry": {
+      "Metabolism": {
+        "Definition": [
+          {
+            "text": "Define metabolism",
+            "pdf_page": 12,
+            "row": "1",
+            "domain_inferred": false
+          }
+        ],
+        "Types of metabolism": [
+          {
+            "text": "Explain types of metabolism",
+            "pdf_page": 12,
+            "row": "2",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Practical / OSPE": {
+        "Demonstrate tube selection & preservative for blood tests independantly": [
+          {
+            "text": "Demonstrate tube selection & preservative for blood tests independantly",
+            "pdf_page": 12,
+            "row": "3",
+            "domain_inferred": false
+          }
+        ],
+        "Perform Preparation of reagents and estimation of glucose": [
+          {
+            "text": "Perform Preparation of reagents and estimation of glucose",
+            "pdf_page": 12,
+            "row": "8",
+            "domain_inferred": false
+          }
+        ],
+        "Video Demonstrate of electron tranport chain": [
+          {
+            "text": "Video Demonstrate of electron tranport chain",
+            "pdf_page": 12,
+            "row": "13",
+            "domain_inferred": false
+          }
+        ],
+        "Demonstrate procedure & parts of water bath independently": [
+          {
+            "text": "Demonstrate procedure & parts of water bath independently",
+            "pdf_page": 12,
+            "row": "17",
+            "domain_inferred": false
+          }
+        ],
+        "Perform the procedure of blood collection technique independently": [
+          {
+            "text": "Perform the procedure of blood collection technique independently",
+            "pdf_page": 12,
+            "row": "20",
+            "domain_inferred": false
+          }
+        ],
+        "Video Demontration of Gluconeogensis & Glycogensis": [
+          {
+            "text": "Video Demontration of Gluconeogensis & Glycogensis",
+            "pdf_page": 13,
+            "row": "24",
+            "domain_inferred": false
+          }
+        ],
+        "Perform estimation of glucose by spectrophotometric method independently": [
+          {
+            "text": "Perform estimation of glucose by spectrophotometric method independently",
+            "pdf_page": 13,
+            "row": "27",
+            "domain_inferred": false
+          }
+        ],
+        "Video Demontration of ammonia systhesis": [
+          {
+            "text": "Video Demontration of ammonia systhesis",
+            "pdf_page": 13,
+            "row": "31",
+            "domain_inferred": false
+          }
+        ],
+        "Perform estimation of Urea by spectrophotometric method independently": [
+          {
+            "text": "Perform estimation of Urea by spectrophotometric method independently",
+            "pdf_page": 13,
+            "row": "36",
+            "domain_inferred": false
+          }
+        ],
+        "Perform the Ketone body estimation in urine through step method": [
+          {
+            "text": "Perform the Ketone body estimation in urine through step method",
+            "pdf_page": 13,
+            "row": "40",
+            "domain_inferred": false
+          }
+        ],
+        "Perform the procedure of estimation of cholesterol estimation by spectrophotometric method independently": [
+          {
+            "text": "Perform the procedure of estimation of cholesterol estimation by spectrophotometric method independently",
+            "pdf_page": 14,
+            "row": "44",
+            "domain_inferred": false
+          }
+        ],
+        "Perform protein estimation in urine": [
+          {
+            "text": "Perform protein estimation in urine",
+            "pdf_page": 14,
+            "row": "49",
+            "domain_inferred": false
+          }
+        ],
+        "Perform uric acid estimation by spectrophotometric method": [
+          {
+            "text": "Perform uric acid estimation by spectrophotometric method",
+            "pdf_page": 14,
+            "row": "53",
+            "domain_inferred": false
+          }
+        ],
+        "Perform interpretation of Various nutrients ( Iron, Bcomplex , Folate)": [
+          {
+            "text": "Perform interpretation of Various nutrients ( Iron, Bcomplex , Folate)",
+            "pdf_page": 14,
+            "row": "59",
+            "domain_inferred": false
+          }
+        ],
+        "Video Demontration of oral glucose tolerance test": [
+          {
+            "text": "Video Demontration of oral glucose tolerance test",
+            "pdf_page": 15,
+            "row": "63",
+            "domain_inferred": false
+          }
+        ],
+        "Perform serum ALT estimation by spectrophotometric method": [
+          {
+            "text": "Perform serum ALT estimation by spectrophotometric method",
+            "pdf_page": 15,
+            "row": "68",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Catabolic Process Carbohydrate Metabolism": {
+        "Glycolysis": [
+          {
+            "text": "Describe glycolysis pathway of carbohydrate metabolism",
+            "pdf_page": 12,
+            "row": "5",
+            "domain_inferred": false
+          }
+        ],
+        "Glycogenolysis": [
+          {
+            "text": "Explain glycogenolysis pathway of carbohydrate metabolism",
+            "pdf_page": 12,
+            "row": "6",
+            "domain_inferred": false
+          }
+        ],
+        "Pentose Phosphate Pathway": [
+          {
+            "text": "Descirbe pentose phosphate pathway of carbohydrate metabolism",
+            "pdf_page": 12,
+            "row": "7",
+            "domain_inferred": false
+          }
+        ],
+        "Rapoport Lubering shunt": [
+          {
+            "text": "Describe glycolysis pathway in Red Blood Cells (RBCs)",
+            "pdf_page": 12,
+            "row": "10",
+            "domain_inferred": false
+          }
+        ],
+        "Krebs cycle": [
+          {
+            "text": "Explain kreb cycle of carbohydrate metbolism",
+            "pdf_page": 12,
+            "row": "11",
+            "domain_inferred": false
+          }
+        ],
+        "Electron transport chain": [
+          {
+            "text": "Describe the electron transport chain an energy harvesting pathway of carbohydrate metabolism",
+            "pdf_page": 12,
+            "row": "12",
+            "domain_inferred": false
+          }
+        ],
+        "Cori cycle": [
+          {
+            "text": "Explain the pathway of Cori cycle",
+            "pdf_page": 12,
+            "row": "15",
+            "domain_inferred": false
+          }
+        ],
+        "Chemical rationale": [
+          {
+            "text": "Discuss the chemical rationale of each reaction/step of Carbohydrate metabolism",
+            "pdf_page": 12,
+            "row": "16",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Energy Calculation": {
+        "ATP calculation": [
+          {
+            "text": "Calculate how much ATPs are produced by complete oxidation of one molecule of glucose",
+            "pdf_page": 12,
+            "row": "19",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Anabolic Process Carbohydrate Metabolism": {
+        "Gluconeogenesis": [
+          {
+            "text": "Describe the process of Gluconeogensis in human body",
+            "pdf_page": 13,
+            "row": "22",
+            "domain_inferred": false
+          }
+        ],
+        "Glycogenesis": [
+          {
+            "text": "Explain the process of Glycogensis",
+            "pdf_page": 13,
+            "row": "23",
+            "domain_inferred": false
+          }
+        ],
+        "Regulation": [
+          {
+            "text": "Explain the regulation of the metabolic pathways of carbohydrates",
+            "pdf_page": 13,
+            "row": "26",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Protein And Amino Acid Metabolism": {
+        "Metabolic pathways of amoni acids": [
+          {
+            "text": "Describe the metbolic pathway of amino acids",
+            "pdf_page": 13,
+            "row": "29",
+            "domain_inferred": false
+          }
+        ],
+        "Amonia synthesis": [
+          {
+            "text": "Describe how ammonia synthesized and excreted from body",
+            "pdf_page": 13,
+            "row": "30",
+            "domain_inferred": false
+          }
+        ],
+        "Urea Cycle": [
+          {
+            "text": "Define Urea",
+            "pdf_page": 13,
+            "row": "33",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain reaction of urea cycle",
+            "pdf_page": 13,
+            "row": "34",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain exceation of urea",
+            "pdf_page": 13,
+            "row": "35",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Lipids Metabolism": {
+        "Oxidation of fatty acids": [
+          {
+            "text": "Describe metabolic pathways of lipid metabolism",
+            "pdf_page": 13,
+            "row": "38",
+            "domain_inferred": false
+          }
+        ],
+        "Beta oxidation": [
+          {
+            "text": "Explain beta oxidation of lipids",
+            "pdf_page": 13,
+            "row": "39",
+            "domain_inferred": false
+          }
+        ],
+        "Steps of beta oxidation": [
+          {
+            "text": "Enist reactions of the beta oxidation pathway",
+            "pdf_page": 14,
+            "row": "42",
+            "domain_inferred": false
+          }
+        ],
+        "ATP calculation": [
+          {
+            "text": "Calculate how much ATPs are produced by complete oxidation of one fatty acid molecule",
+            "pdf_page": 14,
+            "row": "43",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Nucleotide Metabolism": {
+        "de nove and salvage pathways of nucleotide synthesis": [
+          {
+            "text": "Explain how purine nucleotides are synthesized in the body",
+            "pdf_page": 14,
+            "row": "46",
+            "domain_inferred": false
+          }
+        ],
+        "Catabolism of purines": [
+          {
+            "text": "Discuss structure and nomentclature of protein",
+            "pdf_page": 14,
+            "row": "47",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss structure and nomentclature of aminoacids",
+            "pdf_page": 14,
+            "row": "48",
+            "domain_inferred": false
+          }
+        ],
+        "Purine catabolism": [
+          {
+            "text": "Explain how purine nucloetides are catabolized in the body",
+            "pdf_page": 14,
+            "row": "51",
+            "domain_inferred": false
+          }
+        ],
+        "Uric acid synthesis and elimination": [
+          {
+            "text": "Describe uric acid production and elimination from body",
+            "pdf_page": 14,
+            "row": "52",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Nutrition": {
+        "Definition": [
+          {
+            "text": "Define nutrients and nutrition",
+            "pdf_page": 14,
+            "row": "55",
+            "domain_inferred": false
+          }
+        ],
+        "Nutrient groups": [
+          {
+            "text": "Explain the essential nutrient groups",
+            "pdf_page": 14,
+            "row": "56",
+            "domain_inferred": false
+          }
+        ],
+        "Balanced diet": [
+          {
+            "text": "Describe balance diet for human body",
+            "pdf_page": 14,
+            "row": "57",
+            "domain_inferred": false
+          }
+        ],
+        "Nutritional importance biomolecules": [
+          {
+            "text": "Describe nutritional value of carbohydrates, proteins and lipids",
+            "pdf_page": 14,
+            "row": "58",
+            "domain_inferred": false
+          }
+        ],
+        "Anorexia, Obesity": [
+          {
+            "text": "Discuss eating disorders in human body",
+            "pdf_page": 15,
+            "row": "61",
+            "domain_inferred": false
+          }
+        ],
+        "Malnutrition": [
+          {
+            "text": "Explain malnutrition with focus on Protein energy malnutrition, Kwashiorkor, Marasmus",
+            "pdf_page": 15,
+            "row": "62",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Clinical Enzymology": {
+        "Definition": [
+          {
+            "text": "Define clinical/ diagnostic enzymology",
+            "pdf_page": 15,
+            "row": "65",
+            "domain_inferred": false
+          }
+        ],
+        "factors effecting enzymes": [
+          {
+            "text": "Explain factors affecting Enzymes activity",
+            "pdf_page": 15,
+            "row": "66",
+            "domain_inferred": false
+          }
+        ],
+        "Clinical significance of ALT,AST,ALP,GGT,LDH,CK,Lipase,amylase.": [
+          {
+            "text": "Describe clinical significance of enzymes",
+            "pdf_page": 15,
+            "row": "67",
+            "domain_inferred": false
+          }
+        ]
+      }
+    },
+    "Physiology": {
+      "Nervous System": {
+        "Nervous system introduction": [
+          {
+            "text": "Explain the Nervous system",
+            "pdf_page": 17,
+            "row": "1",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the anatomical and physiological division of nervous system",
+            "pdf_page": 17,
+            "row": "2",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the structure and function of central nervous system",
+            "pdf_page": 17,
+            "row": "3",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the structure and function of peripheral nervous system",
+            "pdf_page": 17,
+            "row": "4",
+            "domain_inferred": false
+          }
+        ],
+        "Action potential": [
+          {
+            "text": "Explain the action potential and resting membrane potential",
+            "pdf_page": 17,
+            "row": "5",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the miniature end plate potential",
+            "pdf_page": 17,
+            "row": "6",
+            "domain_inferred": false
+          },
+          {
+            "text": "Describe the Local and action potential",
+            "pdf_page": 17,
+            "row": "7",
+            "domain_inferred": false
+          }
+        ],
+        "Neuron": [
+          {
+            "text": "Define Neuron.",
+            "pdf_page": 17,
+            "row": "8",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the Structure of neuron",
+            "pdf_page": 17,
+            "row": "9",
+            "domain_inferred": false
+          },
+          {
+            "text": "Describe the classification of neuron and nerve fiber",
+            "pdf_page": 17,
+            "row": "10",
+            "domain_inferred": false
+          }
+        ],
+        "Meninges, CSF, ventricles": [
+          {
+            "text": "Explain the function of Meninges and CSF",
+            "pdf_page": 17,
+            "row": "11",
+            "domain_inferred": false
+          }
+        ],
+        "Neuroglia": [
+          {
+            "text": "Define Neuroglia",
+            "pdf_page": 17,
+            "row": "14",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the classification of neuroglia",
+            "pdf_page": 17,
+            "row": "15",
+            "domain_inferred": false
+          },
+          {
+            "text": "Describe the function of neuroglia",
+            "pdf_page": 17,
+            "row": "16",
+            "domain_inferred": false
+          }
+        ],
+        "Receptors": [
+          {
+            "text": "Define the Receptor",
+            "pdf_page": 17,
+            "row": "17",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the classification of receptors",
+            "pdf_page": 17,
+            "row": "18",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the properties of receptors",
+            "pdf_page": 17,
+            "row": "19",
+            "domain_inferred": false
+          }
+        ],
+        "Synapse": [
+          {
+            "text": "Define the Synapses",
+            "pdf_page": 17,
+            "row": "20",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the classification of synapses",
+            "pdf_page": 17,
+            "row": "21",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the properties of synapses",
+            "pdf_page": 17,
+            "row": "22",
+            "domain_inferred": false
+          },
+          {
+            "text": "Decribe the functions of synapse",
+            "pdf_page": 17,
+            "row": "23",
+            "domain_inferred": false
+          }
+        ],
+        "Neurotransmitter": [
+          {
+            "text": "Define the neurotransmitter",
+            "pdf_page": 18,
+            "row": "26",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain classification of neurotransmitter",
+            "pdf_page": 18,
+            "row": "27",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the Neuromodulators",
+            "pdf_page": 18,
+            "row": "28",
+            "domain_inferred": false
+          }
+        ],
+        "Reflex activity": [
+          {
+            "text": "Explain the Reflex activity and Reflex arc",
+            "pdf_page": 18,
+            "row": "29",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the component of reflex arc",
+            "pdf_page": 18,
+            "row": "30",
+            "domain_inferred": false
+          }
+        ],
+        "Cranial and spinal nerves": [
+          {
+            "text": "Explain the function of spinal nerves",
+            "pdf_page": 18,
+            "row": "33",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain different types of cranial nerves",
+            "pdf_page": 18,
+            "row": "34",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss function of each cranial nerve",
+            "pdf_page": 18,
+            "row": "35",
+            "domain_inferred": false
+          }
+        ],
+        "Somatic system": [
+          {
+            "text": "Explain the somatosensory system",
+            "pdf_page": 18,
+            "row": "36",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the Somatomotor system",
+            "pdf_page": 18,
+            "row": "37",
+            "domain_inferred": false
+          }
+        ],
+        "Autonomic nervous system": [
+          {
+            "text": "Decribe the Sympathetic nevous system",
+            "pdf_page": 18,
+            "row": "38",
+            "domain_inferred": false
+          },
+          {
+            "text": "Describe the Para sympathetic nevous system",
+            "pdf_page": 18,
+            "row": "39",
+            "domain_inferred": false
+          }
+        ],
+        "Physiology of pain": [
+          {
+            "text": "Discuss the components of pain sensation",
+            "pdf_page": 18,
+            "row": "40",
+            "domain_inferred": false
+          },
+          {
+            "text": "Decribe the types of pain sensation",
+            "pdf_page": 18,
+            "row": "41",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the pathways of pain sensation.",
+            "pdf_page": 18,
+            "row": "42",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the benefits of pain sensations",
+            "pdf_page": 18,
+            "row": "43",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Practical / OSPE": {
+        "label the function and division of nervous system on model/ charts": [
+          {
+            "text": "label the function and division of nervous system on model/ charts",
+            "pdf_page": 17,
+            "row": "12",
+            "domain_inferred": false
+          }
+        ],
+        "Label Structure and function of receptor and synapses on model & Charts": [
+          {
+            "text": "Label Structure and function of receptor and synapses on model & Charts",
+            "pdf_page": 17,
+            "row": "24",
+            "domain_inferred": false
+          }
+        ],
+        "Demonstrate the superficial and deep reflexes independently": [
+          {
+            "text": "Demonstrate the superficial and deep reflexes independently",
+            "pdf_page": 18,
+            "row": "31",
+            "domain_inferred": false
+          }
+        ],
+        "Demonstrate function principal of nerve stimulator": [
+          {
+            "text": "Demonstrate function principal of nerve stimulator",
+            "pdf_page": 18,
+            "row": "44",
+            "domain_inferred": true
+          }
+        ],
+        "Demonstrate the working of ear and eye": [
+          {
+            "text": "Demonstrate the working of ear and eye",
+            "pdf_page": 19,
+            "row": "60",
+            "domain_inferred": false
+          }
+        ],
+        "Label the pathway of olfactory system and taste buds on charts": [
+          {
+            "text": "Label the pathway of olfactory system and taste buds on charts",
+            "pdf_page": 19,
+            "row": "72",
+            "domain_inferred": false
+          }
+        ],
+        "Interpret reports of CBC and TLC": [
+          {
+            "text": "Interpret reports of CBC and TLC",
+            "pdf_page": 20,
+            "row": "84",
+            "domain_inferred": false
+          }
+        ],
+        "Perform bleeding and clotting time independently": [
+          {
+            "text": "Perform bleeding and clotting time independently",
+            "pdf_page": 20,
+            "row": "94",
+            "domain_inferred": false
+          }
+        ],
+        "Perform the procedure of ESR": [
+          {
+            "text": "Perform the procedure of ESR",
+            "pdf_page": 21,
+            "row": "105",
+            "domain_inferred": false
+          }
+        ],
+        "Label structure and function of heart on model and charts": [
+          {
+            "text": "Label structure and function of heart on model and charts",
+            "pdf_page": 21,
+            "row": "117",
+            "domain_inferred": false
+          }
+        ],
+        "Perform auscultation heart sounds": [
+          {
+            "text": "Perform auscultation heart sounds",
+            "pdf_page": 22,
+            "row": "130",
+            "domain_inferred": false
+          }
+        ],
+        "Interpretation of Normal ECG Strip": [
+          {
+            "text": "Interpretation of Normal ECG Strip",
+            "pdf_page": 22,
+            "row": "143",
+            "domain_inferred": false
+          }
+        ],
+        "Demonstrate the examination of BP and Pulses independently": [
+          {
+            "text": "Demonstrate the examination of BP and Pulses independently",
+            "pdf_page": 23,
+            "row": "149",
+            "domain_inferred": false
+          }
+        ],
+        "Identify various sites of Lymph nodes independently": [
+          {
+            "text": "Identify various sites of Lymph nodes independently",
+            "pdf_page": 23,
+            "row": "163",
+            "domain_inferred": false
+          }
+        ],
+        "Identification of various component of lymphatic system using charts and models": [
+          {
+            "text": "Identification of various component of lymphatic system using charts and models",
+            "pdf_page": 24,
+            "row": "173",
+            "domain_inferred": false
+          }
+        ],
+        "Perform the procedure of DLC independently": [
+          {
+            "text": "Perform the procedure of DLC independently",
+            "pdf_page": 24,
+            "row": "186",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Special Senses": {
+        "Sense of Vision": [
+          {
+            "text": "Explain the structure of eye",
+            "pdf_page": 19,
+            "row": "46",
+            "domain_inferred": false
+          },
+          {
+            "text": "Decribe the layer of eye wall",
+            "pdf_page": 19,
+            "row": "47",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the structure inside the eyeball",
+            "pdf_page": 19,
+            "row": "48",
+            "domain_inferred": false
+          },
+          {
+            "text": "Expalin the sensory receptor cells in eye",
+            "pdf_page": 19,
+            "row": "49",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the visual pocess",
+            "pdf_page": 19,
+            "row": "50",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the visual pathway",
+            "pdf_page": 19,
+            "row": "51",
+            "domain_inferred": false
+          }
+        ],
+        "Sense of hearing": [
+          {
+            "text": "Decribe the structure of ear",
+            "pdf_page": 19,
+            "row": "52",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss parts of ear",
+            "pdf_page": 19,
+            "row": "53",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the function of external ear",
+            "pdf_page": 19,
+            "row": "54",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the function middle ear",
+            "pdf_page": 19,
+            "row": "55",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the function of internal ear",
+            "pdf_page": 19,
+            "row": "56",
+            "domain_inferred": false
+          },
+          {
+            "text": "Decribe the auditory pathway",
+            "pdf_page": 19,
+            "row": "57",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the mechanism of hearing",
+            "pdf_page": 19,
+            "row": "58",
+            "domain_inferred": false
+          },
+          {
+            "text": "Illustrate the mechanism of balance maintaince by ears",
+            "pdf_page": 19,
+            "row": "59",
+            "domain_inferred": false
+          }
+        ],
+        "Sense of taste": [
+          {
+            "text": "Define taste buds",
+            "pdf_page": 19,
+            "row": "62",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain situation of taste buds",
+            "pdf_page": 19,
+            "row": "63",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain structure and function of taste buds",
+            "pdf_page": 19,
+            "row": "64",
+            "domain_inferred": false
+          },
+          {
+            "text": "Describe the Pathway for taste",
+            "pdf_page": 19,
+            "row": "65",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the primary taste sensation",
+            "pdf_page": 19,
+            "row": "66",
+            "domain_inferred": false
+          }
+        ],
+        "Sense of smell": [
+          {
+            "text": "Define olfaction",
+            "pdf_page": 19,
+            "row": "67",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the olfactory receptors",
+            "pdf_page": 19,
+            "row": "68",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the vomeronasal organ in human",
+            "pdf_page": 19,
+            "row": "69",
+            "domain_inferred": false
+          },
+          {
+            "text": "Decribe the pathway for olfaction",
+            "pdf_page": 19,
+            "row": "70",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the olfactory transduction",
+            "pdf_page": 19,
+            "row": "71",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Blood Physiology": {
+        "Body fluid": [
+          {
+            "text": "Discuss the significance of body fluid",
+            "pdf_page": 20,
+            "row": "74",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the body fluid compartments",
+            "pdf_page": 20,
+            "row": "75",
+            "domain_inferred": false
+          },
+          {
+            "text": "Decribe the concentration of body fluids",
+            "pdf_page": 20,
+            "row": "76",
+            "domain_inferred": false
+          }
+        ],
+        "Blood": [
+          {
+            "text": "Explain the composition of blood plasma",
+            "pdf_page": 20,
+            "row": "77",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the function of blood",
+            "pdf_page": 20,
+            "row": "78",
+            "domain_inferred": false
+          }
+        ],
+        "Hematopiosis": [
+          {
+            "text": "Explain the Hematopiosis",
+            "pdf_page": 20,
+            "row": "79",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the Erythropiosis",
+            "pdf_page": 20,
+            "row": "80",
+            "domain_inferred": false
+          },
+          {
+            "text": "Decribe the Leukopiosis",
+            "pdf_page": 20,
+            "row": "81",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the thorombopiosis",
+            "pdf_page": 20,
+            "row": "82",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the factor responsible of Hematopiosis",
+            "pdf_page": 20,
+            "row": "83",
+            "domain_inferred": false
+          }
+        ],
+        "Red blood cell": [
+          {
+            "text": "Explain the morphology and properties of RBC",
+            "pdf_page": 20,
+            "row": "86",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the function of RBC",
+            "pdf_page": 20,
+            "row": "87",
+            "domain_inferred": false
+          },
+          {
+            "text": "Decribe the variation in number, size, shape and structure of RBC",
+            "pdf_page": 20,
+            "row": "88",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the structure of hemoglobin",
+            "pdf_page": 20,
+            "row": "89",
+            "domain_inferred": false
+          }
+        ],
+        "White blood cells": [
+          {
+            "text": "Explain the classification of WBC",
+            "pdf_page": 20,
+            "row": "90",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the morphology of WBC",
+            "pdf_page": 20,
+            "row": "91",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain variation in WBC Count, Properties of WBC",
+            "pdf_page": 20,
+            "row": "92",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the function and properties of WBC",
+            "pdf_page": 20,
+            "row": "93",
+            "domain_inferred": false
+          }
+        ],
+        "Homeostasis": [
+          {
+            "text": "Define homeostasis",
+            "pdf_page": 21,
+            "row": "96",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the stages of homeostasis,",
+            "pdf_page": 21,
+            "row": "97",
+            "domain_inferred": true
+          },
+          {
+            "text": "List of coagulation factors",
+            "pdf_page": 21,
+            "row": "98",
+            "domain_inferred": true
+          },
+          {
+            "text": "Decribe the sequence of coagulation mechanism",
+            "pdf_page": 21,
+            "row": "99",
+            "domain_inferred": true
+          },
+          {
+            "text": "Discuss the clot retraction and fabrinolysis,",
+            "pdf_page": 21,
+            "row": "100",
+            "domain_inferred": true
+          }
+        ],
+        "Blood groups": [
+          {
+            "text": "Define blood grouping ,",
+            "pdf_page": 21,
+            "row": "101",
+            "domain_inferred": true
+          },
+          {
+            "text": "Explain the ABO blood group system ,",
+            "pdf_page": 21,
+            "row": "102",
+            "domain_inferred": true
+          },
+          {
+            "text": "Explain the importance of ABO blood groups in transfusion",
+            "pdf_page": 21,
+            "row": "103",
+            "domain_inferred": true
+          },
+          {
+            "text": "Discuss the Rh Factor",
+            "pdf_page": 21,
+            "row": "104",
+            "domain_inferred": true
+          }
+        ]
+      },
+      "Cardiovascular System": {
+        "Introduction to car-diovascular system": [
+          {
+            "text": "Explain the function of CVS",
+            "pdf_page": 21,
+            "row": "107",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the arterial and venous system",
+            "pdf_page": 21,
+            "row": "108",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the division of circulation pulmonary and systemic circulation",
+            "pdf_page": 21,
+            "row": "109",
+            "domain_inferred": false
+          }
+        ],
+        "Physiology of heart": [
+          {
+            "text": "Explain the structure of heart",
+            "pdf_page": 21,
+            "row": "110",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain Layers of wall of heart",
+            "pdf_page": 21,
+            "row": "111",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the action of heart",
+            "pdf_page": 21,
+            "row": "112",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss properties of cardiac muscles",
+            "pdf_page": 21,
+            "row": "113",
+            "domain_inferred": false
+          }
+        ],
+        "Cardiac cycle": [
+          {
+            "text": "Explain the cardiac cycle",
+            "pdf_page": 21,
+            "row": "114",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the events of cardiac cycle",
+            "pdf_page": 21,
+            "row": "115",
+            "domain_inferred": false
+          },
+          {
+            "text": "Decribe the physiological changing during each periods of cardiac cycle",
+            "pdf_page": 21,
+            "row": "116",
+            "domain_inferred": false
+          }
+        ],
+        "Heart sound": [
+          {
+            "text": "Discuss the heart sounds",
+            "pdf_page": 22,
+            "row": "119",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain different types of heat sound",
+            "pdf_page": 22,
+            "row": "120",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss methods of studying heart sounds",
+            "pdf_page": 22,
+            "row": "121",
+            "domain_inferred": false
+          }
+        ],
+        "Cardiac output": [
+          {
+            "text": "Explain the cardiac output",
+            "pdf_page": 22,
+            "row": "122",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the Stroke volume",
+            "pdf_page": 22,
+            "row": "123",
+            "domain_inferred": false
+          },
+          {
+            "text": "Describe the heart rate",
+            "pdf_page": 22,
+            "row": "124",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the Minute volume",
+            "pdf_page": 22,
+            "row": "125",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the cardiac index",
+            "pdf_page": 22,
+            "row": "126",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the Variation in cardiac output",
+            "pdf_page": 22,
+            "row": "127",
+            "domain_inferred": false
+          },
+          {
+            "text": "Describe the factor maintenance cardiac output",
+            "pdf_page": 22,
+            "row": "128",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the measurements of cardiac output",
+            "pdf_page": 22,
+            "row": "129",
+            "domain_inferred": false
+          }
+        ],
+        "Blood pressure": [
+          {
+            "text": "Define blood pressure",
+            "pdf_page": 22,
+            "row": "132",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the regulation of blood pressure",
+            "pdf_page": 22,
+            "row": "133",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the short term and long term regulation of blood pressure",
+            "pdf_page": 22,
+            "row": "134",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explainthe structure and function of blood vessels",
+            "pdf_page": 22,
+            "row": "135",
+            "domain_inferred": false
+          }
+        ],
+        "ECG": [
+          {
+            "text": "Define Conducive system of heart",
+            "pdf_page": 22,
+            "row": "136",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the Part of conductive system",
+            "pdf_page": 22,
+            "row": "137",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the properties of conductive system",
+            "pdf_page": 22,
+            "row": "138",
+            "domain_inferred": false
+          },
+          {
+            "text": "Define elecrocardio graphy",
+            "pdf_page": 22,
+            "row": "139",
+            "domain_inferred": false
+          },
+          {
+            "text": "Decribe different in electrocardiogram and graph",
+            "pdf_page": 22,
+            "row": "140",
+            "domain_inferred": false
+          },
+          {
+            "text": "Eplain classification ECG Leads and placement of ECG leads",
+            "pdf_page": 22,
+            "row": "141",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the description of waves and segments in basic ECG",
+            "pdf_page": 22,
+            "row": "142",
+            "domain_inferred": false
+          }
+        ],
+        "Arterial Circulation": [
+          {
+            "text": "Explain Systemic Circulation",
+            "pdf_page": 23,
+            "row": "145",
+            "domain_inferred": false
+          }
+        ],
+        "Venous Circulation": [
+          {
+            "text": "Describe Pulmonary Circulation",
+            "pdf_page": 23,
+            "row": "146",
+            "domain_inferred": false
+          }
+        ],
+        "Capillary Circulation and Exchangeof Materials": [
+          {
+            "text": "Explain the Capillary circulation",
+            "pdf_page": 23,
+            "row": "147",
+            "domain_inferred": false
+          }
+        ],
+        "Conduction system of the heart": [
+          {
+            "text": "Explain Conduction system",
+            "pdf_page": 23,
+            "row": "148",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Lymphatic System": {
+        "Lymphatic system": [
+          {
+            "text": "Define lymphatic system",
+            "pdf_page": 23,
+            "row": "151",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the organization of lymphatic system",
+            "pdf_page": 23,
+            "row": "152",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the lymph nodes",
+            "pdf_page": 23,
+            "row": "153",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the structure and function of lymph node",
+            "pdf_page": 23,
+            "row": "154",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the formation of lymph",
+            "pdf_page": 23,
+            "row": "155",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the composition and function of lymph",
+            "pdf_page": 23,
+            "row": "156",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the lymphatic circulation",
+            "pdf_page": 23,
+            "row": "157",
+            "domain_inferred": false
+          }
+        ],
+        "Spleen": [
+          {
+            "text": "Discuss the structure of spleen",
+            "pdf_page": 23,
+            "row": "158",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the red pulp and white pulp",
+            "pdf_page": 23,
+            "row": "159",
+            "domain_inferred": false
+          },
+          {
+            "text": "Describe the function of spleen",
+            "pdf_page": 23,
+            "row": "160",
+            "domain_inferred": false
+          }
+        ],
+        "Thymus": [
+          {
+            "text": "Discuss the structure and function of thymus",
+            "pdf_page": 23,
+            "row": "161",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the location of thymus",
+            "pdf_page": 23,
+            "row": "162",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Immune System": {
+        "Immunity": [
+          {
+            "text": "Define immunity",
+            "pdf_page": 24,
+            "row": "165",
+            "domain_inferred": false
+          },
+          {
+            "text": "Define innate immunity",
+            "pdf_page": 24,
+            "row": "166",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the types of immunity",
+            "pdf_page": 24,
+            "row": "167",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the mechanism of innate immunity",
+            "pdf_page": 24,
+            "row": "168",
+            "domain_inferred": false
+          },
+          {
+            "text": "Define acquired immunity",
+            "pdf_page": 24,
+            "row": "169",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the types of acquired immunity",
+            "pdf_page": 24,
+            "row": "170",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the mechanism of acquired immunity",
+            "pdf_page": 24,
+            "row": "171",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the development and processing of lymphocytes",
+            "pdf_page": 24,
+            "row": "172",
+            "domain_inferred": false
+          },
+          {
+            "text": "Define antigen",
+            "pdf_page": 24,
+            "row": "175",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the types of antigen",
+            "pdf_page": 24,
+            "row": "176",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the development of cell mediated immunity",
+            "pdf_page": 24,
+            "row": "177",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the development of humoral immunity",
+            "pdf_page": 24,
+            "row": "178",
+            "domain_inferred": false
+          },
+          {
+            "text": "Define antibody",
+            "pdf_page": 24,
+            "row": "179",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain types of antibody",
+            "pdf_page": 24,
+            "row": "180",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the function and mechanism of antibody",
+            "pdf_page": 24,
+            "row": "181",
+            "domain_inferred": false
+          }
+        ],
+        "Immunization": [
+          {
+            "text": "Discuss Immunization in detail",
+            "pdf_page": 24,
+            "row": "182",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the types of immunization",
+            "pdf_page": 24,
+            "row": "183",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the role of blood in immunity",
+            "pdf_page": 24,
+            "row": "184",
+            "domain_inferred": false
+          },
+          {
+            "text": "Differentiate various WBCs that plays role in immune sysyem independently",
+            "pdf_page": 24,
+            "row": "185",
+            "domain_inferred": false
+          }
+        ]
+      }
+    },
+    "Anatomy": {
+      "Skull Bones/ Scalp": {
+        "Scalp": [
+          {
+            "text": "Describe layers of scalp",
+            "pdf_page": 26,
+            "row": "1",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the vascular supply of scalp",
+            "pdf_page": 26,
+            "row": "2",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the nerve supply of scalp",
+            "pdf_page": 26,
+            "row": "3",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the applied aspect of scalp",
+            "pdf_page": 26,
+            "row": "4",
+            "domain_inferred": false
+          }
+        ],
+        "Bone, sutures, surface land marks": [
+          {
+            "text": "Explain the basic anatomy of skull bones",
+            "pdf_page": 26,
+            "row": "5",
+            "domain_inferred": false
+          }
+        ],
+        "Sutures": [
+          {
+            "text": "Describe the sutures",
+            "pdf_page": 26,
+            "row": "6",
+            "domain_inferred": false
+          }
+        ],
+        "land marks": [
+          {
+            "text": "Explain the exterior and interior of skull",
+            "pdf_page": 26,
+            "row": "7",
+            "domain_inferred": false
+          }
+        ],
+        "Skull Bones": [
+          {
+            "text": "Explain the land marks of frontal and occipital bone",
+            "pdf_page": 26,
+            "row": "8",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the land marks of maxilla",
+            "pdf_page": 26,
+            "row": "9",
+            "domain_inferred": false
+          },
+          {
+            "text": "Decribe the sphenoid and temporal bones",
+            "pdf_page": 26,
+            "row": "10",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the Foetal skull",
+            "pdf_page": 26,
+            "row": "11",
+            "domain_inferred": false
+          },
+          {
+            "text": "Decribe the hyoid bone",
+            "pdf_page": 26,
+            "row": "12",
+            "domain_inferred": false
+          }
+        ],
+        "Cranial cavity": [
+          {
+            "text": "Discuss the internal and external bony table folds of dura mater",
+            "pdf_page": 26,
+            "row": "16",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss apex and base of skull",
+            "pdf_page": 26,
+            "row": "17",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss vacular supply of the bony skull",
+            "pdf_page": 26,
+            "row": "18",
+            "domain_inferred": false
+          }
+        ],
+        "Meninges": [
+          {
+            "text": "Explain the structure of meninges",
+            "pdf_page": 26,
+            "row": "19",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the types of meningial layers",
+            "pdf_page": 26,
+            "row": "20",
+            "domain_inferred": false
+          }
+        ],
+        "Brain": [
+          {
+            "text": "Explain the structure of brain",
+            "pdf_page": 27,
+            "row": "23",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain Parts of brain",
+            "pdf_page": 27,
+            "row": "24",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the regions of the brain",
+            "pdf_page": 27,
+            "row": "25",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain Vascular supply of the brain",
+            "pdf_page": 27,
+            "row": "28",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss Nerve supply of the brain",
+            "pdf_page": 27,
+            "row": "29",
+            "domain_inferred": false
+          }
+        ],
+        "Cerebrospinal fluid": [
+          {
+            "text": "Discuss the structure and function of ventricles",
+            "pdf_page": 27,
+            "row": "30",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the production and flow of CSF",
+            "pdf_page": 27,
+            "row": "31",
+            "domain_inferred": false
+          }
+        ],
+        "Cranial nerve": [
+          {
+            "text": "Explain the functional components, course, branches, distributions of cranial nerve with its applied aspect",
+            "pdf_page": 27,
+            "row": "34",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the relations of cranial nerve",
+            "pdf_page": 27,
+            "row": "35",
+            "domain_inferred": false
+          }
+        ],
+        "Spinal cord": [
+          {
+            "text": "Explain the structure of Spinal cord",
+            "pdf_page": 27,
+            "row": "36",
+            "domain_inferred": false
+          },
+          {
+            "text": "Describe the spinal nerves",
+            "pdf_page": 27,
+            "row": "37",
+            "domain_inferred": false
+          }
+        ],
+        "Face": [
+          {
+            "text": "Describe Facial bones and muscles",
+            "pdf_page": 27,
+            "row": "40",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the vascular supply of face",
+            "pdf_page": 27,
+            "row": "41",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the nerve supply of face",
+            "pdf_page": 27,
+            "row": "42",
+            "domain_inferred": false
+          }
+        ],
+        "Temporomandibular joint": [
+          {
+            "text": "Discuss the temporomandibular joint",
+            "pdf_page": 27,
+            "row": "43",
+            "domain_inferred": false
+          }
+        ],
+        "Sinuses": [
+          {
+            "text": "Explain the structure and function of Sinuses",
+            "pdf_page": 27,
+            "row": "44",
+            "domain_inferred": false
+          }
+        ],
+        "Orbit": [
+          {
+            "text": "Explain the structure of Orbit",
+            "pdf_page": 28,
+            "row": "47",
+            "domain_inferred": false
+          }
+        ],
+        "Eye": [
+          {
+            "text": "Discuss Structure and function of eye",
+            "pdf_page": 28,
+            "row": "48",
+            "domain_inferred": false
+          }
+        ],
+        "lacrimal apparatus": [
+          {
+            "text": "Describe the Parts of lacrimal apparatus",
+            "pdf_page": 28,
+            "row": "49",
+            "domain_inferred": false
+          }
+        ],
+        "lacrimal gland": [
+          {
+            "text": "Explain the struture of lacrimal gland anatomy",
+            "pdf_page": 28,
+            "row": "50",
+            "domain_inferred": false
+          }
+        ],
+        "Teeth": [
+          {
+            "text": "Explain the types of teeth",
+            "pdf_page": 28,
+            "row": "51",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the structure of teeh",
+            "pdf_page": 28,
+            "row": "52",
+            "domain_inferred": false
+          }
+        ],
+        "Ear": [
+          {
+            "text": "Explain the parts of Ear",
+            "pdf_page": 28,
+            "row": "53",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the bony Ear",
+            "pdf_page": 28,
+            "row": "54",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the struture of tympanic membrane",
+            "pdf_page": 28,
+            "row": "55",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain middle ear cavity its boundaries and relations",
+            "pdf_page": 28,
+            "row": "56",
+            "domain_inferred": false
+          },
+          {
+            "text": "Describe vascular supply of ear",
+            "pdf_page": 28,
+            "row": "57",
+            "domain_inferred": false
+          },
+          {
+            "text": "Describe nerve supply of ear",
+            "pdf_page": 28,
+            "row": "58",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Practical / OSPE": {
+        "Identify the bony landmarks of skull bones from Models and charts": [
+          {
+            "text": "Identify the bony landmarks of skull bones from Models and charts",
+            "pdf_page": 26,
+            "row": "13",
+            "domain_inferred": false
+          }
+        ],
+        "Identify the bony landmarks of skull sutures from Models and charts": [
+          {
+            "text": "Identify the bony landmarks of skull sutures from Models and charts",
+            "pdf_page": 26,
+            "row": "14",
+            "domain_inferred": false
+          }
+        ],
+        "Identify the bony landmarks of base of skull from Models and charts": [
+          {
+            "text": "Identify the bony landmarks of base of skull from Models and charts",
+            "pdf_page": 26,
+            "row": "21",
+            "domain_inferred": false
+          }
+        ],
+        "Identify the landmarks of brain from Models and charts": [
+          {
+            "text": "Identify the landmarks of brain from Models and charts",
+            "pdf_page": 27,
+            "row": "26",
+            "domain_inferred": false
+          }
+        ],
+        "Identify the landmarks vessels of brain and CSF from Models and charts": [
+          {
+            "text": "Identify the landmarks vessels of brain and CSF from Models and charts",
+            "pdf_page": 27,
+            "row": "32",
+            "domain_inferred": false
+          }
+        ],
+        "Identify the landmarks cranial nerve and spinal cord from Models and charts": [
+          {
+            "text": "Identify the landmarks cranial nerve and spinal cord from Models and charts",
+            "pdf_page": 27,
+            "row": "38",
+            "domain_inferred": false
+          }
+        ],
+        "Label Facial bone on bone/ Models/ Chart": [
+          {
+            "text": "Label Facial bone on bone/ Models/ Chart",
+            "pdf_page": 27,
+            "row": "45",
+            "domain_inferred": false
+          }
+        ],
+        "Label orbit on bone/ Models/ Chart": [
+          {
+            "text": "Label orbit on bone/ Models/ Chart",
+            "pdf_page": 28,
+            "row": "59",
+            "domain_inferred": false
+          }
+        ],
+        "Label orbit on nasal and buccal cavity on / Models/ Chart": [
+          {
+            "text": "Label orbit on nasal and buccal cavity on / Models/ Chart",
+            "pdf_page": 28,
+            "row": "70",
+            "domain_inferred": false
+          }
+        ],
+        "Label Neck bones on bone/ Models/ Chart": [
+          {
+            "text": "Label Neck bones on bone/ Models/ Chart",
+            "pdf_page": 29,
+            "row": "89",
+            "domain_inferred": false
+          },
+          {
+            "text": "Label Neck bones on bone/ Models/ Chart",
+            "pdf_page": 30,
+            "row": "102",
+            "domain_inferred": false
+          }
+        ],
+        "Label all bones of the shoulder girdle on model/ chart": [
+          {
+            "text": "Label all bones of the shoulder girdle on model/ chart",
+            "pdf_page": 30,
+            "row": "110",
+            "domain_inferred": false
+          }
+        ],
+        "Demonstrate all bones of the upper arm, joints and its surface marking": [
+          {
+            "text": "Demonstrate all bones of the upper arm, joints and its surface marking",
+            "pdf_page": 31,
+            "row": "121",
+            "domain_inferred": false
+          }
+        ],
+        "Demonstrate all bones and joints of the forearm, hand and their classification with surface markings": [
+          {
+            "text": "Demonstrate all bones and joints of the forearm, hand and their classification with surface markings",
+            "pdf_page": 31,
+            "row": "122",
+            "domain_inferred": false
+          }
+        ],
+        "Identify all bone and joints along with different views independly": [
+          {
+            "text": "Identify all bone and joints along with different views independly",
+            "pdf_page": 31,
+            "row": "123",
+            "domain_inferred": false
+          }
+        ],
+        "Demonstrate all bones and joints of the gluteal region": [
+          {
+            "text": "Demonstrate all bones and joints of the gluteal region",
+            "pdf_page": 31,
+            "row": "128",
+            "domain_inferred": false
+          }
+        ],
+        "Demonstrate the surface landmarks of long bones independently": [
+          {
+            "text": "Demonstrate the surface landmarks of long bones independently",
+            "pdf_page": 31,
+            "row": "133",
+            "domain_inferred": false
+          }
+        ],
+        "Demonstrate all bones and joints of the leg and foot with surface markings": [
+          {
+            "text": "Demonstrate all bones and joints of the leg and foot with surface markings",
+            "pdf_page": 32,
+            "row": "138",
+            "domain_inferred": false
+          }
+        ],
+        "Demonstrate all muscles the leg and foot with surface markings": [
+          {
+            "text": "Demonstrate all muscles the leg and foot with surface markings",
+            "pdf_page": 32,
+            "row": "144",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Oral Cavity": {
+        "Palate": [
+          {
+            "text": "Discuss bony and soft Palate",
+            "pdf_page": 28,
+            "row": "61",
+            "domain_inferred": false
+          }
+        ],
+        "Pharynx": [
+          {
+            "text": "Discuss naso, oro and layngo pharynx and their relations, muscles",
+            "pdf_page": 28,
+            "row": "62",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the muscles of pharynx",
+            "pdf_page": 28,
+            "row": "63",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the nerve supply of pharynx",
+            "pdf_page": 28,
+            "row": "64",
+            "domain_inferred": false
+          }
+        ],
+        "Tonsils and auditory tube": [
+          {
+            "text": "Explain Features and relations of tonsils and auditory tube with applied anatomy",
+            "pdf_page": 28,
+            "row": "65",
+            "domain_inferred": false
+          }
+        ],
+        "Larynx": [
+          {
+            "text": "Discuss the cartilages and structures Larynx",
+            "pdf_page": 28,
+            "row": "66",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the muscles of Larynx",
+            "pdf_page": 28,
+            "row": "67",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the structure of glotis and epiglotis",
+            "pdf_page": 28,
+            "row": "68",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the movements of vocal cords",
+            "pdf_page": 28,
+            "row": "69",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Neck": {
+        "Neck Bone": [
+          {
+            "text": "Explain structure and function of Neck bones",
+            "pdf_page": 29,
+            "row": "72",
+            "domain_inferred": false
+          },
+          {
+            "text": "Difference between typical and Atypical vertebrae",
+            "pdf_page": 29,
+            "row": "73",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain muscles of Neck Bone",
+            "pdf_page": 29,
+            "row": "74",
+            "domain_inferred": false
+          },
+          {
+            "text": "Describe Ligament of Neck bones",
+            "pdf_page": 29,
+            "row": "75",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain suboccipital triangle boundaries and its contents",
+            "pdf_page": 29,
+            "row": "76",
+            "domain_inferred": false
+          },
+          {
+            "text": "Describe sub occipital plexus of vein",
+            "pdf_page": 29,
+            "row": "77",
+            "domain_inferred": false
+          }
+        ],
+        "Deep Cervical Fascia": [
+          {
+            "text": "Describe the pre vertebral fascia",
+            "pdf_page": 29,
+            "row": "78",
+            "domain_inferred": false
+          },
+          {
+            "text": "Describe the carotid sheath and its applied aspect",
+            "pdf_page": 29,
+            "row": "79",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the Pharyngeal spaces",
+            "pdf_page": 29,
+            "row": "80",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the relations of all cervical fascia",
+            "pdf_page": 29,
+            "row": "81",
+            "domain_inferred": false
+          }
+        ],
+        "Anterior & Posterior triangle of neck": [
+          {
+            "text": "Explain subdivision, boundaries & contents of Posterior Triangle",
+            "pdf_page": 29,
+            "row": "82",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the origin, insertion, nerve supply and action sternocleido mastoid muscle.",
+            "pdf_page": 29,
+            "row": "83",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the relations of sternocleidomastoid",
+            "pdf_page": 29,
+            "row": "84",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain Anterior triangle of neck, sub divisions, boundaries and its contents",
+            "pdf_page": 29,
+            "row": "85",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the supra & infra hyoid muscles",
+            "pdf_page": 29,
+            "row": "86",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the origin & insertion of supra & infra hyoid muscles",
+            "pdf_page": 29,
+            "row": "87",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the cervical plexus",
+            "pdf_page": 29,
+            "row": "88",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Glands": {
+        "Parotid gland/ Sub lingual": [
+          {
+            "text": "Explain the location and relations of parotid and Sub lingual gland",
+            "pdf_page": 30,
+            "row": "91",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discribe the vascular supply of parotid and Sub lingual gland",
+            "pdf_page": 30,
+            "row": "92",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the nerve supply of parotid and Sub lingual gland",
+            "pdf_page": 30,
+            "row": "93",
+            "domain_inferred": false
+          }
+        ],
+        "Submandibular gland": [
+          {
+            "text": "Discribe the vascular supply of Submandibular gland",
+            "pdf_page": 30,
+            "row": "94",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the nerve supply of Submandibular gland",
+            "pdf_page": 30,
+            "row": "95",
+            "domain_inferred": false
+          }
+        ],
+        "Thyroid gland": [
+          {
+            "text": "Discuss location and relations thyroid gland with applied aspect",
+            "pdf_page": 30,
+            "row": "96",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss vascular supply of thyroid gland",
+            "pdf_page": 30,
+            "row": "97",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss nerve supply of thyroid gland",
+            "pdf_page": 30,
+            "row": "98",
+            "domain_inferred": false
+          }
+        ],
+        "Parathyroid gland": [
+          {
+            "text": "Discuss location and relations parathyroid gland with applied aspect",
+            "pdf_page": 30,
+            "row": "99",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss vascular supply of parathyroid gland",
+            "pdf_page": 30,
+            "row": "100",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss nerve supply of parathyroid gland",
+            "pdf_page": 30,
+            "row": "101",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Upper Limb": {
+        "Pectoral region, axilla": [
+          {
+            "text": "Define the basic anatomy of pectoral region and axilla",
+            "pdf_page": 30,
+            "row": "104",
+            "domain_inferred": false
+          }
+        ],
+        "Shoulder girdle": [
+          {
+            "text": "Explain the basic anatomy of pectoral region and axilla",
+            "pdf_page": 30,
+            "row": "105",
+            "domain_inferred": false
+          }
+        ],
+        "Arm": [
+          {
+            "text": "Discuss shoulder girdle and bones of the arm",
+            "pdf_page": 30,
+            "row": "106",
+            "domain_inferred": false
+          }
+        ],
+        "Muscles of upper limb, rotator cuff and cubital fossa": [
+          {
+            "text": "Define muscles and its types",
+            "pdf_page": 30,
+            "row": "107",
+            "domain_inferred": false
+          },
+          {
+            "text": "Enlist the muscles connecting upper limb to thoracic wall, vertebral column and scapula with humerus",
+            "pdf_page": 30,
+            "row": "108",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the rotator cuff, cubital fossa and muscles involved in it",
+            "pdf_page": 30,
+            "row": "109",
+            "domain_inferred": false
+          }
+        ],
+        "Upper Arm, blood and nerve supplies": [
+          {
+            "text": "Define upper arm and joints of the upper arm",
+            "pdf_page": 31,
+            "row": "112",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain bone and joints of the upper arm",
+            "pdf_page": 31,
+            "row": "113",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss blood supply and nerve supply to the upper arm",
+            "pdf_page": 31,
+            "row": "114",
+            "domain_inferred": false
+          }
+        ],
+        "Fore arm and Hand": [
+          {
+            "text": "Define forearm and hand",
+            "pdf_page": 31,
+            "row": "115",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss facial compartments and bones of the fore arm and hand",
+            "pdf_page": 31,
+            "row": "116",
+            "domain_inferred": false
+          },
+          {
+            "text": "Express anatomy of the palm and dorsum of the hand including bones",
+            "pdf_page": 31,
+            "row": "117",
+            "domain_inferred": false
+          }
+        ],
+        "Vessels, Nerves, Lymphatic’s & Radiographic anatom": [
+          {
+            "text": "Define vessels, nerves and lymphatic",
+            "pdf_page": 31,
+            "row": "118",
+            "domain_inferred": false
+          },
+          {
+            "text": "Summarize blood, nerve, lymphatic supplies of upper limb",
+            "pdf_page": 31,
+            "row": "119",
+            "domain_inferred": false
+          },
+          {
+            "text": "Enlist all joints and its classification of upper limb",
+            "pdf_page": 31,
+            "row": "120",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Lower Limb": {
+        "Gluteal Region, Skin": [
+          {
+            "text": "Define skin, fascia and gluteal region",
+            "pdf_page": 31,
+            "row": "125",
+            "domain_inferred": false
+          },
+          {
+            "text": "Describe the gluteal region with its bony organization",
+            "pdf_page": 31,
+            "row": "126",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss blood supply and nerve supply to the gluteal region",
+            "pdf_page": 31,
+            "row": "127",
+            "domain_inferred": false
+          }
+        ],
+        "Thigh, Popliteal Artery, Vein and Muscles": [
+          {
+            "text": "Define thigh and its muscles",
+            "pdf_page": 31,
+            "row": "130",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain the popliteal fossa with its all contents",
+            "pdf_page": 31,
+            "row": "131",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the front, medial aspect and back of the thigh",
+            "pdf_page": 31,
+            "row": "132",
+            "domain_inferred": false
+          }
+        ],
+        "Leg and foot": [
+          {
+            "text": "Define leg and foot",
+            "pdf_page": 32,
+            "row": "135",
+            "domain_inferred": false
+          },
+          {
+            "text": "Express the contents of leg from bone to its all facial compartments",
+            "pdf_page": 32,
+            "row": "136",
+            "domain_inferred": false
+          },
+          {
+            "text": "Express the Sole and dorsum of the foot including bones",
+            "pdf_page": 32,
+            "row": "137",
+            "domain_inferred": false
+          }
+        ],
+        "Muscles of lower limb, joints of lower limb, vessels, nerves & lymphatic system of lower limb": [
+          {
+            "text": "Define muscle of lower limb",
+            "pdf_page": 32,
+            "row": "140",
+            "domain_inferred": false
+          },
+          {
+            "text": "Explain muscles of anterior, lateral and posterior fascial compartment of the leg",
+            "pdf_page": 32,
+            "row": "141",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss joints of lower limb and their classification",
+            "pdf_page": 32,
+            "row": "142",
+            "domain_inferred": false
+          },
+          {
+            "text": "Summarize blood, nerve, lymphatic supplies of Lower limb",
+            "pdf_page": 32,
+            "row": "143",
+            "domain_inferred": false
+          }
+        ]
+      }
+    },
+    "English": {
+      "Paragraph Writing": {
+        "Paragraph Writing": [
+          {
+            "text": "Identify the structural components of a paragraph",
+            "pdf_page": 34,
+            "row": "1",
+            "domain_inferred": false
+          },
+          {
+            "text": "Understand and practice free writing",
+            "pdf_page": 34,
+            "row": "2",
+            "domain_inferred": false
+          },
+          {
+            "text": "Use pre- writing strategies to write a paragraph",
+            "pdf_page": 34,
+            "row": "3",
+            "domain_inferred": false
+          },
+          {
+            "text": "Arrange sentences in a logical order",
+            "pdf_page": 34,
+            "row": "4",
+            "domain_inferred": false
+          },
+          {
+            "text": "Make use of transitions to ensure a smooth flow of ideas",
+            "pdf_page": 34,
+            "row": "5",
+            "domain_inferred": false
+          },
+          {
+            "text": "Learn how to write a paragraphs using the appropriate form of verbs",
+            "pdf_page": 34,
+            "row": "6",
+            "domain_inferred": false
+          },
+          {
+            "text": "Write a good, unified and coherent paragraph on any of the choice topic",
+            "pdf_page": 34,
+            "row": "7",
+            "domain_inferred": false
+          },
+          {
+            "text": "Comprehend meanings of words in a paragraph",
+            "pdf_page": 34,
+            "row": "8",
+            "domain_inferred": false
+          },
+          {
+            "text": "Correct the forms of verbs in a paragraph",
+            "pdf_page": 34,
+            "row": "9",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Essay Writing": {
+        "Essay Writing": [
+          {
+            "text": "Learn the basics of writing an essay",
+            "pdf_page": 34,
+            "row": "10",
+            "domain_inferred": false
+          },
+          {
+            "text": "Understand about the knowledge of Prewriting stage",
+            "pdf_page": 34,
+            "row": "11",
+            "domain_inferred": false
+          },
+          {
+            "text": "Comprehend the writing stage of an essay",
+            "pdf_page": 34,
+            "row": "12",
+            "domain_inferred": false
+          },
+          {
+            "text": "Write essays on different topics",
+            "pdf_page": 34,
+            "row": "13",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Cv And Job Application": {
+        "Cv And Job Application": [
+          {
+            "text": "Discuss the basics of making curriculum vitae",
+            "pdf_page": 34,
+            "row": "14",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the components of writing an application",
+            "pdf_page": 34,
+            "row": "15",
+            "domain_inferred": false
+          },
+          {
+            "text": "Understand the language and sentences of writing an application",
+            "pdf_page": 34,
+            "row": "18",
+            "domain_inferred": false
+          },
+          {
+            "text": "Learn to write an application for applying to a job",
+            "pdf_page": 34,
+            "row": "19",
+            "domain_inferred": false
+          },
+          {
+            "text": "Translate an application from English to Urdu and vice versa",
+            "pdf_page": 34,
+            "row": "20",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Practical / OSPE": {
+        "Practice to make you own curriculum Vitae": [
+          {
+            "text": "Practice to make you own curriculum Vitae",
+            "pdf_page": 34,
+            "row": "16",
+            "domain_inferred": false
+          }
+        ],
+        "Practice to write minutes of a meeting": [
+          {
+            "text": "Practice to write minutes of a meeting",
+            "pdf_page": 35,
+            "row": "38",
+            "domain_inferred": false
+          }
+        ],
+        "Develop and present effective presentations on the topics of common interest": [
+          {
+            "text": "Develop and present effective presentations on the topics of common interest",
+            "pdf_page": 36,
+            "row": "46",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Study Skills": {
+        "Study Skills": [
+          {
+            "text": "Understand skimming and scanning",
+            "pdf_page": 35,
+            "row": "21",
+            "domain_inferred": false
+          },
+          {
+            "text": "Distinguish between intensive and extensive Skimming and scanning",
+            "pdf_page": 35,
+            "row": "22",
+            "domain_inferred": false
+          },
+          {
+            "text": "Identify the main ideas and supporting detail in the given articles",
+            "pdf_page": 35,
+            "row": "23",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss how to extract themes from the given text",
+            "pdf_page": 35,
+            "row": "24",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the guidelines to read the content or a passage with different pace of speed",
+            "pdf_page": 35,
+            "row": "25",
+            "domain_inferred": false
+          },
+          {
+            "text": "Make summary of a passage or the assigned reading",
+            "pdf_page": 35,
+            "row": "26",
+            "domain_inferred": false
+          },
+          {
+            "text": "Comprehend a passage or article and write it precisely in your own words",
+            "pdf_page": 35,
+            "row": "27",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Academic Skills": {
+        "Academic Skills": [
+          {
+            "text": "Understand the basics of writing a letter",
+            "pdf_page": 35,
+            "row": "28",
+            "domain_inferred": false
+          },
+          {
+            "text": "Write accurate, to the point, clear and courteous letters of request",
+            "pdf_page": 35,
+            "row": "29",
+            "domain_inferred": false
+          },
+          {
+            "text": "Use appropriate salutation in writing a letter or memo",
+            "pdf_page": 35,
+            "row": "30",
+            "domain_inferred": false
+          },
+          {
+            "text": "Include relevant information in the letter",
+            "pdf_page": 35,
+            "row": "31",
+            "domain_inferred": false
+          },
+          {
+            "text": "Try to convince and persuade the recipient by writing a letter",
+            "pdf_page": 35,
+            "row": "32",
+            "domain_inferred": false
+          },
+          {
+            "text": "Learn how to write a clear and concise memo",
+            "pdf_page": 35,
+            "row": "33",
+            "domain_inferred": false
+          },
+          {
+            "text": "Understand the purpose of writing a memo",
+            "pdf_page": 35,
+            "row": "34",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the purpose of writing the minutes of a meeting",
+            "pdf_page": 35,
+            "row": "35",
+            "domain_inferred": false
+          },
+          {
+            "text": "Comprehend the structure and components of writing the official minutes of a meeting",
+            "pdf_page": 35,
+            "row": "36",
+            "domain_inferred": false
+          },
+          {
+            "text": "Learn the use of digital library and internet for retrieving the content for writing",
+            "pdf_page": 35,
+            "row": "37",
+            "domain_inferred": false
+          }
+        ]
+      },
+      "Presentation Skills": {
+        "Presentation Skills": [
+          {
+            "text": "Understand elements of a good presentation",
+            "pdf_page": 36,
+            "row": "40",
+            "domain_inferred": false
+          },
+          {
+            "text": "Know how to make well organized and clear presentation",
+            "pdf_page": 36,
+            "row": "41",
+            "domain_inferred": false
+          },
+          {
+            "text": "Discuss the purpose of the presentation",
+            "pdf_page": 36,
+            "row": "42",
+            "domain_inferred": false
+          },
+          {
+            "text": "Understand the significance of the audience of the presentation",
+            "pdf_page": 36,
+            "row": "43",
+            "domain_inferred": false
+          },
+          {
+            "text": "Make clarity and accuracy in presenting information",
+            "pdf_page": 36,
+            "row": "44",
+            "domain_inferred": false
+          },
+          {
+            "text": "Plan to handle questions raised by the audience",
+            "pdf_page": 36,
+            "row": "45",
+            "domain_inferred": false
+          },
+          {
+            "text": "Understand how to prepare a good presentation using a variety of strategies to convey ideas",
+            "pdf_page": 36,
+            "row": "48",
+            "domain_inferred": false
+          },
+          {
+            "text": "Learn to have emphasis on the content, style and pronunciation",
+            "pdf_page": 36,
+            "row": "49",
+            "domain_inferred": false
+          },
+          {
+            "text": "Engage the audience in thought-provoking discussions",
+            "pdf_page": 36,
+            "row": "50",
+            "domain_inferred": false
+          },
+          {
+            "text": "Wrap up convincingly, restating the key points",
+            "pdf_page": 36,
+            "row": "51",
+            "domain_inferred": false
+          }
+        ]
+      }
+    }
+  }
+}

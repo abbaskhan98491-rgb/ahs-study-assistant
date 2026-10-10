@@ -36,8 +36,9 @@ It has two modes:
 
 1. **Topic Study** — I type a topic, it answers from the book, with the
    book name and page number, and shows the diagram page if there is one.
-2. **Generate MCQs** — I type a topic, it makes a practice paper, I pick
-   answers, press Submit, and see my score with the correct answers.
+2. **Generate MCQs** — I type a topic, it makes one scrolling list of MCQs.
+   Picking an option immediately shows right/wrong, the correct answer and
+   a short explanation. No quiz submission, score or pagination.
 
 How it works inside:
 
@@ -194,8 +195,8 @@ must not appear. If it is not in the retrieved text, it is not a question.
 - If I type one word ("mandible", "glycolysis"), explain that topic. Do not
   refuse it as "too broad".
 - Only say it is missing if the topic really is not in the retrieved text.
-- For MCQs, after I press Submit I must see: my score, the correct answer,
-  a short explanation, and the page it came from.
+- For MCQs, selecting an option immediately shows right/wrong, the correct
+  answer, a short explanation, and the page it came from.
 - English gets an English tutor voice, not a medical one.
 
 ---
@@ -244,17 +245,26 @@ replace it with a plain or corporate theme.
 
 Layout:
 
-- **Study Panel** on the left: Subject (dropdown), Study from (Book /
-  Slides radio), Dark mode toggle.
-- Main area: a card with the title and "Source: Subject · Book", one text
-  box for the topic, and two equal buttons: **Topic Study** and
-  **Generate MCQs**.
+- Subject (dropdown), Study from (Book / Slides radio), Dark mode toggle,
+  one text box for the topic, and two equal buttons: **Topic Study** and
+  **Generate MCQs**. Keep these controls visible, with a compact header and footer.
+- One searchable suggestion list for the selected subject's topics and subtopics.
+  Typing a few letters (e.g. "ner") filters the list, and selecting a suggestion
+  fills the editable question box. Custom questions must still work.
+- No unit, chapter, coverage or workspace selectors. Suggestions must use local
+  syllabus data and stay fast without loading PDFs, the search model or AI.
 - MCQ cards: "QUESTION 7" in small pink capitals, the question in bold,
   options as radio buttons that look like pills, nothing pre-selected.
-- One **Submit & See Score** button at the bottom.
-- After submit: a score badge, then each question with right/wrong marked,
-  the correct answer, the explanation and the page.
-- Diagrams appear under the answer as page images from the PDF.
+- All MCQs on one page; scrolling is fine. No Next 5, quiz score, submit or retry.
+- Selecting an option immediately shows right/wrong, the correct answer,
+  a short explanation and the page reference.
+- Shuffle and balance correct answers across A/B/C/D locally; updating positions
+  must preserve the actual correct answer and combining-option meanings.
+- A bare topic gets a full, clear teaching explanation. "Define" requests get
+  only the definition; specific aspects get a focused explanation. Keep source
+  references together at the end rather than interrupting every point.
+- Diagram pages must contain a relevant figure for the typed topic. Do not
+  treat every slide or logo-bearing page as a diagram or fall back to unrelated pages.
 - Footer: "Created by Abbas Khan · BS Allied Health Sciences · 2nd
   Semester", with WhatsApp 0345-9059934, Email, TikTok and Instagram links.
 - Dark mode must work and must be reachable even when the Study Panel is
@@ -264,8 +274,7 @@ Layout:
 Behaviour:
 
 - Starting a new MCQ set must clear the previous set's selected answers,
-  or the new paper opens with old answers already ticked and the score is
-  wrong.
+  so the new questions open without old answers already ticked.
 - Errors are shown as one short line, not a Python traceback.
 
 ---
