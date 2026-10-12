@@ -93,6 +93,18 @@ class QuizParsingTests(unittest.TestCase):
         self.assertIn('Third sentence.', result)
 
 
+class ErrorDetailTests(unittest.TestCase):
+    def test_technical_details_show_the_real_error_without_secrets(self):
+        from study_utils import technical_details
+        error = KeyError('options missing; key gsk_abcdefghijklmnopqrstuvwxyz0123 at https://api.x.com/v1?key=abc')
+        text = technical_details(error, ['my-private-key'])
+        self.assertIn('KeyError', text)
+        self.assertIn('options missing', text)
+        self.assertNotIn('gsk_abcdefghijklmnopqrstuvwxyz0123', text)
+        self.assertNotIn('https://', text)
+        self.assertNotIn('my-private-key', technical_details(RuntimeError('bad my-private-key'), ['my-private-key']))
+
+
 class CoreTests(unittest.TestCase):
     def test_study_depth_controls_prompt_context_and_budget(self):
         ns = core_namespace()
@@ -195,6 +207,24 @@ class CoreTests(unittest.TestCase):
             self.assertEqual(ns['st'].session_state['last_provider_model'], 'offline-fast-model')
             self.assertEqual(ns['st'].session_state['last_api_seconds'], .12)
         self.assertEqual(router_state['successful_calls'], 3)
+
+    def test_bad_answers_do_not_stop_the_run_but_an_outage_does(self):
+        class Quality(RuntimeError):
+            kind = 'quality'
+        good = question()
+        cases = ((Quality('bad JSON'), [good], [good], None),        # keeps what it got
+                 (Quality('bad JSON'), [], [], 'validation'),        # skip batch, run goes on
+                 (RuntimeError('down'), [good], [], 'provider'))     # outage stops the run
+        for error, replied, expected, kind in cases:
+            with self.subTest(error=type(error).__name__, replied=len(replied)):
+                ns = core_namespace()
+                def route(prompt, **kwargs):
+                    kwargs['validator'](json.dumps(replied))
+                    raise error
+                ns['route_completion'] = route
+                result = ns['generate_mcq_batch']('paragraph', 'English', BOOK, CONTEXT, 4, [], None)
+                self.assertEqual(result, expected)
+                self.assertEqual(ns['st'].session_state.get('mcq_last_error_kind'), kind)
 
     def test_mcq_batch_routes_with_source_and_minimum_count_validation(self):
         ns = core_namespace()
@@ -475,7 +505,7 @@ class InterfaceTests(unittest.TestCase):
         self.assertEqual(at.text_input(key='query_text').value, '')
         self.assertEqual(at.checkbox(key='fresh_mcqs').label, 'Make fresh questions')
         self.assertEqual(at.button(key='btn_study').label, 'Topic Study')
-        self.assertEqual(at.button(key='btn_mcq').label, 'Generate 40 MCQs')
+        self.assertEqual(at.button(key='btn_mcq').label, 'Generate 25 MCQs')
         self.assertEqual(len(at.expander), 0)
         markup = '\n'.join(element.value for element in at.markdown)
         self.assertIn('<div class="landing-layout"></div>', markup)
@@ -501,7 +531,7 @@ class InterfaceTests(unittest.TestCase):
         self.assertFalse(any(radio.key == 'workspace_view' for radio in at.radio))
         self.assertEqual(at.text_input(key='query_text').value, 'Types of neurons')
         self.assertEqual(at.button(key='btn_study').label, 'Topic Study')
-        self.assertEqual(at.button(key='btn_mcq').label, 'Generate 40 MCQs')
+        self.assertEqual(at.button(key='btn_mcq').label, 'Generate 25 MCQs')
         markup = '\n'.join(element.value for element in at.markdown)
         self.assertIn('<div class="results-layout"></div>', markup)
         self.assertNotIn('<div class="landing-layout"></div>', markup)
@@ -575,8 +605,11 @@ class InterfaceTests(unittest.TestCase):
         at.button(key='btn_mcq').click().run()
         self.assertEqual(at.session_state['test_quiz_request'], 'What is a paragraph topic sentence?')
         self.assertIsNone(at.radio(key='ans_0').value)
+        # The "N of 40 ready" message must survive the rerun and be visible.
+        self.assertTrue(any('1 of 25 questions ready' in alert.value for alert in at.warning))
         labels = {button.label for button in at.button}
-        self.assertFalse(labels & {'Submit & See Score', 'Previous 5', 'Next 5', 'Finish anyway'})
+        self.assertFalse(labels & {'Previous 5', 'Next 5', 'Finish anyway'})
+        self.assertIn('Submit & See Score', labels)
         at.radio(key='ans_0').set_value('Topic sentence').run()
         self.assertTrue(any('Correct' in alert.value and 'Explanation:' in alert.value for alert in at.success))
         self.assertEqual(len(at.exception), 0)

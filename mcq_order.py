@@ -44,8 +44,13 @@ def _literal_letter(text, position):
     before = text[:position]
     after = text[position + 1:]
     return bool(
-        re.search(r"\b(?:vitamins?|blood\s+groups?|types?|classes?|grades?|groups?|forms?)\s*$", before, re.I)
-        or re.match(r"\s*[- ]\s*(?:cells?|fibers?|waves?|bands?|DNA)\b", after, re.I)
+        # "Hepatitis B", "Vitamin B", "factor C", "zone A", "stage B": a real
+        # medical name, not an option label like "option B".
+        re.search(r"\b(?:vitamins?|blood\s+groups?|types?|classes?|grades?|groups?|forms?|"
+                  r"hepatitis|influenza|factors?|proteins?|chains?|subunits?|zones?|bands?|"
+                  r"antigens?|stages?|phases?|segments?|regions?)\s*$", before, re.I)
+        or re.match(r"\s*[- ]\s*(?:cells?|fibers?|waves?|bands?|DNA|lymphocytes?|complex|"
+                    r"vitamins?|antigens?|virus)\b", after, re.I)
     )
 
 

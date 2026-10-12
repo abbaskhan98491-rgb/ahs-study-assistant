@@ -23,6 +23,21 @@ def item(index=0, **changes):
 
 
 class AnswerOrderTests(unittest.TestCase):
+    def test_medical_letters_are_not_mistaken_for_option_labels(self):
+        safe = (["Hepatitis A", "Hepatitis B", "Hepatitis C", "Hepatitis E"],
+                ["Vitamin A", "Vitamin B", "Vitamin C", "Vitamin D"],
+                ["T cells", "B cells", "NK cells", "Plasma cells"])
+        for options in safe:
+            with self.subTest(options=options):
+                result = balance_mcq_options([item(options=options, answer_index=1)], rng=random.Random(3))[0]
+                self.assertNotIn('option_order_warning', result)
+                self.assertEqual(result['options'][result['answer_index']], options[1])
+        # A real reference to another option is still recognised and rewritten
+        # to that option's text, so reordering cannot make it point elsewhere.
+        result = balance_mcq_options([item(explanation="B is correct because it performs the function.")],
+                                     rng=random.Random(3))[0]
+        self.assertIn('“Other 0” is correct', result['explanation'])
+
     def test_forty_first_answers_are_evenly_balanced_without_changing_facts(self):
         original = [item(index) for index in range(40)]
         snapshot = deepcopy(original)

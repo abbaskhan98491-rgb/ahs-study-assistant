@@ -54,6 +54,9 @@ def check_pdf_is_text_based(path):
 
 
 def chunk_text(text, size=CHUNK_SIZE, overlap=CHUNK_OVERLAP):
+    if size <= 0 or not 0 <= overlap < size:
+        # overlap >= size would never move forward: an endless loop.
+        raise ValueError("chunk overlap must be at least 0 and smaller than the chunk size")
     words = text.split()
     chunks = []
     start = 0
@@ -79,9 +82,18 @@ def build_index():
 
     client = chromadb.PersistentClient(path=DB_DIR)
     try:
-        client.delete_collection(COLLECTION_NAME)
+        existing = client.get_collection(COLLECTION_NAME).count()
     except Exception:
-        pass
+        existing = 0
+    if existing:
+        # The live app reads this database. Rebuilding deletes every chunk in it,
+        # so never do that without the user typing a clear yes.
+        print(f"WARNING: '{DB_DIR}' already holds {existing} chunks used by the app.")
+        print(f"Rebuilding from the {len(pdfs)} PDF(s) in '{BOOKS_DIR}/' DELETES all of them first.")
+        if input("Type YES to delete and rebuild, anything else to stop: ").strip() != "YES":
+            print("Stopped. Nothing was changed.")
+            return
+        client.delete_collection(COLLECTION_NAME)
     collection = client.create_collection(COLLECTION_NAME)
 
     doc_id = 0

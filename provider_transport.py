@@ -34,6 +34,9 @@ class Completion:
     model: str
     elapsed: float
     output_tokens: int
+    # True when the model stopped at the token limit. The text is kept, because
+    # parse_mcqs can still recover every complete question from it.
+    truncated: bool = False
 
 
 class ProviderError(Exception):
@@ -163,13 +166,14 @@ def _chat_text(data):
     if not isinstance(choices, list) or not choices or not isinstance(choices[0], dict):
         raise _failure("invalid")
     choice = choices[0]
-    if choice.get("finish_reason") not in (None, "stop"):
-        raise _failure("invalid")
+    finish = choice.get("finish_reason")
+    if finish not in (None, "stop", "length"):
+        raise _failure("invalid")                     # blocked or filtered
     message = choice.get("message")
     text = message.get("content") if isinstance(message, dict) else None
     if not isinstance(text, str) or not text.strip():
         raise _failure("invalid")
-    return text.strip(), _token_count(data.get("usage"), "completion_tokens")
+    return text.strip(), _token_count(data.get("usage"), "completion_tokens"), finish == "length"
 
 
 def _gemini_text(data):
@@ -177,8 +181,9 @@ def _gemini_text(data):
     if not isinstance(candidates, list) or not candidates or not isinstance(candidates[0], dict):
         raise _failure("invalid")
     candidate = candidates[0]
-    if candidate.get("finishReason") not in (None, "STOP"):
-        raise _failure("invalid")
+    finish = candidate.get("finishReason")
+    if finish not in (None, "STOP", "MAX_TOKENS"):
+        raise _failure("invalid")                     # safety or other block
     content = candidate.get("content")
     parts = content.get("parts") if isinstance(content, dict) else None
     if not isinstance(parts, list):
@@ -196,7 +201,7 @@ def _gemini_text(data):
     text = "".join(text_parts).strip()
     if not text:
         raise _failure("invalid")
-    return text, _token_count(data.get("usageMetadata"), "candidatesTokenCount")
+    return text, _token_count(data.get("usageMetadata"), "candidatesTokenCount"), finish == "MAX_TOKENS"
 
 
 def _gemini_thinking(model):
@@ -242,7 +247,7 @@ def complete(candidate, prompt, max_tokens, temperature, timeout_seconds):
                         headers={"x-goog-api-key": candidate.api_key, "Content-Type": "application/json"},
                         json={"contents": [{"role": "user", "parts": [{"text": prompt}]}],
                               "generationConfig": generation})
-        text, tokens = _gemini_text(body)
+        text, tokens, truncated = _gemini_text(body)
     else:
         payload = {"model": model, "messages": [{"role": "user", "content": prompt}],
                    "max_completion_tokens": max_tokens, "temperature": temperature, "stream": False}
@@ -252,8 +257,9 @@ def complete(candidate, prompt, max_tokens, temperature, timeout_seconds):
         body = _request(requests.post, _CHAT_URLS[provider], timeout_seconds=seconds,
                         headers={"Authorization": f"Bearer {candidate.api_key}", "Content-Type": "application/json"},
                         json=payload)
-        text, tokens = _chat_text(body)
-    return Completion(text, candidate.label, model, max(0.0, time.monotonic() - started), tokens)
+        text, tokens, truncated = _chat_text(body)
+    return Completion(text, candidate.label, model, max(0.0, time.monotonic() - started), tokens,
+                      truncated)
 
 
 def _gemini_model_rank(model):

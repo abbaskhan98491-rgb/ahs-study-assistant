@@ -76,6 +76,10 @@ def extract(path):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print('Usage: python import_syllabus.py <path-to-KMU-syllabus.pdf>')
+        print('Writes syllabus_details.json next to this script.')
+        sys.exit(1)
     data = extract(sys.argv[1])
     Path('syllabus_details.json').write_text(json.dumps(data, indent=2, ensure_ascii=False),
                                            encoding='utf-8')

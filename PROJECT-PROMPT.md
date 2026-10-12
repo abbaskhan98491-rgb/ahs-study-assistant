@@ -38,7 +38,8 @@ It has two modes:
    book name and page number, and shows the diagram page if there is one.
 2. **Generate MCQs** — I type a topic, it makes one scrolling list of MCQs.
    Picking an option immediately shows right/wrong, the correct answer and
-   a short explanation. No quiz submission, score or pagination.
+   a short explanation. One "Submit & See Score" button at the bottom shows
+   how many are correct (for example "19 / 25"). No pagination.
 
 How it works inside:
 
@@ -93,7 +94,7 @@ Rules:
   writes must name that file.
 - Content from any other subject is a bug, not a bonus.
 - English has slides only, no book. Biochemistry slides are small (314).
-  On those two, 40 questions is near the limit of the material.
+  On those two, 25 questions is close to the limit of the material.
 - **Islamiat is not supported.** There is no Islamiat PDF in the database,
   and the embedding model is English-only, so Urdu would need a different
   model and a full rebuild of `rag_db`. Do not pretend otherwise.
@@ -112,9 +113,9 @@ for how many questions to make.
 
 ### Count
 
-- **40 questions per topic.** Not 70, not 30.
+- **25 questions per topic.** (Was 40 until October 2026; I changed it to 25.)
 - If a topic runs out of material, loosen the repeat filter and still give
-  me 40. Do not hand back 31.
+  me 25. Do not hand back 18.
 
 ### Style — every subject
 
@@ -175,7 +176,7 @@ A real set of 40 I generated had 12 repeats. Rules now:
   and drops a question when the wording is nearly the same, OR the correct
   answer is the same and the subject matches, OR the wording is close and
   the options mostly match.
-- Keep the context wide (45 chunks) so there is enough material for 40.
+- Keep the context wide (45 chunks) so there is enough material for 25.
 - Prove the filter works on a real set before telling me it is fixed.
 
 ### Difficulty
@@ -196,7 +197,8 @@ must not appear. If it is not in the retrieved text, it is not a question.
   refuse it as "too broad".
 - Only say it is missing if the topic really is not in the retrieved text.
 - For MCQs, selecting an option immediately shows right/wrong, the correct
-  answer, a short explanation, and the page it came from.
+  answer, a short explanation, and the page it came from. "Submit & See
+  Score" shows the total correct out of 25.
 - English gets an English tutor voice, not a medical one.
 
 ---
@@ -205,9 +207,9 @@ must not appear. If it is not in the retrieved text, it is not a question.
 
 **Quality first. I will wait.**
 
-- 40 good questions in 1 to 3 minutes is fine.
-- 40 questions in 20 seconds with 12 repeats is not fine.
-- Always show a progress bar with real numbers: "Made 23 of 40 questions...".
+- 25 good questions in about 1 to 2 minutes is fine.
+- 25 questions in 20 seconds with many repeats is not fine.
+- Always show a progress bar with real numbers: "Made 14 of 25 questions...".
 - Keep the answer mode fast — a few seconds — because I use it while reading.
 
 Current settings that produce this:
@@ -215,17 +217,20 @@ Current settings that produce this:
 ```
 TOP_K = 6              # chunks for Topic Study
 MCQ_CONTEXT_K = 45     # chunks for making MCQs
-MCQ_TOTAL = 40
-MCQ_BATCH = 10         # questions per API call
-GROQ_MODEL     = "llama-3.3-70b-versatile"   # answers: slower, better
-GROQ_MCQ_MODEL = "llama-3.1-8b-instant"      # MCQs: faster, bigger free quota
+MCQ_TOTAL = 25
+MCQ_BATCH = 16         # questions per API call (app asks for 2 extra)
+
+# provider_router.py
+GROQ_STUDY_MODEL = "openai/gpt-oss-120b"     # Topic Study answers
+GROQ_MCQ_MODEL   = "openai/gpt-oss-20b"      # MCQs
+CEREBRAS_MODELS  = ("gpt-oss-120b", "qwen-3.8-27b")
+GEMINI_MODELS    = ("gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-3.8-flash")
 ```
 
-Providers run in order and the app must never stop because one is busy:
-
-1. Groq — every key I have, tried one after another
-2. Cerebras
-3. Gemini
+The app must never stop because one provider is busy. provider_router.py
+tries Cerebras, Groq (every key), then Gemini by default, and then prefers
+whichever gave valid answers fastest in the last hour. Calls are plain REST
+(provider_transport.py), so the `groq` Python package is not needed.
 
 The app must start if ANY provider has a key, not only Groq.
 
@@ -255,7 +260,8 @@ Layout:
   syllabus data and stay fast without loading PDFs, the search model or AI.
 - MCQ cards: "QUESTION 7" in small pink capitals, the question in bold,
   options as radio buttons that look like pills, nothing pre-selected.
-- All MCQs on one page; scrolling is fine. No Next 5, quiz score, submit or retry.
+- All MCQs on one page; scrolling is fine. No Next 5 or retry. One
+  "Submit & See Score" button at the bottom shows the score.
 - Selecting an option immediately shows right/wrong, the correct answer,
   a short explanation and the page reference.
 - Shuffle and balance correct answers across A/B/C/D locally; updating positions
@@ -275,7 +281,8 @@ Behaviour:
 
 - Starting a new MCQ set must clear the previous set's selected answers,
   so the new questions open without old answers already ticked.
-- Errors are shown as one short line, not a Python traceback.
+- Errors are shown as one short line. The real error sits in a closed
+  "Technical details" box (keys and links hidden) so bugs can be fixed.
 
 ---
 
@@ -313,6 +320,9 @@ cd C:\projects\ahs-study-assistant && git push
 
 ## 10. Traps that already cost me time
 
+- The app needs **Python 3.10 or newer** (`dataclass(slots=True)` in
+  provider_transport.py); RUN-APP.bat checks this. The separate speed tool
+  `benchmark_providers.py` needs **3.11 or newer** (it uses `tomllib`).
 - `'pip' is not recognized` on my PC → use `python -m pip`, and
   `python -m streamlit`.
 - Running locally throws 50+ `No module named 'torchvision'` errors →
@@ -335,5 +345,5 @@ cd C:\projects\ahs-study-assistant && git push
   questions I would need to add an English book PDF and rebuild `rag_db`.
 - Islamiat is not in the app at all and cannot be added without changing
   the embedding model.
-- Biochemistry slides are small (314 chunks); 40 questions there may repeat.
+- Biochemistry slides are small (314 chunks); 25 questions there may still repeat a little.
 - Whether `rag_db` (70 MB) should stay in git, or move to a release file.

@@ -28,6 +28,20 @@ class RoutingTests(unittest.TestCase):
         study = router.build_candidates(**KEYS, task='topic')
         self.assertNotIn('openai/gpt-oss-20b', [c.model for c in study])
 
+    def test_truncated_unusable_answer_falls_back_without_a_cooldown(self):
+        state = {}
+
+        def reply(candidate, *args):
+            if candidate.provider == 'cerebras':
+                return Completion('cut', candidate.label, candidate.model, 1, 200, True)
+            return answer(candidate)
+        with patch.object(router, 'complete', side_effect=reply), \
+             patch.object(router, 'discover_gemini_models', return_value=['gemini-3.5-flash-lite']):
+            result = router.route_completion('Prompt', **KEYS, state=state, task='mcq',
+                                             validator=lambda text: text != 'cut')
+        self.assertNotEqual(result.provider, 'Cerebras')
+        self.assertFalse(any(scope for scope in state.get('cooldowns', {}) if 'cerebras' in scope))
+
     def test_success_runs_only_one_call_without_discovery_or_benchmark(self):
         state = {}
         with patch.object(router, 'complete', side_effect=lambda c, *args: answer(c)) as complete, \

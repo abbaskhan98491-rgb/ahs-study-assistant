@@ -18,6 +18,17 @@ if errorlevel 1 (
     exit /b 1
 )
 
+python -c "import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)" >nul 2>&1
+if errorlevel 1 (
+    echo PYTHON PURANA HAI. Is app ko Python 3.10 ya naya chahiye.
+    python --version
+    echo.
+    echo python.org se naya Python install karein.
+    echo.
+    pause
+    exit /b 1
+)
+
 if not exist "app.py" (
     echo app.py is folder me nahi mili.
     echo Ye file project folder ke andar honi chahiye.

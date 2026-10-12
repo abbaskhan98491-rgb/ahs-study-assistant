@@ -23,6 +23,13 @@ ATTEMPT_BUDGET = 25.0
 MAX_ATTEMPTS = 5
 
 
+class NoValidAnswer(RuntimeError):
+    """A provider did answer, but nothing usable came back (bad JSON, too few
+    questions, cut off). This is a model-quality problem, not an outage, so a
+    40-question run should skip this batch and keep going."""
+    kind = "quality"
+
+
 def credential_id(provider, key):
     # Changing a key creates a new scope. Credentials never enter the profile,
     # diagnostics, labels, or exception messages.
@@ -159,6 +166,7 @@ def route_completion(prompt, *, groq_keys=(), cerebras_key="", gemini_key="", st
     state = {} if state is None else state
     end = min(deadline if deadline is not None else float("inf"), time.monotonic() + CALL_BUDGET)
     attempted = set()
+    answered = False          # did any provider actually reply?
     discovered = False
     gemini_models = None
     count = 0
@@ -206,12 +214,21 @@ def route_completion(prompt, *, groq_keys=(), cerebras_key="", gemini_key="", st
             except Exception:
                 valid = False
             if not valid:
-                raise ProviderError("The provider returned no usable answer.", kind="invalid")
+                # A cut-off answer is the token limit, not a bad model: try the
+                # next candidate without putting this one on a cooldown.
+                kind = "truncated" if getattr(result, "truncated", False) else "invalid"
+                raise ProviderError("The provider returned no usable answer.", kind=kind)
         except ProviderError as error:
-            record_failure(state, candidate, error, task)
+            if error.kind in ("invalid", "truncated"):
+                answered = True
+            if error.kind != "truncated":
+                record_failure(state, candidate, error, task)
             continue
         record_success(state, candidate, result, task)
         state["last_result"] = {"provider": result.provider, "model": result.model,
                                 "elapsed": result.elapsed, "task": task}
         return result
-    raise RuntimeError("AI providers are unavailable, busy, or returned no valid answer. Try again shortly.")
+    message = "AI providers are unavailable, busy, or returned no valid answer. Try again shortly."
+    if answered:
+        raise NoValidAnswer(message)
+    raise RuntimeError(message)

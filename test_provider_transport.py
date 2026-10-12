@@ -113,8 +113,21 @@ class TransportTests(unittest.TestCase):
                 _, call = self.run_completion(candidate('gemini', name), gemini())
                 self.assertEqual(call.kwargs['json']['generationConfig'].get('thinkingConfig'), expected)
 
-    def test_empty_malformed_truncated_and_blocked_responses_are_invalid(self):
-        cases = [chat(''), chat('Partial', 'length'), chat('Blocked', 'content_filter'),
+    def test_truncated_text_is_kept_for_salvage(self):
+        # parse_mcqs recovers complete questions from a cut-off answer, so the
+        # transport must hand that text over instead of discarding the batch.
+        with patch.object(transport.requests, 'post', return_value=response(chat('Partial', 'length'))):
+            result = transport.complete(candidate(), 'Prompt', 400, 0, 10)
+        self.assertEqual(result.text, 'Partial')
+        self.assertTrue(result.truncated)
+        with patch.object(transport.requests, 'post', return_value=response(gemini(finish='MAX_TOKENS'))):
+            result = transport.complete(candidate('gemini', 'gemini-2.5-flash-lite'), 'Prompt', 400, 0, 10)
+        self.assertTrue(result.truncated)
+        with patch.object(transport.requests, 'post', return_value=response(chat('Done'))):
+            self.assertFalse(transport.complete(candidate(), 'Prompt', 400, 0, 10).truncated)
+
+    def test_empty_malformed_and_blocked_responses_are_invalid(self):
+        cases = [chat(''), chat('Blocked', 'content_filter'),
                  {'choices': 'bad'}, {'choices': [{'message': {'content': None}}]}, [],
                  {'error': {'message': KEY}}]
         for body in cases:
@@ -128,8 +141,8 @@ class TransportTests(unittest.TestCase):
         self.assertEqual(caught.exception.kind, 'invalid')
         self.assertNotIn(KEY, str(caught.exception))
 
-    def test_gemini_truncated_or_only_thought_content_is_invalid(self):
-        for body in (gemini(finish='MAX_TOKENS'), gemini(finish='SAFETY'),
+    def test_gemini_blocked_or_only_thought_content_is_invalid(self):
+        for body in (gemini(finish='SAFETY'),
                      gemini([{'thought': True, 'text': KEY}]), gemini([{'text': None}])):
             with patch.object(transport.requests, 'post', return_value=response(body)):
                 with self.assertRaises(transport.ProviderError) as caught:

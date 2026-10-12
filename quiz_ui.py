@@ -63,11 +63,32 @@ def render_mcqs(mcqs, set_id, topic=""):
         index: answer for index, answer in state["answers"].items()
         if index < len(mcqs) and answer in mcqs[index]["options"]
     }
-    _render_mcqs_fragment(mcqs, state, topic)
+    _render_mcqs_fragment(mcqs, state, topic, set_id)
+
+
+def _score(mcqs, answers):
+    """How many chosen answers are correct, and how many were answered."""
+    correct = sum(1 for index, question in enumerate(mcqs)
+                  if answers.get(index) == question["options"][question["answer_index"]])
+    return correct, len(answers)
+
+
+def _render_score(mcqs, state, set_id):
+    if st.button("Submit & See Score", key=f"submit_score_{set_id}", type="primary"):
+        state["submitted"] = True
+    if state.get("submitted"):
+        correct, answered = _score(mcqs, state["answers"])
+        total = len(mcqs)
+        percent = round(100 * correct / total) if total else 0
+        st.markdown(
+            f'<div class="score-badge"><div class="score-num">{correct} / {total}</div>'
+            f'<div class="score-lbl">{percent}% correct &middot; {answered} of {total} answered</div></div>',
+            unsafe_allow_html=True,
+        )
 
 
 @st.fragment
-def _render_mcqs_fragment(mcqs, state, topic):
+def _render_mcqs_fragment(mcqs, state, topic, set_id=""):
     # A choice saves immediately and reruns only this list, leaving the app's
     # study controls and generation services untouched.
     _save_answers(mcqs, state)
@@ -92,3 +113,4 @@ def _render_mcqs_fragment(mcqs, state, topic):
                      format_func=lambda option, options=question["options"]: f"{'ABCD'[options.index(option)]}. {option}",
                      on_change=_save_answers, args=(mcqs, state))
             _render_answer_feedback(question, state["answers"].get(index))
+    _render_score(mcqs, state, set_id)

@@ -11,7 +11,8 @@ os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
 os.environ.setdefault("OMP_NUM_THREADS", "2")
 import re
 import time
-from study_utils import parse_mcqs, compact_context, friendly_error
+import traceback
+from study_utils import parse_mcqs, compact_context, friendly_error, technical_details
 import streamlit as st
 from ui_theme import LIGHT_CSS as SANRIO_CSS, DARK_CSS
 from quiz_ui import render_mcqs
@@ -19,7 +20,7 @@ from diagram_utils import select_diagram_pages
 from topic_suggestions import get_topic_suggestions
 from mcq_order import balance_mcq_options
 from study_format import classify_study_request, build_study_instructions
-from provider_router import route_completion, load_speed_profile, GROQ_STUDY_MODEL, GROQ_MCQ_MODEL
+from provider_router import route_completion, load_speed_profile, GROQ_MCQ_MODEL
 
 # ---------------- SOURCES: subject -> Book / Slides file names ----------------
 # These must match the exact PDF file names in the books/ folder.
@@ -48,10 +49,9 @@ DB_DIR = "rag_db"
 COLLECTION_NAME = "semester_books"
 EMBED_MODEL = "all-MiniLM-L6-v2"
 TOP_K = 6
-MCQ_CONTEXT_K = 45          # wide context, else 40 questions start repeating
-MCQ_TOTAL = 40              # 40 questions per topic
+MCQ_CONTEXT_K = 45          # wide context, else the questions start repeating
+MCQ_TOTAL = 25              # 25 questions per topic
 MCQ_BATCH = 16               # generate this many per API call
-GROQ_MODEL = GROQ_STUDY_MODEL
 ZOOM = 1.5
 
 # Credentials belong in Streamlit secrets or environment variables.
@@ -432,22 +432,42 @@ JSON:"""
 
     last_error = ""
     error_kind = "validation"
-    for attempt in range(1):
+    best = []                     # the most questions any reply gave us
+    # Two tries: the router already falls through every provider, so a second
+    # try only helps when a provider answered badly (it then picks another one).
+    for attempt in range(2):
+        parsed = {}
+
+        def validator(text):
+            # Parse once here and keep the result, instead of parsing twice.
+            items = parse_mcqs(text, book_name, context)
+            parsed[text] = items
+            if len(items) > len(best):
+                best[:] = items
+            return len(items) >= max(1, n // 2)
+
         try:
             raw, provider = call_llm(prompt, groq_client, max_tokens=min(6000, n * 300 + 200),
                                      temperature=0.5, model=GROQ_MCQ_MODEL,
-                                     validator=lambda text: len(parse_mcqs(text, book_name, context)) >= max(1, n // 2))
+                                     validator=validator)
             st.session_state["last_provider"] = provider
-            clean = parse_mcqs(raw, book_name, context)
-
+            clean = parsed[raw] if raw in parsed else parse_mcqs(raw, book_name, context)
             if clean:
                 return clean
             last_error = "model returned no usable questions"
-
         except Exception as e:
             last_error = str(e)
-            error_kind = "provider"
-            # The provider chain already tried the available services.
+            if getattr(e, "kind", "") == "quality":
+                # A provider replied but the questions were not usable. That is
+                # not an outage: keep any good questions and let the run go on.
+                error_kind = "validation"
+                if best:
+                    return list(best)
+            else:
+                error_kind = "provider"
+                break             # nobody answered; retrying now is pointless
+        deadline = st.session_state.get("mcq_request_deadline")
+        if deadline is not None and time.monotonic() >= deadline:
             break
 
     if last_error:
@@ -622,6 +642,19 @@ def generate_all_mcqs(topic, subject, selected_book, model, collection, groq_cli
     return all_mcqs[:MCQ_TOTAL]
 
 
+def _show_error(error):
+    """Friendly message for the student, plus the real error for fixing bugs.
+
+    The real error is printed to the console and kept in a closed box, with
+    API keys, links and long tokens hidden, so nothing secret is shown."""
+    st.error(friendly_error(error))
+    details = technical_details(error, [*GROQ_KEYS, CEREBRAS_API_KEY, GEMINI_API_KEY])
+    frames = "".join(traceback.format_tb(error.__traceback__))
+    print(f"[AHS Study Assistant] {details}\n{frames}", flush=True)
+    with st.expander("Technical details"):
+        st.code(details + "\n\n" + frames, language=None)
+
+
 def _use_topic_suggestion(topic_queries):
     selected = st.session_state.get("topic_suggestion")
     if selected in topic_queries:
@@ -742,7 +775,7 @@ with st.container():
         study_clicked = st.button("Topic Study", key="btn_study",
                                   width="stretch", type="secondary")
     with b2:
-        mcq_clicked = st.button("Generate 40 MCQs", key="btn_mcq",
+        mcq_clicked = st.button(f"Generate {MCQ_TOTAL} MCQs", key="btn_mcq",
                                 width="stretch", type="primary")
 
     if study_clicked:
@@ -768,7 +801,7 @@ with st.container():
                     diagram_pages, st.session_state.get("last_provider", ""))
                 st.rerun()
             except Exception as error:
-                st.error(friendly_error(error))
+                _show_error(error)
     result = st.session_state.get("study_result")
     if result and result[0] == book_choice and workspace_view == "Study notes":
         _, answered_topic, answer, diagram_pages, provider = result
@@ -811,7 +844,7 @@ with st.container():
             mcqs = generate_all_mcqs(topic, subject, book_choice, model,
                                          collection, groq_client, progress, focus_topics)
         except Exception as error:
-            st.error(friendly_error(error))
+            _show_error(error)
             mcqs = []
         progress.empty()
         if not mcqs:
@@ -833,23 +866,31 @@ with st.container():
             st.session_state["quiz_request"] = topic
             st.session_state["quiz_focus"] = focus_topics
             st.session_state["quiz_id"] = st.session_state.get("quiz_id", 0) + 1
+            # Kept in session state: st.rerun() below would wipe a message
+            # shown here before the student could read it.
             if len(mcqs) < MCQ_TOTAL:
-                st.warning(f"{len(mcqs)} of 40 questions ready. Some questions were repeated, invalid, "
-                           "or the provider stopped. You can generate the remaining questions below.")
-            st.success(f"{len(mcqs)} questions ready — answer them below.")
+                st.session_state["mcq_notice"] = ("warning",
+                    f"{len(mcqs)} of {MCQ_TOTAL} questions ready. Some questions were repeated, invalid, "
+                    "or the provider stopped. You can generate the remaining questions below.")
+            else:
+                st.session_state["mcq_notice"] = ("success",
+                    f"{len(mcqs)} questions ready — answer them below.")
         if mcqs:
             st.session_state["quiz_ready_seconds"] = time.perf_counter() - quiz_started
             st.rerun()
 
     if workspace_view == "MCQs":
         if st.session_state.get("mcqs") and st.session_state.get("quiz_book") == book_choice:
+            notice = st.session_state.pop("mcq_notice", None)
+            if notice:
+                (st.warning if notice[0] == "warning" else st.success)(notice[1])
             current_mcqs = st.session_state["mcqs"]
-            st.caption(f"{len(current_mcqs)} / 40 questions ready · "
+            st.caption(f"{len(current_mcqs)} / {MCQ_TOTAL} questions ready · "
                        f"Prepared in {st.session_state.get('quiz_ready_seconds', 0):.1f}s"
                        + (f" · {st.session_state.get('last_provider')}" if st.session_state.get('last_provider') else ""))
             if len(current_mcqs) < MCQ_TOTAL:
                 st.info(f"{len(current_mcqs)} / {MCQ_TOTAL} MCQs available. "
-                        "A narrow topic may not support 40 different questions from this source.")
+                        f"A narrow topic may not support {MCQ_TOTAL} different questions from this source.")
                 if st.button("Complete remaining questions", key="complete_mcqs", type="primary"):
                     progress = st.progress(len(current_mcqs) / MCQ_TOTAL,
                                            text="Keeping your questions and making the rest...")
@@ -865,7 +906,7 @@ with st.container():
                             st.warning("No new valid questions were added. Try again when the provider "
                                        "is available, or choose a broader topic.")
                     except Exception as error:
-                        st.error(friendly_error(error))
+                        _show_error(error)
                     progress.empty()
             render_mcqs(st.session_state["mcqs"], st.session_state.get("quiz_id", 0),
                         st.session_state.get("quiz_topic", ""))

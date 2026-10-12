@@ -52,17 +52,33 @@ class MCQPracticeTests(unittest.TestCase):
     def state(self, at):
         return at.session_state['_mcq_answer_state']
 
-    def test_all_forty_questions_visible_without_quiz_controls(self):
+    def test_all_forty_questions_visible_with_only_a_score_button(self):
         at = self.app(40)
         self.assertEqual(len(at.radio), 40)
         self.assertEqual([radio.key for radio in at.radio], [f'ans_{i}' for i in range(40)])
-        self.assertEqual([button.key for button in at.button], ['test_new', 'test_append'])
+        # The student asked for the score back: one Submit button, nothing else.
+        self.assertEqual([button.key for button in at.button], ['test_new', 'test_append', 'submit_score_0'])
         self.assertEqual(len(at.metric), 0)
         self.assertEqual(len(at.get('progress')), 0)
         self.assertEqual(len(at.get('form')), 0)
         visible_text = '\n'.join(re.sub(r'<[^>]*>', '', element.value) for element in [*at.markdown, *at.caption])
         for forbidden in ('quiz', 'submit', 'retry', 'score', 'page', 'attempt', 'answered'):
             self.assertNotIn(forbidden, visible_text.casefold())
+
+    def test_submit_shows_the_score(self):
+        at = self.app()
+        self.assertFalse(any('score-num' in element.value for element in at.markdown))
+        at.radio(key='ans_0').set_value('Correct 0').run()
+        at.radio(key='ans_1').set_value('Other 1').run()
+        at.radio(key='ans_2').set_value('Correct 2').run()
+        at.button(key='submit_score_0').click().run()
+        self.assertEqual(len(at.exception), 0)
+        badge = next(element.value for element in at.markdown if 'score-num' in element.value)
+        self.assertIn('2 / 12', badge)
+        self.assertIn('3 of 12 answered', badge)
+        # A new set starts without the old score.
+        at.button(key='test_new').click().run()
+        self.assertFalse(any('score-num' in element.value for element in at.markdown))
 
     def test_correct_answer_feedback_is_immediate(self):
         at = self.app()

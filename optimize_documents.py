@@ -20,6 +20,10 @@ def main():
         before = path.stat().st_size
         with pymupdf.open(path) as doc:
             count = len(doc)
+            if count == 0:
+                # An empty PDF has no page to check (doc[-1] would fail).
+                print(f'Skipped {path.name}: it has no pages.')
+                continue
             samples = sorted({0, count // 2, count - 1})
             texts = [doc[i].get_text() for i in samples]
             sizes = [tuple(doc[i].rect) for i in samples]

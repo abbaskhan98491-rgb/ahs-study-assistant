@@ -4,7 +4,7 @@ Topics organized by subject, taken from the supplied KMU 2021-22 curriculum
 (PMS-607/608/609/610). Islamic Studies is excluded by the user's preference.
 Source PDF pages: Biochemistry 12-15, Physiology 17-24, Anatomy 26-32,
 English 34-36. This is a topic outline, not a source of textbook answers.
-Used by app.py to build the dropdown menus.
+Not used by app.py (topic_suggestions.py reads the same JSON); kept for tests and tools.
 """
 import json
 from pathlib import Path
@@ -15,7 +15,14 @@ SYLLABUS_DETAILS = SYLLABUS_DATA['subjects']
 
 def build_study_scope(subject, unit, topic=None, subtopic=None):
     """Turn syllabus selections into explicit coverage and balanced search terms."""
+    # A clear message instead of a bare KeyError for a wrong name.
+    if subject not in SYLLABUS_DETAILS:
+        raise ValueError(f'Unknown subject: {subject}')
+    if unit not in SYLLABUS_DETAILS[subject]:
+        raise ValueError(f'Unknown unit for {subject}: {unit}')
     topics = SYLLABUS_DETAILS[subject][unit]
+    if topic and topic not in topics:
+        raise ValueError(f'Unknown topic in {subject} / {unit}: {topic}')
     selected = {topic: topics[topic]} if topic else topics
     sections, searches = [], []
     for name, outcomes in selected.items():

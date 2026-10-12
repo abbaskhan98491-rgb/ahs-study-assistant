@@ -13,6 +13,20 @@ def friendly_error(error):
     return 'The request could not finish. Check provider availability and try again.'
 
 
+_URL = re.compile(r'https?://\S+')
+_LONG_TOKEN = re.compile(r'[A-Za-z0-9_\-]{24,}')
+
+
+def technical_details(error, secrets=()):
+    """The real error for debugging, with keys, URLs and token-like strings hidden."""
+    text = f'{type(error).__name__}: {error}'
+    for secret in secrets:
+        if secret:
+            text = text.replace(secret, '[hidden]')
+    text = _URL.sub('[url hidden]', text)
+    return _LONG_TOKEN.sub('[hidden]', text)[:600]
+
+
 def compact_context(chunks, metas):
     # Adjacent chunks overlap. Remove exact duplicate sentences without
     # dropping any retrieved page or inventing new textbook text.
@@ -95,6 +109,39 @@ def _unclear_ganglion_count(question):
     return bool(counts_ganglia and not scope)
 
 
+_PAGE_WORDS = frozenset({'page', 'pages', 'pg', 'pgs', 'p', 'pp', 'pdf', 'slide', 'slides',
+                         'no', 'number', 'see', 'ref', 'reference', 'source'})
+
+
+def _words(text):
+    return re.findall(r'[a-z]+', str(text).casefold())
+
+
+def source_page(page_text, book_name, context):
+    """Return 'Book, page N' for the model's page note, or None.
+
+    The model may write "page 285.", "p. 285", "Page 285", "pg 285", "285" or a
+    range. All of these are accepted when that page really is one of the
+    retrieved headings. A page that was not retrieved (an invented page) or a
+    note naming some other file is still rejected.
+    """
+    text = str(page_text).strip()
+    if not text:
+        return None
+    stem = book_name[:-4] if book_name.casefold().endswith('.pdf') else book_name
+    rest = re.sub(re.escape(book_name), ' ', text, flags=re.I)
+    rest = re.sub(re.escape(stem), ' ', rest, flags=re.I)
+    if re.search(r'\S+\.pdf\b', rest, re.I):
+        return None                                   # names a different file
+    allowed = _PAGE_WORDS | set(_words(stem))
+    if any(word not in allowed for word in _words(rest)):
+        return None                                   # other words = other source
+    for number in re.findall(r'\d+', rest)[:2]:
+        if f'[{book_name}, page {int(number)}]' in context:
+            return f'{book_name}, page {int(number)}'
+    return None
+
+
 def parse_mcqs(raw, book_name, context):
     """Recover complete JSON objects and reject malformed or wrong-source items."""
     decoder = json.JSONDecoder()
@@ -123,9 +170,10 @@ def parse_mcqs(raw, book_name, context):
                 and isinstance(item.get('explanation'), str) and item['explanation'].strip()
                 and isinstance(item.get('page'), str)):
             continue
-        ref = re.fullmatch(re.escape(book_name) + r',\s*page\s+(\d+)', item['page'].strip())
-        if not ref or f'[{book_name}, page {int(ref[1])}]' not in context:
+        page = source_page(item['page'], book_name, context)
+        if page is None:
             continue
+        item['page'] = page
         negative = re.search(r'\b(not|except|incorrect)\b', item['question'], re.I)
         combining = any(re.search(r'\b(all|none) of|\bboth [A-D] and [A-D]', o, re.I) for o in opts)
         if negative and combining:

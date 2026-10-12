@@ -17,7 +17,10 @@ import os
 import sys
 import fitz
 
-BOOKS_DIR = "books"
+# Same order the app uses: the optimized copies, then the small copies, then
+# the full originals. Use whichever folder actually exists.
+BOOKS_DIR = next((folder for folder in ("books_optimized", "books_small", "books")
+                  if os.path.isdir(folder)), "books")
 OUT_DIR = "page_images"
 ZOOM = 2  # 2 = clear + light. Raise to 3 for sharper (bigger files, slower).
 
@@ -28,7 +31,7 @@ def list_books():
         return
     pdfs = [f for f in os.listdir(BOOKS_DIR) if f.lower().endswith(".pdf")]
     if not pdfs:
-        print("No PDFs in books/ folder.")
+        print(f"No PDFs in {BOOKS_DIR}/ folder.")
         return
     print("Your books (copy the name exactly, with quotes):")
     for p in pdfs:
