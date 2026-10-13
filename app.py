@@ -19,6 +19,7 @@ from quiz_ui import render_mcqs
 from diagram_utils import select_diagram_pages
 from topic_suggestions import get_topic_suggestions
 from mcq_order import balance_mcq_options
+from past_papers import pick_past_questions
 from study_format import classify_study_request, build_study_instructions
 from provider_router import route_completion, load_speed_profile, GROQ_MCQ_MODEL
 
@@ -52,6 +53,7 @@ TOP_K = 6
 MCQ_CONTEXT_K = 45          # wide context, else the questions start repeating
 MCQ_TOTAL = 25              # 25 questions per topic
 MCQ_BATCH = 16               # generate this many per API call
+PAST_MAX = 8                 # at most this many real past-paper MCQs per set
 ZOOM = 1.5
 
 # Credentials belong in Streamlit secrets or environment variables.
@@ -564,6 +566,10 @@ def generate_all_mcqs(topic, subject, selected_book, model, collection, groq_cli
         return False
 
     all_mcqs = list(existing_mcqs[:MCQ_TOTAL])
+    if not existing_mcqs:
+        # Real KMU past-paper questions on this topic go in first; the AI then
+        # writes the rest and is told not to repeat them.
+        all_mcqs += pick_past_questions(topic, subject, "\n".join(chunks), limit=PAST_MAX)
     avoid = [q['question'] for q in all_mcqs]
     kept = [fingerprint(q) for q in all_mcqs]
     answer_counts = {}

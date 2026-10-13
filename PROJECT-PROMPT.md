@@ -117,6 +117,22 @@ for how many questions to make.
 - If a topic runs out of material, loosen the repeat filter and still give
   me 25. Do not hand back 18.
 
+### Real past-paper questions
+
+- `past_papers.json` holds 266 real past-paper MCQs typed from my photos:
+  KMU Biochemistry-II (Spring 2021 and another year), the Carbohydrate
+  Metabolism class test, Human Anatomy-II (Spring 2020 and 2021), English-II
+  (Spring 2020 and another paper) and one Physiology page. Islamiat is not
+  included (Urdu, and not a subject in the app).
+- The papers had no answer key. Every answer was set from the standard
+  textbook and checked a second time on its own; anything unreadable,
+  flawed or doubtful was left out.
+- `past_papers.py` puts up to 8 of them at the start of a 25-question set,
+  only when they belong to the topic: the topic's main words must be in the
+  question or its answer ("brachial plexus" needs both words; "phrases and
+  clauses" accepts either). A wrong-topic past question is worse than none.
+- They are tagged "📝 Past paper · <paper>" and the AI is told not to repeat them.
+
 ### Style — every subject
 
 - Stems are SHORT, 8 to 20 words.

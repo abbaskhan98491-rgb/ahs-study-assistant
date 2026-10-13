@@ -103,8 +103,12 @@ def _render_mcqs_fragment(mcqs, state, topic, set_id=""):
         # Keep the established container key so the app theme owns its card
         # background, border, and spacing without a second native border.
         with st.container(border=False, key=f"quiz_question_{index}"):
+            past = ""
+            if question.get("past_paper"):
+                past = (f'<span class="mcq-past">📝 Past paper · '
+                        f'{escape(str(question.get("past_source", "KMU")))}</span>')
             st.markdown(
-                f'<div class="quiz-question-heading"><div class="mcq-num">QUESTION {index + 1}</div>'
+                f'<div class="quiz-question-heading"><div class="mcq-num">QUESTION {index + 1}{past}</div>'
                 f'<div class="mcq-q">{escape(question["question"])}</div></div>',
                 unsafe_allow_html=True,
             )

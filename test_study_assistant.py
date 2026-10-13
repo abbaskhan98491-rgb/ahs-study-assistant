@@ -50,7 +50,8 @@ def core_namespace():
               MCQ_CONTEXT_K=45, MCQ_TOTAL=40, MCQ_BATCH=16,
               GROQ_KEYS=[], CEREBRAS_API_KEY='', GEMINI_API_KEY='',
               GROQ_MODEL='answer-model', GROQ_MCQ_MODEL='quiz-model',
-              route_completion=no_live_routing, load_speed_profile=lambda: {})
+              route_completion=no_live_routing, load_speed_profile=lambda: {},
+              pick_past_questions=lambda *args, **kwargs: [], PAST_MAX=8)
     exec(compile(ast.Module(body=functions, type_ignores=[]), 'app.py', 'exec'), ns)
     return ns
 
@@ -399,6 +400,36 @@ class CoreTests(unittest.TestCase):
             types.SimpleNamespace(progress=lambda *a, **kw: None))
         self.assertEqual(again, result)
         self.assertEqual(len(contexts), 3)
+
+    def test_past_paper_questions_come_first_and_the_ai_writes_the_rest(self):
+        from past_papers import pick_past_questions
+        ns = core_namespace()
+        ns['MCQ_TOTAL'] = 25
+        ns['pick_past_questions'] = pick_past_questions
+        ns['retrieve'] = lambda *args: (['The urea cycle takes place in liver cells.'] * 20,
+                                        [{'book': BOOK, 'page': i + 1} for i in range(20)])
+        avoided = []
+        def batch(topic, subject, book, context, n, avoid, client):
+            avoided.append(list(avoid))
+            start = (len(avoided) - 1) * 18
+            return [question(question=f'Concept{i} structure{i} function{i} mechanism{i}',
+                             options=[f'Answer{i}', f'Other{i}', f'Third{i}', f'Fourth{i}'])
+                    for i in range(start, start + n)]
+        ns['generate_mcq_batch'] = batch
+        result = ns['generate_all_mcqs']('urea cycle', 'Biochemistry', BOOK, None, None, None,
+            types.SimpleNamespace(progress=lambda *a, **kw: None))
+        past = [q for q in result if q.get('past_paper')]
+        self.assertEqual(len(result), 25)
+        self.assertTrue(past)
+        self.assertTrue(all(q.get('past_paper') for q in result[:len(past)]))
+        # The AI is told about the past questions so it does not repeat them.
+        self.assertTrue(all(q['question'] in avoided[0] for q in past))
+        # Answers stay correct after the A/B/C/D positions are balanced.
+        bank = {row['question']: row for row in pick_past_questions('urea cycle', 'Biochemistry', 'urea cycle')}
+        for q in past:
+            original = bank[q['question']]
+            self.assertEqual(q['options'][q['answer_index']].casefold().startswith(
+                original['options'][original['answer_index']].casefold()[:4]), True)
 
     def test_search_is_filtered_to_selected_file(self):
         ns = core_namespace()

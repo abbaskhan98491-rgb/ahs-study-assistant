@@ -1,0 +1,3463 @@
+{
+ "note": "Real past-paper MCQs typed from photos the student supplied. Answers are not an official key: each was set from the standard textbook and checked a second time independently. Low-confidence, unreadable and flawed items were left out.",
+ "questions": [
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 1,
+   "question": "Electron transport within complex I begins with the reduction of ______ by NADH",
+   "options": [
+    "FMN",
+    "NAD",
+    "FAD",
+    "ATP"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 3,
+   "question": "In which of the following reactions is the reactant oxidized?",
+   "options": [
+    "ATP → AMP",
+    "NAD+ → NADH",
+    "NADH → NAD+",
+    "acetaldehyde → ethanol"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 4,
+   "question": "Which of the following biochemical pathways delivers amino nitrogen from muscle cells to the liver to be disposed of in urea molecules?",
+   "options": [
+    "Krebs bicycle",
+    "Cori cycle",
+    "purine cycle",
+    "glucose-alanine cycle"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 5,
+   "question": "Lesch-Nyhan syndrome is",
+   "options": [
+    "Sex-linked disorder",
+    "Autosomal chromosomes disorder",
+    "Y-linked disorder chromosome",
+    "All of these"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 6,
+   "question": "Complexes I and II of the electron transport complex transfer electrons from NADH and succinate, respectively, to ______.",
+   "options": [
+    "CoQ10",
+    "ATP",
+    "NAD",
+    "Complex III"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 7,
+   "question": "Which of the following does not act as marker for liver cancer?",
+   "options": [
+    "Aldolase",
+    "Prostate specific antigen",
+    "γ-glutamyl transferase",
+    "5'-nucleotidase"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 8,
+   "question": "Uric acid is end product of",
+   "options": [
+    "Glucose metabolism",
+    "amino acid metabolism",
+    "both of these",
+    "Purine metabolism"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 9,
+   "question": "Glucose transporter I (GLUT1) is present in which tissue (s)?",
+   "options": [
+    "RBCs, Fetus, blood brain barrier",
+    "Kidney, liver, pancreas",
+    "Muscles, adipocytes",
+    "Heart muscles"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 10,
+   "question": "Although glucose is the major sugar degraded by the glycolytic pathway, other sugars such as galactose and fructose are also often present. These sugars",
+   "options": [
+    "Cannot be metabolized by the glycolytic pathway",
+    "Must first be converted to glucose in order to be metabolized",
+    "Are metabolized by the glycolytic pathway by conversion to intermediates in the pathway",
+    "Are oxidized to carbon dioxide and water and energy is released without involving the glycolytic pathway"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 11,
+   "question": "Allosteric activation of glycogen phosphorylase b in the muscle is due to which one of the following?",
+   "options": [
+    "AMP",
+    "Glucose",
+    "Glucose 6 phosphate",
+    "ADP"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 12,
+   "question": "The Coenzyme is:",
+   "options": [
+    "Often a metal",
+    "always a protein",
+    "often a vitamin",
+    "always an inorganic compound"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 14,
+   "question": "What enzyme profile is characteristic of acute myocardial infarction?",
+   "options": [
+    "ALT, AST, lipase, CPK",
+    "ALT, amylase, CKMB",
+    "CPK, LDH, CKMB, AST",
+    "amylase, lipase"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 16,
+   "question": "GTP is converted into ATP by the",
+   "options": [
+    "nucleoside diphosphate kinase",
+    "nucleoside phosphate kinase",
+    "nucleosidase",
+    "none of these"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 17,
+   "question": "In the β-oxidation, fatty acids undergo oxidative removal of successive two-carbon units in the form of",
+   "options": [
+    "Glycerol",
+    "Fatty acid",
+    "Acetyl CoA",
+    "NADH"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 18,
+   "question": "Which of the following enzymes is not used in the diagnosis of myocardial infarction?",
+   "options": [
+    "Aldolase",
+    "Aspartate transaminase",
+    "Creatine kinase",
+    "Lactate dehydrogenase"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 19,
+   "question": "Dinitrophenol is a potential inhibitor of the electron transport chain which works by:",
+   "options": [
+    "Uncoupling of phosphorylation from electron transfer",
+    "Inhibit cytochrome oxidase",
+    "Inhibits F1",
+    "Inhibit cytochrome b"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 20,
+   "question": "Rat poison inhibit which enzyme of TCA cycle?",
+   "options": [
+    "Aconitase",
+    "Isocitrate dehydrogenase",
+    "Alpha ketoglutarate dehydrogenase",
+    "Fumarase"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 21,
+   "question": "Cori Cycle mainly Occur in",
+   "options": [
+    "liver",
+    "kidney",
+    "stomach",
+    "All of these"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 22,
+   "question": "Acyltransferase I is inhibited by",
+   "options": [
+    "Acetyl CoA",
+    "Malonyl CoA",
+    "Citrate",
+    "Pyruvate"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 23,
+   "question": "The synthesis of glucose in liver from skeletal muscle lactate and the reuse of glucose by muscle is called",
+   "options": [
+    "Cahill cycle",
+    "cori cycle",
+    "TCA cycle",
+    "All of these"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 24,
+   "question": "The lipoprotein involved in the reverse cholesterol transport is",
+   "options": [
+    "LDL",
+    "HDL",
+    "VLDL",
+    "Chylomicron"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 27,
+   "question": "Which of the following is not a product of the citric acid cycle?",
+   "options": [
+    "FADH2",
+    "NADH",
+    "AMP",
+    "CO2"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 28,
+   "question": "Amino acids that degrade yielding acetyl-CoA or acetoacetyl-CoA are referred to as",
+   "options": [
+    "Glucogenic",
+    "Ketogenic",
+    "Lipogenic",
+    "All of the above"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 30,
+   "question": "A diet containing 10 grams of proteins will give:",
+   "options": [
+    "40 Kilocalories",
+    "04 Kilocalories",
+    "10 Kilocalories",
+    "09 Kilocalories"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 31,
+   "question": "Which one of the following statements correctly describes reduction of one of the electron carriers, NAD or FAD?",
+   "options": [
+    "FAD must accept two electrons at a time",
+    "NAD+ accepts two electrons as a hydride ion to form NADH",
+    "NAD+ accepts two electrons as hydrogen atoms to form NADH2",
+    "NAD+ accepts two electrons that are each donated from a separate atom of the substrate"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 32,
+   "question": "Dephosphorylation reaction in purine metabolism is carried out by:",
+   "options": [
+    "Deaminase",
+    "Nucleotidase",
+    "Oxidase",
+    "Guanase"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 33,
+   "question": "Rickets may arise in children that do not receive sufficient:",
+   "options": [
+    "Vitamin A",
+    "Vitamin C",
+    "Vitamin D",
+    "Vitamin E"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 34,
+   "question": "All of the following are diagnostic indications of increase in the serum levels of ALP except",
+   "options": [
+    "Liver disease",
+    "Bone disease",
+    "Third trimester of pregnancy",
+    "Skin disorders"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 35,
+   "question": "Glucose transporter II (GLUT2) is present in which tissue (s)?",
+   "options": [
+    "RBCs, Fetus, blood brain barrier",
+    "Kidney, liver, pancreas",
+    "Muscles, adipocytes",
+    "Heart muscles"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 36,
+   "question": "Cardiac muscle contains which of the following CK isoenzyme?",
+   "options": [
+    "BB only",
+    "MM and BB only",
+    "MM, BB and MB all three",
+    "MM and MB only"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 37,
+   "question": "Which one of the following is sex linked",
+   "options": [
+    "Pseudogout",
+    "Gout",
+    "Both A and B",
+    "Lesch-Nyhan syndrome"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 38,
+   "question": "The name of the protein that has been identified to serve as a primer for glycogen synthesis is:",
+   "options": [
+    "Glycoprotein",
+    "Glycogen synthase",
+    "Glycogenin",
+    "Glutathione"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 39,
+   "question": "The disorder in which the patients have an irresistible urge to bite their fingers and lips is",
+   "options": [
+    "Lesch Nyhan syndrome",
+    "Gout",
+    "Down syndrome",
+    "Klinefelter syndrome"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 40,
+   "question": "Which of the following statements is true when glucose is oxidized in the presence of O2?",
+   "options": [
+    "All ATP synthesis requires the presence of O2",
+    "O2 is the final electron acceptor",
+    "No water molecules are formed",
+    "The electron transport chain is responsible for all ATP synthesis"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 42,
+   "question": "Obesity is linked to several disorders of the body. Select one disorder from the following that may arise in a person who is significantly overweight",
+   "options": [
+    "cirrhosis of the liver",
+    "heart disease",
+    "lung cancer",
+    "anaemia"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 43,
+   "question": "A continuous supply of energy to the body is necessary to meet the requirements of",
+   "options": [
+    "Basal metabolic rate",
+    "Specific dynamic action",
+    "Physical activity",
+    "All of them"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 44,
+   "question": "Muscle glycogen does not directly contribute to blood glucose due to absence of the enzyme:",
+   "options": [
+    "Glucose 6 phosphate",
+    "Glucose 6 phosphatase",
+    "Glycogen phosphorylase",
+    "G6PD"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 48,
+   "question": "The first step of urea cycle consume how many ATP",
+   "options": [
+    "1 ATP",
+    "2 ATP",
+    "4 ATP",
+    "zero ATP"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 49,
+   "question": "The daily normal requirement of protein in an adult is",
+   "options": [
+    "1g/kg body weight/day",
+    "10g/kg body weight/day",
+    "1kg/kg body weight/day",
+    "0.1g/kg body weight/day"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 50,
+   "question": "The amino acid required for the formation of glutathione",
+   "options": [
+    "Glycine",
+    "Glutamate",
+    "Cysteine",
+    "All of the above"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 55,
+   "question": "Energy reservoir of the body is ______.",
+   "options": [
+    "Carbohydrate",
+    "Proteins",
+    "Lipids",
+    "Nucleotides"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 56,
+   "question": "Rapoport Luebering shunt to produce 2,3-bisphosphoglycerate operates in:",
+   "options": [
+    "Liver",
+    "Erythrocytes",
+    "Kidney",
+    "Muscles"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 58,
+   "question": "The major diagnostic application of GGT measurements is in the investigation of",
+   "options": [
+    "Hepatobiliary disease",
+    "Cardiac disease",
+    "Lung disease",
+    "Muscle disease"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 59,
+   "question": "The TCA cycle is deemed \"cyclic\" because of the utilization and regeneration of which one of the following?",
+   "options": [
+    "Citrate",
+    "Succinyl CoA",
+    "Malate",
+    "Oxaloacetate"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 60,
+   "question": "During catabolic processes, the oxidation of energy rich molecules often results in the reduction of NAD+ to NADH. What comparable molecule is the most commonly used reductant for reductive steps in anabolic processes?",
+   "options": [
+    "FAD",
+    "NADPH",
+    "Coenzyme A",
+    "ATP"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 61,
+   "question": "Albinism is caused by the deficiency of",
+   "options": [
+    "Homogentisate 1,2 dioxygenase",
+    "Tyrosinase",
+    "Arginase",
+    "Argininosuccinase"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 62,
+   "question": "Starting with glyceraldehyde 3-phosphate and synthesizing one molecule of pyruvate, the net yield of ATP and NADH would be which one of the following?",
+   "options": [
+    "Two ATP and one NADH",
+    "Two ATP and two NADH",
+    "One ATP and two NADH",
+    "One ATP and one NADH"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 63,
+   "question": "The synthesis of urea occurs in",
+   "options": [
+    "Kidney",
+    "Liver",
+    "Muscle",
+    "Brain"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 64,
+   "question": "Carnitine acyltransferase I is inhibited by",
+   "options": [
+    "Acetyl CoA",
+    "Malonyl CoA",
+    "Citrate",
+    "Pyruvate"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 65,
+   "question": "While considering the cellular metabolism, the nucleotide NAD is an important",
+   "options": [
+    "Mineral",
+    "Enzyme",
+    "Vitamin",
+    "Coenzyme"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 66,
+   "question": "Phosphofructokinase is",
+   "options": [
+    "activated by ATP",
+    "inhibited by ATP",
+    "not regulated by ATP",
+    "not regulated at all"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 67,
+   "question": "Reactions and processes that break down material and transform fuels into cellular energy are referred to as:",
+   "options": [
+    "Anabolic",
+    "Catabolic",
+    "Intermediary metabolism",
+    "Anaplerotic"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 68,
+   "question": "The citric acid cycle is a hub of energy transformation. Which citric acid cycle enzyme produces GTP by substrate level phosphorylation?",
+   "options": [
+    "triose phosphate isomerase",
+    "aldolase",
+    "glyceraldehyde-3-phosphate dehydrogenase",
+    "succinyl CoA synthetase"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 69,
+   "question": "Reactions of urea cycle take place in liver cells",
+   "options": [
+    "In cytosol",
+    "Only in lysosomes",
+    "In mitochondrial matrix",
+    "Both in cytosol and mitochondrial matrix"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II, Spring 2021",
+   "number": 70,
+   "question": "In humans, the α-amino groups of the 20 L-amino acids are removed and converted in the body to:",
+   "options": [
+    "Urea",
+    "Uric acid",
+    "Creatinine",
+    "Glucose"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 1,
+   "question": "The synthesis of glycogen from glucose is known as:",
+   "options": [
+    "glycogenolysis",
+    "gluconeogenesis",
+    "glycogenesis",
+    "the Embden-Meyerhof pathway"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 3,
+   "question": "Which of the following does not occur when blood reaches the lungs?",
+   "options": [
+    "CO2 is removed from the blood",
+    "Blood acidity decreases",
+    "Lactate is oxidized",
+    "More O2 binds to hemoglobin"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 4,
+   "question": "McArdle disease is a condition in which:",
+   "options": [
+    "the body loses the ability to produce insulin.",
+    "the liver loses the ability to export glucose.",
+    "tissues lose the ability to respond to insulin.",
+    "muscles lose the ability to break down glycogen."
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 5,
+   "question": "The Embden-Meyerhof pathway produces ATP by:",
+   "options": [
+    "anabolism",
+    "substrate-level phosphorylation",
+    "reducing carbon dioxide",
+    "oxidative phosphorylation"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 6,
+   "question": "In yeast, pyruvate is converted to ethanol in order to:",
+   "options": [
+    "recycle NADH to NAD+",
+    "directly produce ATP",
+    "produce oxygen gas",
+    "none of these"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 7,
+   "question": "The single oxidation-reduction reaction in the Embden-Meyerhof pathway yields the following product:",
+   "options": [
+    "glyceraldehyde-3-phosphate",
+    "phosphoenolpyruvate",
+    "1,3-bisphosphoglycerate",
+    "pyruvate"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 8,
+   "question": "Glycolysis can be termed as:",
+   "options": [
+    "anaerobic and catabolic",
+    "aerobic and anabolic",
+    "aerobic and catabolic",
+    "anaerobic and anabolic"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 9,
+   "question": "For each glucose molecule metabolized in the Embden-Meyerhof pathway there is a net production of:",
+   "options": [
+    "4 ATP",
+    "8 ATP",
+    "6 ATP",
+    "2 ATP"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 10,
+   "question": "How many net moles of ATP will be produced if 0.5 mole of glucose passes through the glycolysis pathway?",
+   "options": [
+    "0.5 mol",
+    "1 mol",
+    "2 mol",
+    "4 mol"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 11,
+   "question": "Which of the following processes is not restricted to the mitochondria in eucaryotic cells?",
+   "options": [
+    "the citric acid cycle",
+    "substrate-level phosphorylation",
+    "electron transport",
+    "oxidative phosphorylation"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 12,
+   "question": "Coenzyme A binds to an acetyl group via a:",
+   "options": [
+    "phosphoric acid anhydride linkage",
+    "carboxylic acid ester linkage",
+    "carboxylic acid anhydride linkage",
+    "thioester linkage"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 13,
+   "question": "Type 1 diabetes mellitus is a disease which is caused by a shortage of:",
+   "options": [
+    "glucagon",
+    "adrenaline",
+    "glycogen",
+    "insulin"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 14,
+   "question": "The first substance produced in the citric acid cycle is:",
+   "options": [
+    "acetyl CoA",
+    "Oxaloacetate",
+    "ATP",
+    "citrate"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 15,
+   "question": "The end product(s) of anaerobic catabolism of glucose in muscle tissue is(are):",
+   "options": [
+    "carbon dioxide and water",
+    "lactate",
+    "sucrose",
+    "ethanol"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 16,
+   "question": "If the glucose level in the body is high, the body produces more:",
+   "options": [
+    "insulin",
+    "thiamin",
+    "glucagon",
+    "epinephrine"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 17,
+   "question": "If the glucose level in the body is high, it is called:",
+   "options": [
+    "homeostasis",
+    "hyperglycemia",
+    "hypoglycemia",
+    "glycogenolysis"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 19,
+   "question": "Liver glycogen can increase blood glucose levels via the process of:",
+   "options": [
+    "glycolysis",
+    "glycogenesis",
+    "glycogenolysis",
+    "gluconeogenesis"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 20,
+   "question": "The nucleotide product of the citric acid cycle is:",
+   "options": [
+    "ATP",
+    "GDP",
+    "CTP",
+    "GTP"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 21,
+   "question": "The following number of carbon dioxide molecules are produced during one citric acid cycle:",
+   "options": [
+    "0",
+    "3",
+    "1",
+    "2"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 22,
+   "question": "In the liver, gluconeogenesis can be used to convert the following compound(s) into glucose:",
+   "options": [
+    "glycerol",
+    "lactate",
+    "some amino acids",
+    "all of these"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 23,
+   "question": "In the Embden-Meyerhof pathway, a high energy phosphate bond is found in:",
+   "options": [
+    "3-phosphoglyceric acid",
+    "glucose-6-phosphate",
+    "phosphoenolpyruvate",
+    "2-phosphoglyceric acid"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 24,
+   "question": "Another name for the citric acid cycle is:",
+   "options": [
+    "Embden-Meyerhof pathway",
+    "pyruvic acid cycle",
+    "Kreb's cycle",
+    "glycogenesis"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 25,
+   "question": "The most efficient pathway(s) for obtaining energy from reduced carbons is(are):",
+   "options": [
+    "glycolysis",
+    "the citric acid cycle",
+    "the citric acid cycle plus electron transport and oxidative phosphorylation",
+    "glycolysis plus substrate-level phosphorylation"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 26,
+   "question": "When blood-glucose is above a normal level the following condition results:",
+   "options": [
+    "hypoglycemia",
+    "hyperglycemia",
+    "fasting condition",
+    "homeostasis"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 27,
+   "question": "Which hormone is not paired with its function?",
+   "options": [
+    "glucagon/lowers blood-glucose level",
+    "oxytocin/muscle contraction",
+    "prolactin/milk production",
+    "epinephrine/increases blood-glucose level"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 29,
+   "question": "For every glucose molecule that is metabolized in glycolysis in humans, there is a net production of:",
+   "options": [
+    "4 ATP + 2 pyruvate + 2 NADH",
+    "2 ATP + 2 pyruvate + 2 NADH",
+    "2 ATP + 2 lactate",
+    "4 ATP + 2 lactate + 2 NAD+"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 30,
+   "question": "The conversion of pyruvate to acetyl-CoA requires the following vitamins:",
+   "options": [
+    "riboflavin and thiamine only",
+    "riboflavin, thiamine and vitamin B12",
+    "riboflavin, thiamine, and niacin",
+    "thiamine and vitamin B12"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 31,
+   "question": "Which of the following substance(s) is/are not found in coenzyme A?",
+   "options": [
+    "adenine and ribose",
+    "thioethanolamine",
+    "thiamine",
+    "pantothenic acid"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 34,
+   "question": "Which of the following is not true of a type 2 diabetic?",
+   "options": [
+    "They are unable to produce insulin.",
+    "They lose the ability to import glucose into muscle.",
+    "They typically face a life of continuing health problems.",
+    "Their muscles become starved for glucose."
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 35,
+   "question": "The Embden-Meyerhof pathway produces:",
+   "options": [
+    "one ATP per glucose molecule",
+    "two NADH per glucose molecule",
+    "two lactate per glucose molecule",
+    "one FADH per glucose molecule"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 36,
+   "question": "Which of the following is an anabolic pathway?",
+   "options": [
+    "glycolysis",
+    "photosynthesis",
+    "fatty acid oxidation",
+    "Kreb's cycle"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 37,
+   "question": "After muscle cells deplete glycogen “stores”, further contraction depends on:",
+   "options": [
+    "ATP supplied from the liver.",
+    "glycogen supplied from the liver.",
+    "glucose supplied from the liver.",
+    "lactic acid supplied from the liver."
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 38,
+   "question": "Which of the following correctly describes conditions in a working muscle cell?",
+   "options": [
+    "oxygen produced, acidity increases, carbon dioxide forms",
+    "oxygen consumed, acidity increases, carbon dioxide forms",
+    "oxygen consumed, acidity decreases, carbon dioxide forms",
+    "oxygen produced, acidity decreases, carbon dioxide consumed"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 39,
+   "question": "Which of the following does not describe the relationship between muscle and liver?",
+   "options": [
+    "As muscles consume glucose, the liver releases more glucose.",
+    "As muscles produce lactate, the liver converts lactate to glucose.",
+    "As acidity increases in the muscles, the acidity increases in the liver.",
+    "None of the above are incorrect statements."
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 40,
+   "question": "Which of the following is not true about type 2 diabetes mellitus?",
+   "options": [
+    "It is also known as adult-onset diabetes.",
+    "Muscle cells cannot respond to insulin.",
+    "Blood glucose is often high.",
+    "Affected individuals cannot produce insulin."
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 41,
+   "question": "The complete oxidation of one glucose molecule produces:",
+   "options": [
+    "2 ATP",
+    "32 ATP",
+    "16 ATP",
+    "4 ATP"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 42,
+   "question": "The liver can transform all of the following molecules into glucose except:",
+   "options": [
+    "glycerol",
+    "ethanol",
+    "threonine",
+    "lactate"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 43,
+   "question": "What process is triggered when the blood glucose level exceeds the renal threshold?",
+   "options": [
+    "Insulin is secreted by the pancreas.",
+    "Glucose is excreted into the urine.",
+    "Glucose is converted into lactate.",
+    "The liver initiates glycogenesis."
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 44,
+   "question": "Which of the following metabolic pathways is not paired with its product?",
+   "options": [
+    "gluconeogenesis/glycogen",
+    "muscle tissue glycolysis/lactate",
+    "glycogenolysis/glucose",
+    "yeast cell glycolysis/ethanol"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 45,
+   "question": "The formation of glucose from noncarbohydrate sources is called:",
+   "options": [
+    "glycogenesis",
+    "glycogenolysis",
+    "glycolysis",
+    "gluconeogenesis"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 47,
+   "question": "Which of the following statements involving hormones is not correct?",
+   "options": [
+    "Hormones are chemical substances that act to regulate metabolic pathways.",
+    "Hormones are secreted by the endocrine system.",
+    "Hormones are like vitamins and must be obtained through diet.",
+    "Hormones do not fit into a single chemical structural classification."
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 49,
+   "question": "Impaired vision, dizziness, fainting spells, convulsions and unconsciousness may result from:",
+   "options": [
+    "hyperglycemia",
+    "hypoglycemia",
+    "both (a) and (b) are correct",
+    "neither (a) nor (b) are correct"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "Biochemistry class test, Carbohydrate Metabolism",
+   "number": 50,
+   "question": "The Embden-Meyerhof pathway produces equal moles of pyruvate and:",
+   "options": [
+    "NADH",
+    "NADPH",
+    "FAD",
+    "FADH2"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 32,
+   "question": "When a hormone binds to its receptor:",
+   "options": [
+    "It changes its conformation",
+    "It breaks down the receptor",
+    "It digests the receptor",
+    "It inserts the receptor"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 33,
+   "question": "Which of the following is not an essential amino acid?",
+   "options": [
+    "Lysine",
+    "Valine",
+    "Leucine",
+    "Alanine"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 34,
+   "question": "Emulsification means:",
+   "options": [
+    "Breakdown of fat globules into smaller droplets",
+    "Breakdown of proteins into smaller fragments",
+    "Breakdown of polysaccharides into monosaccharides",
+    "Breakdown by enzyme of a molecule"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 35,
+   "question": "NaCl is ____, NaOH is ____ and HCl ____.",
+   "options": [
+    "salt, base, acid",
+    "base, salt, acid",
+    "salt, acid, base",
+    "base, acid, salt"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 37,
+   "question": "Enzymes that catalyse the removal of hydrogens are:",
+   "options": [
+    "Oxidoreductase",
+    "Transferase",
+    "Lyase",
+    "Hydrolase"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 38,
+   "question": "Catabolism is:",
+   "options": [
+    "Synthesis of complex molecule",
+    "Breaking down of complex molecule",
+    "Construction of organic matter",
+    "All of the above"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 39,
+   "question": "____ is a sugar that the bloodstream carries to all cells in the body to supply energy.",
+   "options": [
+    "Glucose",
+    "Fructose",
+    "Sucrose",
+    "Maltose"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 40,
+   "question": "Building blocks of lipids are:",
+   "options": [
+    "Alcohol and fatty acids",
+    "Alcohols and ketones",
+    "Ketones and aldehydes",
+    "Fats and oil"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 44,
+   "question": "Biological catalysts are:",
+   "options": [
+    "Enzymes",
+    "Proteins",
+    "Carbohydrates",
+    "Lipids"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 45,
+   "question": "The model of atom with shells around the nucleus with the names K, L, M etc. is called:",
+   "options": [
+    "Thomson",
+    "Rutherford",
+    "Bohr",
+    "Modern"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 46,
+   "question": "First messengers:",
+   "options": [
+    "NO",
+    "H2S",
+    "Insulin",
+    "Diacylglycerol"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 47,
+   "question": "Building blocks of proteins are:",
+   "options": [
+    "Amino acids",
+    "Peptides",
+    "Monosaccharides",
+    "Nucleotides"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 49,
+   "question": "Number of hydrogen bonds between A and T:",
+   "options": [
+    "1",
+    "2",
+    "3",
+    "4"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 50,
+   "question": "They have a double bond in them:",
+   "options": [
+    "Alkane",
+    "Alkene",
+    "Alkyne",
+    "Alkyls"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 51,
+   "question": "Which of the following is not a macromolecule?",
+   "options": [
+    "Vitamin",
+    "DNA",
+    "Protein",
+    "Polysaccharides"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 52,
+   "question": "A tightly bound cofactor is:",
+   "options": [
+    "Prosthetic group",
+    "Coenzyme",
+    "Modulator",
+    "Effector"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 53,
+   "question": "Enzyme plus cofactor complex is:",
+   "options": [
+    "Coenzyme",
+    "Apoenzyme",
+    "Holoenzyme",
+    "Complex"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Biochemistry",
+   "source": "KMU Biochemistry-II paper",
+   "number": 62,
+   "question": "Digestion of protein starts from:",
+   "options": [
+    "Stomach",
+    "Oral cavity",
+    "Intestine",
+    "Duodenum"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Physiology",
+   "source": "Physiology past paper",
+   "number": 56,
+   "question": "Endolymph (cochlear fluid) is present in:",
+   "options": [
+    "Scala vestibuli",
+    "Scala media",
+    "Scala tympani",
+    "Basilar membrane"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Physiology",
+   "source": "Physiology past paper",
+   "number": 57,
+   "question": "Osmotic pressure of the blood is mainly maintained by?",
+   "options": [
+    "Albumin",
+    "Carbon dioxide",
+    "White blood cells",
+    "Globulins"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Physiology",
+   "source": "Physiology past paper",
+   "number": 58,
+   "question": "There are ____ cranial nerves.",
+   "options": [
+    "8",
+    "10",
+    "12",
+    "14"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Physiology",
+   "source": "Physiology past paper",
+   "number": 59,
+   "question": "Which nerve supplies the heart?",
+   "options": [
+    "Vagus",
+    "Trigeminal",
+    "Oculomotor",
+    "Facial"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Physiology",
+   "source": "Physiology past paper",
+   "number": 61,
+   "question": "Buffy coat is ____ %.",
+   "options": [
+    "1",
+    "2",
+    "3",
+    "4"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Physiology",
+   "source": "Physiology past paper",
+   "number": 62,
+   "question": "By the age of 7 months, the primary site of hematopoiesis in a fetus is:",
+   "options": [
+    "Mesenchyme",
+    "Liver",
+    "Spleen",
+    "Bone marrow"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Physiology",
+   "source": "Physiology past paper",
+   "number": 63,
+   "question": "Heart attack is also called?",
+   "options": [
+    "Heart block",
+    "Myocardial infarction",
+    "Ischemia",
+    "Cardiac arrest"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Physiology",
+   "source": "Physiology past paper",
+   "number": 64,
+   "question": "Hypothalamus and thalamus are in the ____.",
+   "options": [
+    "Diencephalon",
+    "Cerebellum",
+    "Cerebrum",
+    "Limbic system"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Physiology",
+   "source": "Physiology past paper",
+   "number": 66,
+   "question": "Which of the following is known as the receptor organ for hearing?",
+   "options": [
+    "Cochlea",
+    "Vestibular membrane",
+    "Organ of Corti",
+    "Scala vestibuli"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Physiology",
+   "source": "Physiology past paper",
+   "number": 67,
+   "question": "Lymph contains ____ % of water.",
+   "options": [
+    "90",
+    "92",
+    "95",
+    "96"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Physiology",
+   "source": "Physiology past paper",
+   "number": 68,
+   "question": "A specific stimulus produces a receptor potential by:",
+   "options": [
+    "Inhibiting Na+ influx into receptor",
+    "Inhibiting K+ efflux from receptor",
+    "Enhancing Na+ influx into receptor",
+    "Enhancing K+ efflux from receptor"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Physiology",
+   "source": "Physiology past paper",
+   "number": 69,
+   "question": "Helper T cells are also called?",
+   "options": [
+    "CD4 cells",
+    "CD8 cells",
+    "CD5 cells",
+    "CD10 cells"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Physiology",
+   "source": "Physiology past paper",
+   "number": 70,
+   "question": "The olfactory area is found within the:",
+   "options": [
+    "Occipital lobe",
+    "Parietal lobe",
+    "Frontal lobe",
+    "Temporal lobe"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 1,
+   "question": "Cerebellum consists of two laterally placed hemispheres connected to a median portion called,",
+   "options": [
+    "Cerebellar peduncles",
+    "Cortex",
+    "Vermis",
+    "Middle cerebellar peduncles"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 2,
+   "question": "The deepest of muscles is?",
+   "options": [
+    "Vastus medialis",
+    "Vastus lateralis",
+    "Vastus intermedius",
+    "Rectus femoris"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 3,
+   "question": "A term \"anatomic snuffbox\" commonly used to describe a triangular skin depression on the,",
+   "options": [
+    "Medial side of the wrist",
+    "Lateral side of the wrist",
+    "Anterior aspect of the hand",
+    "Posterior aspect of the hand"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 4,
+   "question": "The dorsalis pedis artery begins in front of the ankle joint as a continuation of the ________.",
+   "options": [
+    "Anterior tibial artery",
+    "Posterior tibial artery",
+    "Digital artery",
+    "Dorsal venous arch"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 5,
+   "question": "Which of the following, regarding the great saphenous vein, is INCORRECT?",
+   "options": [
+    "It is the longest vein in the body",
+    "It passes behind the medial malleolus",
+    "At the knee, it lies a hand's breadth behind the medial border of the patella",
+    "The saphenous opening lies about 3 cm below and lateral to the pubic tubercle"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 6,
+   "question": "Muscles associated with the greater tuberosity of humerus",
+   "options": [
+    "Deltoid",
+    "Latissimus dorsi",
+    "Teres major",
+    "Teres minor"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 7,
+   "question": "Filum terminale is attached to which segment of spinal cord,",
+   "options": [
+    "Sacral",
+    "Coccygeal",
+    "Lumbar",
+    "Thoracic"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 8,
+   "question": "On the lateral surface of the thigh, the fascia is thickened to form a strong, wide band, called,",
+   "options": [
+    "Tensor fasciae latae",
+    "Gluteus tuberosity",
+    "Iliotibial tract",
+    "Gluteus maximus"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 9,
+   "question": "The axillary artery begins at the lateral border of the ________ as a continuation of the subclavian and ends at the lower border of the teres major muscle, where it continues as the ________ artery.",
+   "options": [
+    "2nd rib & radial",
+    "1st rib & ulnar",
+    "1st rib & brachial",
+    "Both 1st, 2nd rib & subclavian"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 10,
+   "question": "What is the nerve of the anterior compartment of the thigh?",
+   "options": [
+    "Femoral nerve",
+    "Obturator nerve",
+    "Saphenous nerve",
+    "Tibial portion of sciatic nerve"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 11,
+   "question": "In femur bone the center of the head is a small depression, for the attachment of the ligament of the head is called,",
+   "options": [
+    "Greater trochanter",
+    "Fovea capitis",
+    "Linea aspera",
+    "Lesser trochanter"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 13,
+   "question": "CSF is present in the",
+   "options": [
+    "Pericranium",
+    "Epidural space",
+    "Subdural space",
+    "Subarachnoid space"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 14,
+   "question": "Anconeus is the muscle present in... compartment of forearm?",
+   "options": [
+    "Anterior compartment of arm",
+    "Posterior compartment of arm",
+    "Anterior compartment of forearm",
+    "Posterior compartment of forearm"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 15,
+   "question": "Spinal cord continue superiorly with medulla oblongata through,",
+   "options": [
+    "Vertebral foramen",
+    "Foramen rotundum",
+    "Foramen ovale",
+    "Foramen magnum"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 16,
+   "question": "A strong membrane that unites the shafts of the radius and the ulna, it is attached to their interosseous borders,",
+   "options": [
+    "Flexor retinaculum",
+    "Extensor retinaculum",
+    "Interosseous membrane",
+    "Synovial sheath"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 17,
+   "question": "The name thenar eminence is given to short muscles of the,",
+   "options": [
+    "Hand",
+    "Wrist",
+    "Palm",
+    "Thumb"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 18,
+   "question": "All of the following are motor nerves Except?",
+   "options": [
+    "Oculomotor",
+    "Trochlear",
+    "Trigeminal",
+    "Abducent"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 19,
+   "question": "The ligament connects the back of the sacrum to the ischial tuberosity,",
+   "options": [
+    "Sacrospinous",
+    "Sacrotuberous",
+    "Ischiofemoral",
+    "Iliofemoral"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 20,
+   "question": "The cervical plexus is formed by the anterior rami of the first,",
+   "options": [
+    "Two cervical nerves",
+    "Three cervical nerves",
+    "Four cervical nerves",
+    "Five cervical nerves"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 22,
+   "question": "Which of the following is not included in the gluteal region,",
+   "options": [
+    "Superior gluteal artery",
+    "Inferior gluteal artery",
+    "The trochanteric anastomosis",
+    "External iliac artery"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 24,
+   "question": "Which vessel is NOT involved in the trochanteric anastomosis,",
+   "options": [
+    "Superior gluteal artery",
+    "Obturator artery",
+    "Lateral circumflex femoral artery",
+    "Medial circumflex femoral artery"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 27,
+   "question": "The popliteal artery is deeply placed and enters the popliteal fossa through the opening in the adductor magnus as a continuation of the,",
+   "options": [
+    "External iliac artery",
+    "Obturator artery",
+    "Internal iliac artery",
+    "Femoral artery"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 29,
+   "question": "The ________ is triangular and occupies the central area of the palm.",
+   "options": [
+    "Fibrous flexor sheath",
+    "Synovial flexor sheath",
+    "Palmar aponeurosis",
+    "Carpal tunnel"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 30,
+   "question": "The adductor canal is an intermuscular cleft that is situated on the medial side of the thigh beneath the",
+   "options": [
+    "Iliacus",
+    "Adductor magnus",
+    "Adductor longus",
+    "Sartorius"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 31,
+   "question": "The ________ of the cubital fossa is formed by the supinator muscle laterally and the brachialis muscle medially.",
+   "options": [
+    "Base",
+    "Roof",
+    "Floor",
+    "Apex"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 32,
+   "question": "Which of the quadricep femoris muscles performs extension as well as flexion?",
+   "options": [
+    "Vastus lateralis",
+    "Vastus medialis",
+    "Vastus intermedius",
+    "Rectus femoris"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 33,
+   "question": "Fracture of shaft of humerus results in damage of",
+   "options": [
+    "Radial nerve",
+    "Ulnar nerve",
+    "Axillary nerve",
+    "All of above"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 34,
+   "question": "The most medial structure passing under the inferior extensor retinaculum of the foot is,",
+   "options": [
+    "Deep peroneal nerve",
+    "Tibialis anterior",
+    "Extensor hallucis longus",
+    "Anterior tibial artery"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 35,
+   "question": "The frontal bone forms the above margin of orbit, the lateral margin is formed by the processes of the,",
+   "options": [
+    "Frontal and zygomatic bones",
+    "Zygomatic bone and the maxilla",
+    "Maxilla and the frontal bone",
+    "Maxilla and the zygomatic bone"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 36,
+   "question": "Ulna has a notch on its anterior surface, which articulates with the trochlea of the humerus,",
+   "options": [
+    "Trochlear notch",
+    "Olecranon process",
+    "Coronoid process",
+    "Radial notch"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 37,
+   "question": "The profunda artery, superior ulnar collateral artery and inferior ulnar collateral artery are the branches of ________.",
+   "options": [
+    "Ulnar artery",
+    "Radial artery",
+    "Brachial artery",
+    "Axillary artery"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 38,
+   "question": "The vein arises from the medial side of the dorsal venous arch on the back of the hand and winds around the medial border of the forearm,",
+   "options": [
+    "Cephalic",
+    "Axillary",
+    "Basilic",
+    "Median cubital"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 40,
+   "question": "Deltoid originate from ...?",
+   "options": [
+    "Lateral 3rd of clavicle",
+    "Acromion process",
+    "Spine of scapula",
+    "All of the above"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 41,
+   "question": "Patellar plexus comprises of all EXCEPT:",
+   "options": [
+    "Posterior branch of lateral femoral cutaneous nerve",
+    "Infrapatellar branch of saphenous nerve",
+    "Medial femoral cutaneous nerve",
+    "Anterior branch of lateral femoral cutaneous nerve"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 43,
+   "question": "The CSF is produced within the ventricles by",
+   "options": [
+    "Corpus callosum",
+    "Choroid plexuses",
+    "Cerebral aqueduct",
+    "Pineal glands"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 44,
+   "question": "Which one is not included in the ligaments of hip joint,",
+   "options": [
+    "Iliofemoral ligament",
+    "Ischiofemoral ligament",
+    "Pubofemoral ligament",
+    "Inguinal ligament"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 45,
+   "question": "Soleus muscle is the..?",
+   "options": [
+    "Anterior compartment of thigh",
+    "Posterior compartment of thigh",
+    "Anterior compartment of leg",
+    "Posterior compartment of leg"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 47,
+   "question": "Numerous arteries and veins are found in ________ layer of the SCALP",
+   "options": [
+    "Pericranium",
+    "Skin",
+    "Connective tissue",
+    "Aponeurosis"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 48,
+   "question": "The cerebral cavity's venous sinuses are blood-filled compartments located between the layers of the dura mater,",
+   "options": [
+    "Straight sinus",
+    "Superior sagittal sinus",
+    "Right transverse sinus",
+    "All of the above"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 49,
+   "question": "The ________ gland is the largest salivary gland?",
+   "options": [
+    "Parotid",
+    "Submandibular",
+    "Sublingual",
+    "Sebaceous"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 50,
+   "question": "The ilioinguinal nerve is derived from:",
+   "options": [
+    "T10",
+    "T12",
+    "L4-L5",
+    "L1"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 51,
+   "question": "The narrow cavity of the midbrain which connects the third and fourth ventricles,",
+   "options": [
+    "Central canal",
+    "Cerebral aqueduct",
+    "Interventricular foramina",
+    "Venous sinuses"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 54,
+   "question": "Aggregations of arachnoid villi are referred to as,",
+   "options": [
+    "Venous sinuses",
+    "Subarachnoid cisternae",
+    "Arachnoid granulations",
+    "None of the above"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 55,
+   "question": "Head of radius articulate with...?",
+   "options": [
+    "Capitulum",
+    "Trochlea",
+    "Lateral epicondyle",
+    "Medial epicondyle"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 56,
+   "question": "The ________ is a sickle-shaped fold of dura mater that lies in the midline between the two cerebral hemispheres.",
+   "options": [
+    "Falx cerebri",
+    "Tentorium cerebelli",
+    "Tentorial notch",
+    "Diaphragma sellae"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 57,
+   "question": "The upper, lateral, and medial margins of patella give attachment to the different parts of the ________ muscle.",
+   "options": [
+    "Quadriceps femoris",
+    "Tibialis posterior",
+    "Popliteus muscle",
+    "Soleus muscle"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 58,
+   "question": "The femoral vein occupies the ________ compartment of femoral sheath.",
+   "options": [
+    "Lateral",
+    "Medial",
+    "Intermediate",
+    "Anterior"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 59,
+   "question": "The three small, wedge-shaped cuneiform bones articulate proximally with the ________ bone and distally with the first three metatarsal bones.",
+   "options": [
+    "Talus",
+    "Navicular",
+    "Cuboid",
+    "Calcaneum"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 60,
+   "question": "All are muscles of anterior compartment of arm except",
+   "options": [
+    "Coracobrachialis",
+    "Brachialis",
+    "Biceps brachii",
+    "Triceps"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 61,
+   "question": "The precentral gyrus lies immediately anterior to the central sulcus and is known as the,",
+   "options": [
+    "Sensory area",
+    "Motor area",
+    "Broca's area",
+    "Precentral sulcus"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 62,
+   "question": "The artery arises from the brachiocephalic artery behind the right sternoclavicular joint,",
+   "options": [
+    "Superior thyroid",
+    "Ascending pharyngeal artery",
+    "Lingual",
+    "Common carotid"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 63,
+   "question": "In ulna below the trochlear notch?",
+   "options": [
+    "Olecranon process",
+    "Coronoid process",
+    "Coracoid process",
+    "Supinator crest"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 64,
+   "question": "The largest bone of the foot and forms the prominence of the heel is,",
+   "options": [
+    "Calcaneum",
+    "Navicular",
+    "Talus",
+    "Cuboid"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 66,
+   "question": "Which of the following structures is NOT one of the contents of the cubital fossa?",
+   "options": [
+    "Brachial artery",
+    "Tendon of biceps brachii",
+    "Radial nerve",
+    "Anterior interosseous nerve"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 67,
+   "question": "The facial bones consist of the following, two of which are single,",
+   "options": [
+    "Lacrimal & Vomer",
+    "Maxilla & Mandible",
+    "Zygomatic & Palatine",
+    "Vomer & Mandible"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 68,
+   "question": "The anastomosis between the branches of the two internal carotid arteries and the following two arteries forms the Willis circle",
+   "options": [
+    "External carotid arteries",
+    "Vertebral arteries",
+    "Subclavian artery",
+    "Cerebral arteries"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 69,
+   "question": "Which one of the following does not enter the thigh within the femoral sheath?",
+   "options": [
+    "Artery",
+    "Vein",
+    "Nerve",
+    "All of the above"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2021",
+   "number": 70,
+   "question": "Muscles in the floor of the femoral triangle include all EXCEPT:",
+   "options": [
+    "Adductor magnus",
+    "Pectineus",
+    "Psoas",
+    "Iliacus"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 2,
+   "question": "Recommendation is ________ for further action.",
+   "options": [
+    "aim",
+    "process",
+    "suggestion",
+    "purpose"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 3,
+   "question": "Appendix is placed at the ________ of report.",
+   "options": [
+    "End",
+    "beginning",
+    "mid",
+    "before title"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 4,
+   "question": "Comprehension means ________",
+   "options": [
+    "To define",
+    "To understand",
+    "To memorize",
+    "To confuse"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 7,
+   "question": "The noun of poor is ________",
+   "options": [
+    "Poorty",
+    "Poverty",
+    "Poorness",
+    "poors"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 8,
+   "question": "The alphabetical list of abbreviation used in the report is called ________",
+   "options": [
+    "appendix",
+    "bibliography",
+    "glossary",
+    "abstract"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 9,
+   "question": "Terminology can be used in ________",
+   "options": [
+    "friendly letters",
+    "business letters",
+    "informal letters",
+    "apology letters"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 10,
+   "question": "In block style writing everything should be to the ________ of page.",
+   "options": [
+    "to the right",
+    "to the left",
+    "middle",
+    "any side"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 12,
+   "question": "Minutes of the meeting are the ________ record for future reference.",
+   "options": [
+    "Ordinary",
+    "permanent",
+    "legal",
+    "Need based"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 13,
+   "question": "The main purpose of expository writing is to ________",
+   "options": [
+    "explain",
+    "narrate",
+    "brief",
+    "summarise"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 14,
+   "question": "The portion of report writing where we use graphs or diagrams is called ________",
+   "options": [
+    "appendices",
+    "conclusion",
+    "acknowledgement",
+    "summary"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 15,
+   "question": "In the ________ section of report writing the researcher suggest solution to the confronting issues.",
+   "options": [
+    "introduction",
+    "body",
+    "recommendation",
+    "reference"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 17,
+   "question": "If you ________ a minute, I'll come with you.",
+   "options": [
+    "Had waited",
+    "Would have waited",
+    "Wait",
+    "Had to wait"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 18,
+   "question": "If I could go anywhere, it ________ Chitral.",
+   "options": [
+    "Will be",
+    "Would be",
+    "Would have been.",
+    "Shall not be"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 21,
+   "question": "The letter is ________ by me.",
+   "options": [
+    "wrote",
+    "written",
+    "writes",
+    "write"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 22,
+   "question": "I respect my teacher.",
+   "options": [
+    "My teacher are respected me.",
+    "I am respected by my teacher.",
+    "My teacher is respected by me.",
+    "My teacher is being respected by me."
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 23,
+   "question": "Who did help you?",
+   "options": [
+    "By whom you are helped?",
+    "By whom was you helped?",
+    "By whom are you helping?",
+    "None of the above"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 25,
+   "question": "The listener discourages the speaker in ________ listening.",
+   "options": [
+    "Active listening",
+    "Appreciative listening",
+    "Both",
+    "Passive listening"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 28,
+   "question": "Business writer today generally favor the ________ letter format.",
+   "options": [
+    "Semi indented",
+    "Full block",
+    "Traditional format",
+    "All of these"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 29,
+   "question": "Place ________ after complementary close in a letter.",
+   "options": [
+    "Period",
+    "Exclamation marks",
+    "Comma",
+    "semicolon"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 30,
+   "question": "Letter that is sent to family, friend and relative is called ________",
+   "options": [
+    "informal",
+    "formal",
+    "invitation",
+    "social"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 32,
+   "question": "CV is ________ than resume.",
+   "options": [
+    "Shorter",
+    "Longer",
+    "None of these",
+    "complicated"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 33,
+   "question": "Memo works ________ the organization.",
+   "options": [
+    "Within organization",
+    "Outside the organization",
+    "For both",
+    "Inside country"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II, Spring 2020",
+   "number": 35,
+   "question": "Abstract is written ________ you have written the report.",
+   "options": [
+    "after",
+    "before",
+    "In the mid",
+    "None of these"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 2,
+   "question": "Ali, come here. It is ________?",
+   "options": [
+    "Declarative sentence",
+    "Imperative sentence",
+    "Transitive sentence",
+    "Intransitive sentence"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 3,
+   "question": "In the punctuation marks ........ are called terminal symbols.",
+   "options": [
+    "4",
+    "3",
+    "5",
+    "2"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 4,
+   "question": "Why do you waste the time? ________",
+   "options": [
+    "Why the time is wasted by you?",
+    "Why the time was wasted by you?",
+    "Why is time wasted by you?",
+    "Why is the time wasted by you?"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 5,
+   "question": "Letter, Memo, Fax and Email are ________",
+   "options": [
+    "Official letters",
+    "Informal letters",
+    "Business correspondence",
+    "Formal letters"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 7,
+   "question": "In full block letter everything must be to the extreme ........ of page.",
+   "options": [
+    "Left",
+    "Right",
+    "Middle",
+    "Extreme right"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 8,
+   "question": "If you want to fill the statement with action, use ________?",
+   "options": [
+    "Active voice",
+    "Direct narration",
+    "Indirect narration",
+    "Passive voice"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 9,
+   "question": "I said to him, \"who are you\"?",
+   "options": [
+    "I asked him who he was?",
+    "I asked him who was he",
+    "I asked him who is he?",
+    "I asked him who he was"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 10,
+   "question": "The personal opinions are not the part of ________ writing?",
+   "options": [
+    "Persuasive",
+    "Expository",
+    "Narrative",
+    "Descriptive"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 11,
+   "question": "\"To get success\" in examination is my ambition. The quoted words are ________?",
+   "options": [
+    "Adjective phrase",
+    "Infinitive phrase",
+    "Adjective clause",
+    "Prepositional phrase"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 12,
+   "question": "Slangs and abbreviations are omitted in ________?",
+   "options": [
+    "Formal letters",
+    "Application",
+    "Informal letters",
+    "Both A&B"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 13,
+   "question": "The students look \"at the beautiful baby\". The quoted words are ________?",
+   "options": [
+    "Adjective phrase",
+    "Noun clause",
+    "Adjective clause",
+    "Prepositional phrase"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 14,
+   "question": "He says to me, \"I am tired\". ________",
+   "options": [
+    "He tells me that I am tired",
+    "He tells me that he is tired",
+    "He tells me that I was tired",
+    "He tells me that I he tired"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 15,
+   "question": "Most employees will ________ the applicant if a cover letter is poorly written?",
+   "options": [
+    "Respond",
+    "Reject",
+    "Accept",
+    "Consider"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 16,
+   "question": "The door was being knocked at by her. ________",
+   "options": [
+    "She is knocking the door",
+    "She was knocking at the door",
+    "She was being knocking at the door",
+    "She has been knocking at the door"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 17,
+   "question": "The tone of official letter is always ........",
+   "options": [
+    "Friendly",
+    "Sarcastic",
+    "Informal",
+    "Formal"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 18,
+   "question": "I have completed the task. ________",
+   "options": [
+    "The task had been completed by me",
+    "The task is being completed by me",
+    "The task has been completed by me",
+    "The task have been completed by me"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 19,
+   "question": "The essay should begin with ________",
+   "options": [
+    "Joke",
+    "Info",
+    "Hook",
+    "riddle"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 20,
+   "question": "He did not drive a car. The affirmative sentence of this is ________",
+   "options": [
+    "He drives a car",
+    "He drove a car",
+    "He does drive a car",
+    "He is driving a car"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 22,
+   "question": "In order to record the notes of minutes ________ must be preferred?",
+   "options": [
+    "Reported speech",
+    "Reporting speech",
+    "Active voice",
+    "Present tense"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 23,
+   "question": "Minutes of the meeting are ________ record for future reference?",
+   "options": [
+    "Ordinary",
+    "Permanent",
+    "Spoken",
+    "Written"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 24,
+   "question": "The last paragraph of the essay should be",
+   "options": [
+    "Exact summary",
+    "Conclusion",
+    "Body",
+    "All"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 25,
+   "question": "How much you ________ the company it should be mentioned in your cover letter?",
+   "options": [
+    "Benefit",
+    "Support",
+    "Disrupt",
+    "Charge"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 27,
+   "question": "He read a book. The negative of given sentence is ________",
+   "options": [
+    "He does not read a book",
+    "He did not read a book",
+    "He do not read a book",
+    "He is not reading a book"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 28,
+   "question": "Cc stands for ________ in formal writing",
+   "options": [
+    "Cut copy",
+    "Catch Copy",
+    "Communicate copy",
+    "Carbon copy"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 29,
+   "question": "Writing styles can be divided into ........ different kinds.",
+   "options": [
+    "4",
+    "5",
+    "2",
+    "3"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 32,
+   "question": "I spent a joyful day.",
+   "options": [
+    "A joyful day was spent by me",
+    "A joyful day was spend by me",
+    "A joyful day is spent by me",
+    "A joyful day would spent by me"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 33,
+   "question": "In which type of essay the writer describes a place, an object and an event ________",
+   "options": [
+    "Argumentative",
+    "Descriptive",
+    "Narrative",
+    "Reflective"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 36,
+   "question": "In ________ paragraph a large no of adjectives are used.",
+   "options": [
+    "Descriptive",
+    "Narrative",
+    "Expository",
+    "Persuasive"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 37,
+   "question": "A related group of words that work together but they do not have a subject and a verb is called ........",
+   "options": [
+    "Clause",
+    "Phrase",
+    "Both the above",
+    "Sentence"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 38,
+   "question": "Semi block letter is also called ........",
+   "options": [
+    "Simple letter",
+    "Traditional letter",
+    "Modified letter",
+    "Modern letter"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 39,
+   "question": "The first paragraph of an essay comprises on ________",
+   "options": [
+    "Body",
+    "Conclusion",
+    "Introduction",
+    "All"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 40,
+   "question": "My student is coming in class \"with a cup full of tea\". The quoted words are ________?",
+   "options": [
+    "Adjective phrase",
+    "Noun clause",
+    "Adjective clause",
+    "Prepositional phrase"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 41,
+   "question": "The style of writing where the writer tries to win the favor of readers is called ________",
+   "options": [
+    "Persuasive",
+    "Expository",
+    "Narrative",
+    "Descriptive"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 42,
+   "question": "\"Tease\" or \"stress\" questions are asked to judge the candidate's ________",
+   "options": [
+    "intelligence quotient",
+    "technical skill",
+    "how the candidate handles them",
+    "stress level"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 43,
+   "question": "Reading a text carefully to check for errors and general tone is called ________?",
+   "options": [
+    "Editing",
+    "Correction",
+    "Analyzing",
+    "Proofreading"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 44,
+   "question": "________ essay are collection of one's thoughts",
+   "options": [
+    "Narrative",
+    "Expository",
+    "Argumentative",
+    "Reflective"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 45,
+   "question": "He writes \"smoothly\". The quoted word is ________",
+   "options": [
+    "Adjective",
+    "Adverb",
+    "Object",
+    "Noun"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 46,
+   "question": "Identify which type of dependent clause is in this sentence: When the leaves start to fall, they will harvest the last of their crops?",
+   "options": [
+    "noun clause",
+    "adverb clause",
+    "adjective clause",
+    "None of These"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 47,
+   "question": "Curriculum vitae are words of which language?",
+   "options": [
+    "Latin",
+    "German",
+    "French",
+    "English"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 48,
+   "question": "In technical writing, the destination of the memo is defined as?",
+   "options": [
+    "within a company",
+    "outside company",
+    "outside city",
+    "out of way"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 50,
+   "question": "The narrative essay is one that tells us ________",
+   "options": [
+    "Information",
+    "Idea",
+    "Story",
+    "Paragraph"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 52,
+   "question": "In report writing ________ pronouns are used?",
+   "options": [
+    "2nd person pronoun",
+    "1st person pronoun",
+    "3rd person pronouns",
+    "Any kind of"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 27,
+   "question": "Characters and setting both are must in ........",
+   "options": [
+    "Descriptive essay",
+    "Narrative essay",
+    "Expository essay",
+    "Persuasive essay"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 30,
+   "question": "\"A woman in the window\" shouts for help. The quoted words are called ________",
+   "options": [
+    "Noun phrase",
+    "Verb phrase",
+    "Clause",
+    "Adjective phrase"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 35,
+   "question": "The boy said to the girl, \"I can hear you\" The indirect narration is ________",
+   "options": [
+    "The boy told the girl that he could hear her",
+    "The boy told the girl that she could hear her",
+    "The boy told the girl that she can hear her",
+    "The boy told the girl that she will hear her"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 46,
+   "question": "A resume is a word of which language?",
+   "options": [
+    "American",
+    "German",
+    "Indian",
+    "French"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "English",
+   "source": "KMU English-II paper",
+   "number": 50,
+   "question": "In a cover letter ____ topic is not normally mentioned?",
+   "options": [
+    "The salary",
+    "The position",
+    "The company",
+    "Experience"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2020",
+   "number": 1,
+   "question": "Cervical plexus is formed by",
+   "options": [
+    "Ventral rami of C2 to C5",
+    "Ventral rami of C1 to C3",
+    "Ventral rami of C1 to C4",
+    "Dorsal rami of C2 to C5"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2020",
+   "number": 2,
+   "question": "Which column of grey matter receives the sensory input for the body?",
+   "options": [
+    "Posterior column",
+    "Anterior column",
+    "Lateral column",
+    "Both B and C"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2020",
+   "number": 3,
+   "question": "The conus medullaris is the tapering point at the end of the spinal cord. It is located at approximately ______",
+   "options": [
+    "L1/L2",
+    "L3/L4",
+    "L5/S1",
+    "T11/T12"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2020",
+   "number": 5,
+   "question": "The sensory supply of the forehead is from",
+   "options": [
+    "Ophthalmic division",
+    "Facial nerve",
+    "Maxillary division",
+    "Mandibular division"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2020",
+   "number": 6,
+   "question": "Which of the following supply the muscles of mastication?",
+   "options": [
+    "Mandibular nerve",
+    "Ophthalmic nerve",
+    "Facial nerve",
+    "Maxillary nerve"
+   ],
+   "answer_index": 0
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2020",
+   "number": 7,
+   "question": "Cranial nerve VI supplies which muscle?",
+   "options": [
+    "Superior rectus",
+    "Inferior rectus",
+    "Superior oblique",
+    "Lateral rectus"
+   ],
+   "answer_index": 3
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2020",
+   "number": 16,
+   "question": "The vomer bone is located inside the ______",
+   "options": [
+    "Orbital cavity",
+    "Pharyngeal cavity",
+    "Nasal cavity",
+    "Oral cavity"
+   ],
+   "answer_index": 2
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2020",
+   "number": 17,
+   "question": "The infraorbital foramina are located on the ______",
+   "options": [
+    "Mandible",
+    "Maxilla",
+    "Orbital",
+    "Frontal"
+   ],
+   "answer_index": 1
+  },
+  {
+   "subject": "Anatomy",
+   "source": "KMU Human Anatomy-II, Spring 2020",
+   "number": 18,
+   "question": "The sella turcica houses what gland?",
+   "options": [
+    "Sphenoid gland",
+    "Pituitary gland",
+    "Adrenal gland",
+    "Sebaceous gland"
+   ],
+   "answer_index": 1
+  }
+ ]
+}

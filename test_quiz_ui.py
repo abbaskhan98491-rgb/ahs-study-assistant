@@ -65,6 +65,21 @@ class MCQPracticeTests(unittest.TestCase):
         for forbidden in ('quiz', 'submit', 'retry', 'score', 'page', 'attempt', 'answered'):
             self.assertNotIn(forbidden, visible_text.casefold())
 
+    def test_past_paper_question_shows_its_source(self):
+        mcqs = questions(2)
+        mcqs[0].update(past_paper=True, past_source="KMU Biochemistry-II, Spring 2021, Q4")
+        path = Path(f"tmp/mcq_ui_past_{os.getpid()}.py")
+        path.parent.mkdir(exist_ok=True)
+        path.write_text("from quiz_ui import render_mcqs\n"
+                        f"render_mcqs({mcqs!r}, 0)\n", encoding="utf-8")
+        self.addCleanup(path.unlink, missing_ok=True)
+        at = AppTest.from_file(str(path.resolve()), default_timeout=20).run()
+        self.assertEqual(len(at.exception), 0)
+        headings = [m.value for m in at.markdown if 'QUESTION' in m.value]
+        self.assertIn('Past paper', headings[0])
+        self.assertIn('KMU Biochemistry-II, Spring 2021, Q4', headings[0])
+        self.assertNotIn('Past paper', headings[1])
+
     def test_submit_shows_the_score(self):
         at = self.app()
         self.assertFalse(any('score-num' in element.value for element in at.markdown))

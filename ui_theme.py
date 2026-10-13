@@ -353,6 +353,17 @@ div[data-testid="stTabs"] [data-baseweb="tab-highlight"] { background: var(--acc
   line-height: 1.4;
   margin-bottom: .35rem;
 }
+.mcq-past {
+  display: inline-block;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+  border-radius: 999px;
+  font-size: .74rem;
+  font-weight: 650;
+  padding: .1rem .6rem;
+  margin: 0 0 .4rem .5rem;
+}
 .mcq-q {
   color: var(--ink);
   font-family: var(--body-font);
